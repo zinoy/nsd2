@@ -1,0 +1,87 @@
+body{-webkit-font-smoothing:antialiased;font:12px 'Hiragino Sans GB','Hiragino Sans GB W3','Microsoft Yahei',sans-serif}
+a{cursor:pointer}
+
+/* fonts setup */
+
+@font-face {
+    font-family: 'lr-light';
+    src: url('http://www.landrover.com/c/script/landroverlgtl-webfont.eot');
+    src: url('http://www.landrover.com/c/script/landroverlgtl-webfont.eot?#iefix') format('embedded-opentype'),
+         url('http://www.landrover.com/c/script/landroverlgtl-webfont.woff') format('woff'),
+         url('http://www.landrover.com/c/script/landroverlgtl-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'lr-medium';
+    src: url('http://www.landrover.com/c/script/landrovermedl-webfont.eot');
+    src: url('http://www.landrover.com/c/script/landrovermedl-webfont.eot?#iefix') format('embedded-opentype'),
+         url('http://www.landrover.com/c/script/landrovermedl-webfont.woff') format('woff'),
+         url('http://www.landrover.com/c/script/landrovermedl-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'lr-bold';
+    src: url('http://www.landrover.com/c/script/landroverbldl-webfont.eot');
+    src: url('http://www.landrover.com/c/script/landroverbldl-webfont.eot?#iefix') format('embedded-opentype'),
+         url('http://www.landrover.com/c/script/landroverbldl-webfont.woff') format('woff'),
+         url('http://www.landrover.com/c/script/landroverbldl-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* color of placeholder */
+::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #c3c3c3;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #c3c3c3;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #c3c3c3;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #c3c3c3;
+}
+
+.float-left{float:left}
+.float-right{float:right}
+
+/* buttons */
+.btn-simple{border:solid 1px #ccc;color:#333;display:inline-block;height:24px;line-height:24px;text-align:center;text-decoration:none;width:108px}
+
+/* icons */
+.icon{display:inline-block;font:0/0 a;vertical-align:middle}
+.icon-triangle{background:url(../img/arrow-btn-triangle.gif) no-repeat;height:8px;margin-top:-3px;margin-left:5px;width:4px}
+
+#intro{background:#fff;display:inline-block;overflow:hidden;padding-top:40px}
+#intro .column{display:inline;float:left;margin-left:20px;width:260px}
+#intro .stat{list-style:none;margin:5px 0 0;padding:0}
+#intro .stat li{color:#333;font:30px/32px lr-bold,'Hiragino Sans GB','Hiragino Sans GB W3','Microsoft Yahei',sans-serif;margin-bottom:8px}
+#intro .stat li sup{font-size:10px;margin-left:5px;top:-1em}
+#intro .stat li i{background:url(../img/icon-black.png) no-repeat;height:32px;margin-top:-3px;margin-right:6px;width:32px}
+#intro .stat li i.icon-distance{height:34px;line-height:34px}
+#intro .stat li i.icon-stops{background-position:0 -34px}
+#intro .stat li i.icon-pic{background-position:0 -66px}
+#intro h2{font-size:24px;height:31px;line-height:31px;margin:0}
+#intro b.line{background:#000;display:block;font:0/0 a;height:5px;margin:20px 0;width:46px}
+#intro p{margin:20px 0}
+#intro .quick-link{border-left:dashed 1px #ccc;margin-top:51px;height:360px}
+#intro .quick-link .line{margin-top:0}
+#intro .form{list-style:none;margin:0;padding:0 0 0 19px}
+#intro .form li{background:url(../img/pattern-bg.png) repeat;height:35px;margin-bottom:20px;padding:5px;width:110px}
+#intro .form li a{border:solid 1px #fff;display:block;height:31px;padding:1px}
+#intro .form li a span{background:url(../img/arrow-btn-tl.gif) no-repeat 1px 1px #fff;color:#333;display:block;font-size:14px;height:31px;line-height:31px;text-align:center}
+
+#footer{background:url(../img/footer-shadow.gif) repeat-x;clear:both;color:#999;height:60px;line-height:60px;margin-top:20px;padding-left:20px;position:relative;width:960px}
+#footer .extend{background:url(../img/footer-extend.gif) no-repeat;height:38px;position:absolute;right:-207px;top:0;width:207px}
+#footer a{color:#555;font-weight:bold;text-decoration:none}
+#footer a:hover{text-decoration:underline}
+#footer i{background:#000;display:inline-block;height:4px;font:0/0 a;margin:0 5px;vertical-align:bottom;width:1px}
+#footer .share{display:inline-block;list-style:none;margin:0;overflow:hidden;padding:0 20px 0 0}
+#footer .share li{background:url(../img/icon-share.gif) no-repeat;cursor:pointer;display:inline;;float:left;font:0/0 a;height:13px;margin-left:5px;width:13px}
+#footer .share li.renren{background-position:-13px 0}
+#footer .share li.douban{background-position:-26px 0}

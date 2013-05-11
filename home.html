@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8" />
+  <title>发现无止境 中国最美前线 - 路虎中国</title>
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCYIjLU7jUweWaW8pYxNNPfoD-t6XpPdq8&sensor=true"></script>
+  <script>
+  var map;
+    function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(31.615966,106.347656),
+          zoom: 5,
+          mapTypeId: google.maps.MapTypeId.SATELLITE
+        };
+        map = new google.maps.Map(document.getElementById("map"),
+            mapOptions);
+        map.panBy(500,500);
+      }
+      function to(){
+        map.panTo(new google.maps.LatLng(31.222197,121.486816));
+      }
+  </script>
+</head>
+<body onload="initialize()">
+  <div id="map" style="height:800px;width:100%"></div>
+  <button onclick="to()">go</button>
+</body>
+</html>
