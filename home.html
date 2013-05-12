@@ -3,26 +3,160 @@
 <head>
   <meta charset="utf-8" />
   <title>发现无止境 中国最美前线 - 路虎中国</title>
+  <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+  <link rel="stylesheet" type="text/css" href="css/theme2.css" />
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCYIjLU7jUweWaW8pYxNNPfoD-t6XpPdq8&sensor=true"></script>
   <script>
   var map;
     function initialize() {
         var mapOptions = {
-          center: new google.maps.LatLng(31.615966,106.347656),
+          center: new google.maps.LatLng(34.921971,98.393554),
           zoom: 5,
-          mapTypeId: google.maps.MapTypeId.SATELLITE
+          mapTypeId: google.maps.MapTypeId.SATELLITE,
+          disableDefaultUI: true
         };
-        map = new google.maps.Map(document.getElementById("map"),
+        map = new google.maps.Map(document.getElementById("google_map"),
             mapOptions);
-        map.panBy(500,500);
       }
       function to(){
         map.panTo(new google.maps.LatLng(31.222197,121.486816));
+        map.panBy(120,200);
       }
   </script>
 </head>
 <body onload="initialize()">
-  <div id="map" style="height:800px;width:100%"></div>
-  <button onclick="to()">go</button>
+  <div id="main" class="screen">
+    <div id="google_map" style="height:768px"></div>
+    <div id="ui_board" class="col2">
+      <div class="separator"><i></i></div>
+      <div id="ui_counter" class="section">
+        <div class="distance">
+          <span class="digit">
+            <b>0</b>
+            <i></i>
+          </span>
+          <span class="digit">
+            <b>0</b>
+            <i></i>
+          </span>
+          <span class="digit">
+            <b>0</b>
+            <i></i>
+          </span>
+          <span class="digit">
+            <b>0</b>
+            <i></i>
+          </span>
+          <span class="digit">
+            <b>1</b>
+            <i></i>
+          </span>
+          <span class="digit">
+            <b>2</b>
+            <i></i>
+          </span>
+        </div>
+        <p><span>公里</span>目前车队行走的里程</p>
+      </div>
+      <div class="separator"><i></i></div>
+      <div id="ui_user" class="section">
+        <p class="btns">
+          <a>登录</a>
+          <a>注册</a>
+        </p>
+      </div>
+      <div class="separator"><i></i></div>
+      <div id="ui_info" class="section">
+        <ul>
+          <li>
+            <i class="icon icon-location"></i>
+            <span class="text-bold">浙江省杭州市拱墅区</span>
+          </li>
+          <li>
+            <i class="icon icon-duration"></i>
+            <sup>第</sup><b>18</b><sup>天</sup> <span>2013.6.18</span>
+          </li>
+          <li>
+            <i class="icon icon-distance"></i>
+            <b>7,461</b><sup>公里</sup>
+          </li>
+          <li>
+            <i class="icon icon-latlng"></i>
+            <span>30.377614,120.135498</span>
+          </li>
+          <li>
+            <i class="icon icon-pic"></i>
+            <b>7</b><sup>图像</sup>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <a href="" target="_blank" class="logo"><img src="img/logo.gif" alt="lr logo" /></a>
+  <div id="nav">
+    <a class="col1 col-margin btn">导航</a>
+    <ul>
+      <li class="col1 col-margin first active"></li>
+      <li class="col1 col-margin"></li>
+      <li class="col1 col-margin"></li>
+      <li class="col1 col-margin"></li>
+    </ul>
+  </div>
+  <div id="intro">
+    <div class="column">
+      <img src="img/intro-map.gif" alt="map" />
+      <ul class="stat">
+        <li><i class="icon icon-distance"></i>19,351<sup>公里</sup></li>
+        <li><i class="icon icon-stops"></i>89<sup>站</sup></li>
+        <li><i class="icon icon-pic"></i>1,025<sup>图像</sup></li>
+      </ul>
+    </div>
+    <div class="column">
+      <h2>我们的轨迹</h2>
+      <b class="line"></b>
+      <p>自1947年问世以来，世界豪华SUV的至臻之选，从来就只有路虎。</p>
+      <p>在六十五年的传奇旅程中，我们无所谓时代、环境如何变迁，始终坚持以举世无双的全地形反馈适应系统、独具标识性的外形设计和至为精湛的造车工艺...</p>
+      <p><a class="btn-simple">了解更多<i class="icon icon-triangle icon-orange"></i></a></p>
+    </div>
+    <div class="column">
+      <h2>发现精神</h2>
+      <b class="line"></b>
+      <p><img src="img/intro-img.jpg" class="spirit" /></p>
+      <p>秉承60余年对发现精神的专注和探索，路虎一直鼓舞人们发现传奇、勇于探索。纵横四段探索旅程，从容应对复杂路况，驰骋间释放激情，引领路虎瞩目荣耀，尽显高端越野非凡品质，发现无止境！</p>
+      <p><a class="btn-simple">了解更多<i class="icon icon-triangle icon-orange"></i></a></p>
+    </div>
+    <div class="column quick-link">
+      <b class="line"></b>
+      <ul class="form">
+        <li><a class="btn-pattern"><span>保持联系</span></a></li>
+        <li><a class="btn-pattern"><span>申请试驾</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div id="footer">
+    <div class="float-left">
+      <span>捷豹路虎汽车贸易(上海)有限公司</span>
+      <span>沪ICP备11001621号</span>
+      <i></i>
+      <a href="#" target="_blank">条款和条件</a>
+      <i></i>
+      <a href="#" target="_blank">隐私权政策</a>
+    </div>
+    <div class="float-right">
+      <a href="#" target="_blank">路虎官方网站</a>
+      <i></i>
+      <a href="#" target="_blank">路虎体验中心</a>
+      <i></i>
+      <a href="#" target="_blank">路虎优酷频道</a>
+      <i></i>
+      <span>分享</span>
+      <ul class="share">
+        <li class="weibo"></li>
+        <li class="renren"></li>
+        <li class="douban"></li>
+      </ul>
+    </div>
+    <div class="extend"></div>
+  </div>
 </body>
 </html>

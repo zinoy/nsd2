@@ -2,7 +2,6 @@ body{-webkit-font-smoothing:antialiased;font:12px 'Hiragino Sans GB','Hiragino S
 a{cursor:pointer}
 
 /* fonts setup */
-
 @font-face {
     font-family: 'lr-light';
     src: url('http://www.landrover.com/c/script/landroverlgtl-webfont.eot');
@@ -12,7 +11,6 @@ a{cursor:pointer}
     font-weight: normal;
     font-style: normal;
 }
-
 @font-face {
     font-family: 'lr-medium';
     src: url('http://www.landrover.com/c/script/landrovermedl-webfont.eot');
@@ -22,7 +20,6 @@ a{cursor:pointer}
     font-weight: normal;
     font-style: normal;
 }
-
 @font-face {
     font-family: 'lr-bold';
     src: url('http://www.landrover.com/c/script/landroverbldl-webfont.eot');
@@ -47,8 +44,16 @@ a{cursor:pointer}
     color:    #c3c3c3;
 }
 
+/* general */
+.logo{left:20px;position:absolute;top:0;z-index:99}
 .float-left{float:left}
 .float-right{float:right}
+.text-bold{font-weight:bold !important}
+
+/* column */
+.col-margin{}
+.col1{width:120px}
+.col2{width:240px}
 
 /* buttons */
 .btn-simple{border:solid 1px #ccc;color:#333;display:inline-block;height:24px;line-height:24px;text-align:center;text-decoration:none;width:108px}
@@ -57,7 +62,48 @@ a{cursor:pointer}
 .icon{display:inline-block;font:0/0 a;vertical-align:middle}
 .icon-triangle{background:url(../img/arrow-btn-triangle.gif) no-repeat;height:8px;margin-top:-3px;margin-left:5px;width:4px}
 
-#intro{background:#fff;display:inline-block;overflow:hidden;padding-top:40px}
+#main{background:#555;height:768px;position:relative}
+
+#ui_board{-webkit-text-size-adjust:none;position:absolute;right:0;top:10px;width:300px}
+#ui_board .section{margin-right:auto;margin-left:auto;margin-bottom:10px;padding-top:10px}
+#ui_board .separator{position:relative}
+#ui_board .separator i{background:url(../img/ui-separator.gif) no-repeat top center;font:0/0 a;left:0;height:1px;position:absolute;top:0;width:20px}
+
+#ui_counter{background:url(../img/ui-counter.png) no-repeat;height:104px;margin-top:10px;padding:10px 19px 0;width:240px}
+#ui_counter .distance{*display:inline-block;overflow:hidden}
+#ui_counter .digit{float:left;height:70px;position:relative;text-align:center;width:40px}
+#ui_counter .digit b{color:#fff;font:60px/70px lr-medium,sans-serif}
+#ui_counter .digit i{background:url(../img/ui-reflection.png) no-repeat;height:70px;left:0;position:absolute;top:0;width:40px}
+#ui_counter p{color:#fff;margin:6px 0}
+#ui_counter p span{color:#999;float:right;font-size:10px}
+
+#ui_user{}
+#ui_user .btns{font-size:0;margin:0;text-align:center}
+#ui_user .btns a{background:url(../img/ui-btn-user.png) no-repeat;color:#fff;display:inline-block;font-size:12px;height:30px;line-height:30px;margin:0 10px;text-align:center;width:120px}
+
+#ui_info{width:260px}
+#ui_info ul{list-style:none;margin:0;padding:0}
+#ui_info li{color:#fff;margin-bottom:10px;text-shadow:1px 1px 0 #000}
+#ui_info span{font:18px/31px lr-bold,'Hiragino Sans GB','Hiragino Sans GB W6','Microsoft Yahei',sans-serif}
+#ui_info b{font:30px/31px lr-bold,sans-serif;margin-right:5px}
+#ui_info sup{font-size:10px;font-weight:bold;margin-right:5px;top:-1em}
+#ui_info .icon{background:url(../img/ui-icon.png) no-repeat;height:31px;margin-top:-10px;margin-right:5px;width:32px}
+#ui_info .icon-location{margin-top:-5px}
+#ui_info .icon-distance{background-position:right bottom;height:35px;margin-top:-12px}
+#ui_info .icon-duration{background-position:0 -31px}
+#ui_info .icon-latlng{background-position:0 -62px;margin-top:-10px}
+#ui_info .icon-pic{background-position:0 -93px}
+
+#nav{position:absolute;top:768px;width:100%;z-index:9}
+#nav .contract{bottom:0;left:0;position:absolute;width:100%}
+#nav .btn{background:url(../img/ui-icon-nav.gif) no-repeat 6px center #e05206;color:#fff;display:inline;float:left;font-size:10px;height:20px;line-height:20px;margin-left:20px;text-align:center}
+#nav p{background:url(../img/pattern-nav.png) repeat;float:left;font:0/0 a;height:20px;margin:0 0 0 20px}
+#nav span{background:#bcbec0;display:inline-block;height:2px;margin:0 10px;vertical-align:top}
+#nav span.first{margin-left:0}
+#nav span.active{background:#e05206;height:4px}
+#nav b{background:#fff;display:inline-block;height:4px;margin-top:16px;width:2px}
+
+#intro{background:#fff;*display:inline-block;overflow:hidden;padding-top:40px}
 #intro .column{display:inline;float:left;margin-left:20px;width:260px}
 #intro .stat{list-style:none;margin:5px 0 0;padding:0}
 #intro .stat li{color:#333;font:30px/32px lr-bold,'Hiragino Sans GB','Hiragino Sans GB W3','Microsoft Yahei',sans-serif;margin-bottom:8px}
