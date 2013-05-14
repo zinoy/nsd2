@@ -64,7 +64,10 @@ a{cursor:pointer}
 
 #main{background:#555;height:768px;position:relative}
 
-#ui_board{-webkit-text-size-adjust:none;position:absolute;right:0;top:10px;width:300px}
+.pattern{left:0 !important;position:fixed !important;top:0 !important;z-index:1}
+.pattern i{background:url(../img/pattern-map.png) repeat-y;display:inline;float:left;height:100%;width:20px}
+
+#ui_board{-webkit-text-size-adjust:none;left:840px;position:absolute;top:10px;width:300px}
 #ui_board .section{margin-right:auto;margin-left:auto;margin-bottom:10px;padding-top:10px}
 #ui_board .separator{position:relative}
 #ui_board .separator i{background:url(../img/ui-separator.gif) no-repeat top center;font:0/0 a;left:0;height:1px;position:absolute;top:0;width:20px}
@@ -94,16 +97,16 @@ a{cursor:pointer}
 #ui_info .icon-latlng{background-position:0 -62px;margin-top:-10px}
 #ui_info .icon-pic{background-position:0 -93px}
 
-#nav{position:absolute;top:768px;width:100%;z-index:9}
+#nav{position:absolute;width:100%;z-index:9}
 #nav .contract{bottom:0;left:0;position:absolute;width:100%}
 #nav .btn{background:url(../img/ui-icon-nav.gif) no-repeat 6px center #e05206;color:#fff;display:inline;float:left;font-size:10px;height:20px;line-height:20px;margin-left:20px;text-align:center}
 #nav p{background:url(../img/pattern-nav.png) repeat;float:left;font:0/0 a;height:20px;margin:0 0 0 20px}
-#nav span{background:#bcbec0;display:inline-block;height:2px;margin:0 10px;vertical-align:top}
+#nav span{background:#bcbec0;display:inline-block;height:2px;margin:0 9px;vertical-align:top}
 #nav span.first{margin-left:0}
 #nav span.active{background:#e05206;height:4px}
 #nav b{background:#fff;display:inline-block;height:4px;margin-top:16px;width:2px}
 
-#intro{background:#fff;*display:inline-block;overflow:hidden;padding-top:40px}
+#intro{background:#fff;*display:inline-block;overflow:hidden;padding-top:40px;width:1020px}
 #intro .column{display:inline;float:left;margin-left:20px;width:260px}
 #intro .stat{list-style:none;margin:5px 0 0;padding:0}
 #intro .stat li{color:#333;font:30px/32px lr-bold,'Hiragino Sans GB','Hiragino Sans GB W3','Microsoft Yahei',sans-serif;margin-bottom:8px}
@@ -115,14 +118,15 @@ a{cursor:pointer}
 #intro h2{font-size:24px;height:31px;line-height:31px;margin:0}
 #intro b.line{background:#000;display:block;font:0/0 a;height:5px;margin:20px 0;width:46px}
 #intro p{margin:20px 0}
-#intro .quick-link{border-left:dashed 1px #ccc;margin-top:51px;height:360px}
+#intro .quick-link{border-left:dashed 1px #ccc;margin-top:51px;height:360px;width:139px !important}
 #intro .quick-link .line{margin-top:0}
 #intro .form{list-style:none;margin:0;padding:0 0 0 19px}
 #intro .form li{background:url(../img/pattern-bg.png) repeat;height:35px;margin-bottom:20px;padding:5px;width:110px}
 #intro .form li a{border:solid 1px #fff;display:block;height:31px;padding:1px}
 #intro .form li a span{background:url(../img/arrow-btn-tl.gif) no-repeat 1px 1px #fff;color:#333;display:block;font-size:14px;height:31px;line-height:31px;text-align:center}
 
-#footer{background:url(../img/footer-shadow.gif) repeat-x;clear:both;color:#999;height:60px;line-height:60px;margin-top:20px;padding-left:20px;position:relative;width:960px}
+#footer{clear:both;margin-top:20px;min-width:1280px;overflow:hidden}
+#footer .footer-shadow{background:url(../img/footer-shadow.gif) repeat-x;color:#999;height:60px;line-height:60px;padding-left:20px;position:relative;width:960px}
 #footer .extend{background:url(../img/footer-extend.gif) no-repeat;height:38px;position:absolute;right:-207px;top:0;width:207px}
 #footer a{color:#555;font-weight:bold;text-decoration:none}
 #footer a:hover{text-decoration:underline}

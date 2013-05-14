@@ -6,27 +6,23 @@
   <link rel="stylesheet" type="text/css" href="css/normalize.css" />
   <link rel="stylesheet" type="text/css" href="css/theme2.css" />
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCYIjLU7jUweWaW8pYxNNPfoD-t6XpPdq8&sensor=true"></script>
-  <script>
-  var map;
-    function initialize() {
-        var mapOptions = {
-          center: new google.maps.LatLng(34.921971,98.393554),
-          zoom: 5,
-          mapTypeId: google.maps.MapTypeId.SATELLITE,
-          disableDefaultUI: true
-        };
-        map = new google.maps.Map(document.getElementById("google_map"),
-            mapOptions);
-      }
-      function to(){
-        map.panTo(new google.maps.LatLng(31.222197,121.486816));
-        map.panBy(120,200);
-      }
-  </script>
 </head>
 <body onload="initialize()">
   <div id="main" class="screen">
-    <div id="google_map" style="height:768px"></div>
+    <div id="google_map">
+      <div class="pattern">
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+      </div>
+    </div>
     <div id="ui_board" class="col2">
       <div class="separator"><i></i></div>
       <div id="ui_counter" class="section">
@@ -94,13 +90,18 @@
   </div>
   <a href="" target="_blank" class="logo"><img src="img/logo.gif" alt="lr logo" /></a>
   <div id="nav">
-    <a class="col1 col-margin btn">导航</a>
-    <ul>
-      <li class="col1 col-margin first active"></li>
-      <li class="col1 col-margin"></li>
-      <li class="col1 col-margin"></li>
-      <li class="col1 col-margin"></li>
-    </ul>
+    <div class="contract">
+      <a class="col1 col-margin btn">导航</a>
+      <p>
+        <span class="col1 col-margin first active"></span>
+        <b></b>
+        <span class="col1 col-margin"></span>
+        <b></b>
+        <span class="col1 col-margin"></span>
+        <b></b>
+        <span class="col1 col-margin"></span>
+      </p>
+    </div>
   </div>
   <div id="intro">
     <div class="column">
@@ -134,29 +135,109 @@
     </div>
   </div>
   <div id="footer">
-    <div class="float-left">
-      <span>捷豹路虎汽车贸易(上海)有限公司</span>
-      <span>沪ICP备11001621号</span>
-      <i></i>
-      <a href="#" target="_blank">条款和条件</a>
-      <i></i>
-      <a href="#" target="_blank">隐私权政策</a>
+    <div class="footer-shadow">
+      <div class="float-left">
+        <span>捷豹路虎汽车贸易(上海)有限公司</span>
+        <span>沪ICP备11001621号</span>
+        <i></i>
+        <a href="#" target="_blank">条款和条件</a>
+        <i></i>
+        <a href="#" target="_blank">隐私权政策</a>
+      </div>
+      <div class="float-right">
+        <a href="#" target="_blank">路虎官方网站</a>
+        <i></i>
+        <a href="#" target="_blank">路虎体验中心</a>
+        <i></i>
+        <a href="#" target="_blank">路虎优酷频道</a>
+        <i></i>
+        <span>分享</span>
+        <ul class="share">
+          <li class="weibo"></li>
+          <li class="renren"></li>
+          <li class="douban"></li>
+        </ul>
+      </div>
+      <div class="extend"></div>
     </div>
-    <div class="float-right">
-      <a href="#" target="_blank">路虎官方网站</a>
-      <i></i>
-      <a href="#" target="_blank">路虎体验中心</a>
-      <i></i>
-      <a href="#" target="_blank">路虎优酷频道</a>
-      <i></i>
-      <span>分享</span>
-      <ul class="share">
-        <li class="weibo"></li>
-        <li class="renren"></li>
-        <li class="douban"></li>
-      </ul>
-    </div>
-    <div class="extend"></div>
   </div>
+  <script src="js/modernizr.custom.88639.js"></script>
+  <script>document.write('<script src="js/jquery-'+(window.addEventListener||(document.documentMode>=9)?'2.0.0':'1.9.1')+'.min.js"><\/script>')</script>
+  <script src="js/action.js"></script>
+  <script>
+  var map;
+    function initialize() {
+      var myLatlng = new google.maps.LatLng(34.921971,98.393554);
+        var mapOptions = {
+          center: myLatlng,
+          zoom: 5,
+          mapTypeId: google.maps.MapTypeId.SATELLITE,
+          disableDefaultUI: true,
+          noClear: true
+        };
+        map = new google.maps.Map(document.getElementById("google_map"),
+            mapOptions);
+            
+        var contentString = '<div id="content">'+
+      '<div id="siteNotice">'+
+      '</div>'+
+      '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
+      '<div id="bodyContent">'+
+      '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
+      'sandstone rock formation in the southern part of the '+
+      'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
+      'south west of the nearest large town, Alice Springs; 450&#160;km '+
+      '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
+      'features of the Uluru - Kata Tjuta National Park. Uluru is '+
+      'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
+      'Aboriginal people of the area. It has many springs, waterholes, '+
+      'rock caves and ancient paintings. Uluru is listed as a World '+
+      'Heritage Site.</p>'+
+      '<p>Attribution: Uluru, <a href="http://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
+      'http://en.wikipedia.org/w/index.php?title=Uluru</a> '+
+      '(last visited June 22, 2009).</p>'+
+      '</div>'+
+      '</div>';
+
+  var infowindow = new google.maps.InfoWindow({
+      content: contentString
+  });
+
+  var marker = new google.maps.Marker({
+      position: myLatlng,
+      map: map,
+      title: 'Uluru (Ayers Rock)'
+  });
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.open(map,marker);
+  });
+  google.maps.event.addListener(map, 'bounds_changed', movePattern);
+  google.maps.event.addListener(map, 'zoom_changed', movePattern);
+  
+  google.maps.event.addListenerOnce(map, 'idle', function(){
+    var pt = $('.pattern').remove();
+    $('#google_map:first-child > :first > :first > :first').prepend(pt);
+  });
+            
+     }
+     
+     
+     function movePattern() {
+    var trans = $('.pattern').parent().css('transform');
+    console.log(trans);
+    var m =/matrix\(([\d\s-,]+)\)/.exec(trans);
+    if(m){
+      var args =m[1].replace(/\s/g,'').split(',');
+      var x = Number(args[args.length-2]);
+      var y = Number(args[args.length-1]);
+      $('.pattern').css('transform','matrix(1,0,0,1,'+(-x)+','+(-y)+')');
+    }
+}
+     
+      function to(){
+        map.panTo(new google.maps.LatLng(31.222197,121.486816));
+        map.panBy(120,200);
+      }
+  </script>
 </body>
 </html>
