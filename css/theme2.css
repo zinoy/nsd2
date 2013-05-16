@@ -97,14 +97,28 @@ a{cursor:pointer}
 #ui_info .icon-latlng{background-position:0 -62px;margin-top:-10px}
 #ui_info .icon-pic{background-position:0 -93px}
 
+#head{bottom:20px;color:#fff;padding:5px;position:absolute;right:20px;text-align:right;text-shadow:1px 1px 0 #000}
+#head span{font-size:18px;line-height:20px}
+#head h2{font-size:30px;line-height:35px;margin:0}
+
 #nav{position:absolute;width:100%;z-index:9}
-#nav .contract{bottom:0;left:0;position:absolute;width:100%}
+#nav div.separator{bottom:0;font:0/0 a;left:0;position:absolute}
+#nav div.separator span{display:inline-block;margin-left:20px;position:relative}
+#nav div.separator i{background:#fff;bottom:0;height:4px;position:absolute;right:-11px;width:2px}
 #nav .btn{background:url(../img/ui-icon-nav.gif) no-repeat 6px center #e05206;color:#fff;display:inline;float:left;font-size:10px;height:20px;line-height:20px;margin-left:20px;text-align:center}
-#nav p{background:url(../img/pattern-nav.png) repeat;float:left;font:0/0 a;height:20px;margin:0 0 0 20px}
-#nav span{background:#bcbec0;display:inline-block;height:2px;margin:0 9px;vertical-align:top}
-#nav span.first{margin-left:0}
-#nav span.active{background:#e05206;height:4px}
-#nav b{background:#fff;display:inline-block;height:4px;margin-top:16px;width:2px}
+#nav .contract{bottom:0;left:0;position:absolute;width:100%}
+#nav .contract p{background:url(../img/pattern-nav.png) repeat;float:left;font:0/0 a;height:20px;margin:0 0 0 20px}
+#nav .contract span{background:#bcbec0;display:inline-block;height:2px;margin:0 10px;vertical-align:top}
+#nav .contract span.first{margin-left:0}
+#nav .contract span.active{background:#e05206;height:4px}
+#nav .expand{background:url(../img/pattern-menu.png) repeat;bottom:0;height:768px;position:absolute;width:100%}
+#nav .blocks{bottom:10px;left:0;position:absolute;}
+#nav .expand p{background:url(../img/menu-block.png) no-repeat;background-size:100%;float:left;margin:0 0 0 20px}
+#nav .expand p a{border:solid 1px #ccc;box-sizing:border-box;color:#333;display:block;font-size:14px;font-weight:bold;height:100%;position:relative;text-decoration:none}
+#nav .expand p.active a{background:url(../img/menu-arrow.png) no-repeat left bottom;cursor:default}
+#nav .expand p a span{display:block;margin:10px}
+#nav .expand p a b{border-top:solid 1px #000;display:block;font:0/0 a;margin-left:10px;width:4px}
+#nav .expand p a i.separator{background:url(../img/ui-separator.gif) no-repeat center top;font:0/0 a;height:1px;left:-21px;position:absolute;top:-12px;width:20px}
 
 #intro{background:#fff;*display:inline-block;overflow:hidden;padding-top:40px;width:1020px}
 #intro .column{display:inline;float:left;margin-left:20px;width:260px}
@@ -135,3 +149,9 @@ a{cursor:pointer}
 #footer .share li{background:url(../img/icon-share.gif) no-repeat;cursor:pointer;display:inline;;float:left;font:0/0 a;height:13px;margin-left:5px;width:13px}
 #footer .share li.renren{background-position:-13px 0}
 #footer .share li.douban{background-position:-26px 0}
+
+/* map objects define*/
+#map_control{background:url(../img/control-map.jpg) no-repeat;border:solid 3px #fff;cursor:pointer;height:74px;left:20px;position:absolute;width:114px}
+#map_control i{cursor:pointer;height:23px;position:absolute;top:26px;width:23px}
+#map_control i.in{right:-3px}
+#map_control i.out{left:-3px}
