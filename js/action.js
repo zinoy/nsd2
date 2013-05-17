@@ -1,6 +1,7 @@
 (function($, window, undefined) {
     var nsd = {};
     var config = {};
+    var markers = [];
     window.nsd = nsd;
     config.api_path = "api/action.aspx";
     function adjust() {
@@ -17,7 +18,7 @@
         $('#map_control').css('bottom', 30);
         $('#ui_board').css('left', iw * 7);
         $('#nav').css('width', sw);
-        $('#nav .col1').css('width', iw - 20);
+        $('.col1').css('width', iw - 20);
         $('#nav .contract > p').css('width', sw - (iw + 20));
         $('#nav .expand .home').css({
             'margin-right' : (iw - 20) - (iw - 20) / 2,
@@ -28,10 +29,41 @@
         });
     }
 
+    function getProgressSymbolPath(p) {
+        if (p > 1) {
+            p = 1;
+        } else if (p < 0) {
+            p = 0;
+        }
+
+        var cx = 12;
+        var cy = 12;
+        var r = 12;
+        var deg = p * Math.PI * 2;
+
+        var x, y;
+        x = cx + r * Math.sin(deg);
+        y = cy - r * Math.cos(deg);
+
+        $('#done').hide();
+        if (p <= .5)
+            return "M " + cx + "," + cy + " V 0 A " + r + "," + r + " 0 0,1 " + x + "," + y + " z";
+        else if (p < 1)
+            return "M " + cx + "," + cy + " V 0 A " + r + "," + r + " 0 1,1 " + x + "," + y + " z";
+        else
+            return getProgressSymbolPath(.999);
+    }
+
     function initMap() {
         if (window.google === undefined)
             return;
-        var _maker = ["img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", "img/ol-stop.png", "img/ol-spot.png"];
+        var _maker = ["ol-vehicle.png", "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
+            url : "img/ol-stop.png",
+            anchor : new google.maps.Point(11, 10.5)
+        }, {
+            url : "img/ol-spot.png",
+            anchor : new google.maps.Point(8, 7.5)
+        }];
         var wayPoints = [];
         var initPoint = new google.maps.LatLng(28.68883, 115.884);
         var mapOptions = {
@@ -51,6 +83,13 @@
                 var y = Number(args[args.length - 1]);
                 $('.pattern').css('transform', 'matrix(1,0,0,1,' + (-x) + ',' + (-y) + ')');
             }
+        }, findMarkerFromList = function(m, list) {
+            for (var i = 0; i < list.length; i++) {
+                if (m === list[i].obj) {
+                    return list[i];
+                }
+            }
+            return null;
         };
         nsd.map = new google.maps.Map(document.getElementById("google_map"), mapOptions);
         google.maps.event.addListener(nsd.map, 'bounds_changed', movePattern);
@@ -76,20 +115,54 @@
         }, function(data) {
             if (data.code == 0) {
                 nsd.data.location = data.list;
-                for (var i in data.list) {
+
+                for (var i = 0; i < data.list.length; i++) {
                     var loc = data.list[i];
                     var pt = new google.maps.LatLng(loc.Latitude, loc.Longitude);
-                    var beachMarker = new google.maps.Marker({
+                    var marker = new google.maps.Marker({
                         position : pt,
                         map : nsd.map,
-                        icon : _maker[loc.Type - 1],
+                        icon : _maker[loc.Type],
                         title : loc.Location,
-                        zIndex : 6 - loc.Type
+                        zIndex : (_maker.length - loc.Type) * 10
                     });
-                    if (loc.Type == 5)
+                    markers.push({
+                        id : loc.ID,
+                        index : i,
+                        obj : marker,
+                        type : loc.Type
+                    });
+                    if (loc.Type < 5) {
                         wayPoints.push({
                             location : pt
                         });
+                    }
+                    google.maps.event.addListener(marker, 'mouseover', function(e) {
+                        this.setIcon({
+                            url : 'img/ol-hover.png',
+                            anchor : new google.maps.Point(70, 44)
+                        });
+                    });
+                    google.maps.event.addListener(marker, 'mouseout', function(e) {
+                        var obj = findMarkerFromList(this, markers);
+                        this.setIcon(_maker[obj.type]);
+                    });
+                    google.maps.event.addListener(marker, 'click', function(e) {
+                        var progress = new google.maps.Marker({
+                            position : this.getPosition(),
+                            clickable : false,
+                            map : nsd.map,
+                            icon : {
+                                fillColor : '#e05206',
+                                fillOpacity : 1,
+                                strokeOpacity : 0,
+                                path : getProgressSymbolPath(.73),
+                                anchor : new google.maps.Point(12, 12)
+                            },
+                            optimized : true
+                        });
+                        $('#content').data('progress', progress);
+                    });
                 }
             }
         });
@@ -98,7 +171,7 @@
             path : 'M 0,0 0,1',
             strokeColor : "#ffffff",
             strokeOpacity : 1,
-            scale: 2
+            scale : 2
         };
         var directionsDisplay = new google.maps.DirectionsRenderer({
             polylineOptions : {

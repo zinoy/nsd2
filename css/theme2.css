@@ -62,7 +62,7 @@ a{cursor:pointer}
 .icon{display:inline-block;font:0/0 a;vertical-align:middle}
 .icon-triangle{background:url(../img/arrow-btn-triangle.gif) no-repeat;height:8px;margin-top:-3px;margin-left:5px;width:4px}
 
-#main{background:#555;height:768px;position:relative}
+#main{background:#555;height:768px;overflow:hidden;position:relative}
 
 .pattern{left:0 !important;position:fixed !important;top:0 !important;z-index:1}
 .pattern i{background:url(../img/pattern-map.png) repeat-y;display:inline;float:left;height:100%;width:20px}
@@ -96,6 +96,38 @@ a{cursor:pointer}
 #ui_info .icon-duration{background-position:0 -31px}
 #ui_info .icon-latlng{background-position:0 -62px;margin-top:-10px}
 #ui_info .icon-pic{background-position:0 -93px}
+
+#content{left:0;position:absolute;top:0}
+#content .color,#content .gallery-list{background:#fff;height:100%;position:absolute;right:-140px;width:140px}
+#content .alpha-half{filter:alpha(opacity=50);opacity:.5}
+#content .alpha-quarter{filter:alpha(opacity=20);opacity:.2}
+#content .order1{right:-280px}
+#content .gallery-list ul{list-style:none;margin:0;padding:20px 10px 0}
+#content #detail{background:#fff;height:532px;overflow:auto;padding:20px 0 20px 150px;width:560px}
+#content .img-hover{position:relative}
+#content .img-hover span{left:0;position:absolute;top:0;height:323px;width:535px}
+#content .img-hover a{display:block;height:317px;width:529px}
+#content .img-hover a:hover{background:url(../img/icon-image-hover.gif) no-repeat left top,url(../img/icon-image-hover.gif) no-repeat right top,url(../img/icon-image-hover.gif) no-repeat left bottom,url(../img/icon-image-hover.gif) no-repeat right bottom;border:solid 3px #fff}
+#content .right-button{margin-right:10px}
+#content .article{padding:0 10px}
+#content .article h2{font-size:30px;font-weight:normal;line-height:45px;margin:0 0 20px}
+#content .article h2 span{display:block;font-size:18px;font-weight:bold;line-height:22px}
+#content .article h2 b{background:#000;display:block;font:0/0 a;height:5px;margin-top:20px;width:46px}
+#content .article p{font-size:14px;line-height:18px;margin:20px 0}
+#content .article p.float-left{margin:0 20px 0 0}
+#content .article p.float-right{margin:0 0 0 20px}
+
+#gallery{height:100%;left:0;position:absolute;top:0;width:100%}
+#gallery .frame{cursor:url(../img/cursor-close.cur) 26 26,default;height:100%;overflow:hidden;position:absolute;width:100%}
+#gallery .frame img,#gallery .switch img{position:absolute;width:100%}
+#gallery .switch a{border:solid 3px #fff;position:absolute;width:96px}
+#gallery .switch a.next{right:0}
+#gallery .share{bottom:94px;height:0;left:0;position:absolute;text-align:center;width:100%}
+#gallery .share a.btn{background:#ff5900;color:#fff;display:inline-block;height:24px;line-height:24px;width:29px}
+#gallery .share a.btn i{background:url(../img/icon-weibo.gif) no-repeat center center;display:inline-block;height:15px;margin-top:-2px;vertical-align:middle;width:19px}
+#gallery .pager{bottom:56px;font:0/0 a;height:0;left:0;position:absolute;text-align:center;width:100%}
+#gallery .pager a{border:solid 1px #fff;display:inline-block;height:8px;margin:0 8px;padding:2px;width:8px}
+#gallery .pager a.active i{background:#e05206;display:block;height:8px}
 
 #head{bottom:20px;color:#fff;padding:5px;position:absolute;right:20px;text-align:right;text-shadow:1px 1px 0 #000}
 #head span{font-size:18px;line-height:20px}
