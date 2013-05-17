@@ -94,7 +94,23 @@
             }
         });
 
-        var directionsDisplay = new google.maps.DirectionsRenderer();
+        var dashed = {
+            path : 'M 0,0 0,1',
+            strokeColor : "#ffffff",
+            strokeOpacity : 1,
+            scale: 2
+        };
+        var directionsDisplay = new google.maps.DirectionsRenderer({
+            polylineOptions : {
+                strokeOpacity : 0,
+                icons : [{
+                    icon : dashed,
+                    offset : '0',
+                    repeat : '6px'
+                }]
+            },
+            suppressMarkers : true
+        });
         var directionsService = new google.maps.DirectionsService();
         directionsDisplay.setMap(nsd.map);
         var request = {
@@ -108,15 +124,15 @@
             }
         });
     }
-    
-    function delegateListener(){
-        $('#nav .btn').click(function(){
-           $('#nav .contract').hide();
-           $('#nav .expand').show(); 
+
+    function delegateListener() {
+        $('#nav .btn').click(function() {
+            $('#nav .contract').hide();
+            $('#nav .expand').show();
         });
-        $('#nav .expand').click(function(){
-           $('#nav .contract').show();
-           $('#nav .expand').hide(); 
+        $('#nav .expand').click(function() {
+            $('#nav .contract').show();
+            $('#nav .expand').hide();
         });
     }
 
