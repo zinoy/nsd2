@@ -162,3 +162,5 @@ bin/
 *.config
 test.html
 Service References/
+files/
+api/

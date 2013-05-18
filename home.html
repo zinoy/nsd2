@@ -1,5 +1,10 @@
 <!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
 <html lang="zh-cn">
+<!--<![endif]-->
 <head>
   <meta charset="utf-8" />
   <title>发现无止境 中国最美前线 - 路虎中国</title>
@@ -28,44 +33,42 @@
       <i class="out"></i>
     </div>
     
-    <div id="content">
+    <div id="content" style="display:none;">
       <div class="color alpha-quarter col1-full order1"></div>
       <div class="color alpha-half col1-full order2"></div>
       <div class="gallery-list col1-full">
-        <ul>
-          <li class="img-hover">
-            <img src="img/temp/t_pic_03.jpg" alt="pic" width="120" /><span><a></a></span>
-          </li>
-          <li class="img-hover">
-            <img src="img/temp/t_pic_07.jpg" alt="pic" width="120" /><span><a></a></span>
-          </li>
-        </ul>
+        <div class="frame">
+          <ul></ul>
+        </div>
       </div>
       <div id="detail">
         <div class="article">
-          <div class="float-right right-button"><a class="btn-simple">浏览当天图像<i class="icon icon-triangle icon-orange"></i></a></div>
-          <h2><span>第3天</span>最美的前线景色<b></b></h2>
-          <p>在六十五年的传奇旅程中，我们无所谓时代、环境如何变迁，始终坚持以举世无双的全地形反馈适应系统、独具标识性的外形设计和至为精湛的造车工艺，将深厚的SUV专业造诣溶于每一辆路虎的血液之中，为世人带来无所不至、无可比拟的专业豪华SUV－这是我们从过去到未来不变的坚持，也正因如此，我们让路虎精神，一脉相承。</p>
-          <p class="img-hover"><img src="img/temp/t_pic_03.jpg" alt="pic" /><span><a></a></span></p>
-          <p class="float-left"><img src="img/temp/t_pic_07.jpg" alt="pic" /></p>
-          <p>在六十五年的传奇旅程中，我们无所谓时代、环境如何变迁，始终坚持以举世无双的全地形反馈适应系统、独具标识性的外形设计和至为精湛的造车工艺，将深厚的SUV专业造诣溶于每一辆路虎的血液之中，为世人带来无所不至、无可比拟的专业豪华SUV－这是我们从过去到未来不变的坚持，也正因如此，我们让路虎精神，一脉相承。</p>
+          <h2></h2>
+          <div class="content"></div>
         </div>
       </div>
+      <div class="mask mask-white" style="display:none;"></div>
+      <div class="right-button browse"><a class="btn-simple">浏览当天图像<i class="icon icon-triangle icon-orange"></i></a></div>
+      <div class="right-button back" style="display:none;"><a class="btn-simple">返回</a></div>
     </div>
     <div id="head">
       <span>发现无止境</span>
       <h2>中国最美前线</h2>
     </div>
     <div id="gallery" style="display:none;">
-      <div class="frame">
-        <img src="img/temp/big_01.jpg" alt="gallery" />
-      </div>
-      <div class="switch">
-        <a class="next"><img src="img/temp/t_pic_03.jpg" /></a>
-        <a class="prev"><img src="img/temp/t_pic_07.jpg" /></a>
-      </div>
+      <div class="switch"></div>
+      <div class="mask" style="display:none;"></div>
       <div class="share">
-        <a class="btn"><i></i></a>
+        <form method="post">
+          <div class="pattern">
+            <textarea name="status" placeholder="发表您的观点能赢取更多积分"></textarea>
+            <a class="btn-cancel">取消</a>
+            <input type="hidden" name="ac" value="galleryshare" />
+            <input type="hidden" name="token" value="1WeklmIyBwjWCI7vf9cf" />
+            <input type="hidden" name="pic" />
+            <p><a class="btn"><span style="width:0">分享至：</span><i></i></a></p>
+          </div>
+        </form>
       </div>
       <div class="pager">
         <a class="active"><i></i></a>
@@ -188,6 +191,62 @@
             <b></b>
           </a>
         </p>
+      </div>
+    </div>
+  </div>
+  <div id="user_action" style="display:none;">
+    <div class="mask"></div>
+    <div class="bg">
+      <a class="close" style="display:none;">关闭</a>
+      <div class="pattern select">
+        <a class="weibo">社交帐号登录<i></i></a>
+        <b></b>
+        <a class="email">网站注册登录<i></i></a>
+        <p><a class="exist">注册新账户</a></p>
+      </div>
+      <div class="pattern register" style="display:none;">
+        <div class="frame">
+          <div class="float-left">
+            <h4>注 册</h4>
+            <p>请填写右侧表格，<br />完成创建你的新帐户</p>
+          </div>
+          <form class="float-right">
+            <p>
+              <input type="email" class="textbox placeholder" name="email" maxlength="50" value="邮箱" placeholder="邮箱" />
+            </p>
+            <p>
+              <input type="text" class="textbox password placeholder short" name="pass" value="密码" placeholder="密码" />
+              <input type="text" class="textbox password placeholder tiny" name="repass" value="再次输入密码" placeholder="再次输入密码" />
+              <button type="button">提交</button>
+            </p>
+            <p class="desc">通过点击此按钮，您同意隐私政策和使用条款</p>
+            <input type="hidden" name="ac" value="signup" />
+          </form>
+        </div>
+      </div>
+      <div class="pattern login" style="display:none;">
+        <div class="frame">
+          <div class="float-left">
+            <h4>登 录</h4>
+            <p>请正确填写已注册信息</p>
+          </div>
+          <form class="float-right">
+            <p>
+              <input type="email" class="textbox placeholder" name="email" value="邮箱" placeholder="邮箱" />
+            </p>
+            <p>
+              <input type="text" class="textbox password placeholder middle" name="pass" value="密码" placeholder="密码" />
+              <button type="button">提交</button>
+            </p>
+            <p class="desc">未注册用户请点击<a>这里注册</a></p>
+            <input type="hidden" name="ac" value="signin" />
+          </form>
+        </div>
+      </div>
+      <div class="success" style="display:none;">
+        <p class="lead"><strong>恭喜您</strong>登录成功，路虎期待与您一路发现。</p>
+        <p><a href="index.html" class="btn"><span>返回首页</span><i class="arrow"></i></a></p>
+        <p><a href="#" class="btn"><span>以往活动</span><i class="arrow"></i></a></p>
       </div>
     </div>
   </div>
