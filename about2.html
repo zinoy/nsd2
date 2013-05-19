@@ -8,24 +8,63 @@
 </head>
 <body>
   <div id="main" class="screen kv">
-    <div id="google_map">
-      <div class="pattern">
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
+    <div class="mask mask-alpha3"></div>
+    <div class="pattern-about"></div>
+  </div>
+  <div id="about">
+    <div class="frame">
+      <div class="tabs">
+        <div class="box">
+          <div class="head">发现无止境 中国最美前线</div>
+          <ul>
+            <li class="active">活动介绍</li>
+            <li>积分规则</li>
+            <li>奖项设置</li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <div class="copy">
-      <div class="head"><h1>发现无止境 中国最美前线</h1></div>
-      <div class="desc">自1947年问世以来，世界豪华SUV的至臻之选，从来就只有路虎。在六十五年的传奇旅程中，我们无所谓时代、环境如何变迁，始终坚持以举世无双的全地形反馈适应系统、独具标识性的外形设计和至为精湛的造车工艺，将深厚的SUV专业造诣溶于每一辆路虎的血液之中，为世人带来无所不至、无可比拟的专业豪华SUV－这是我们从过去到未来不变的坚持，也正因如此，我们让路虎精神，一脉相承。</div>
-      <p><a href="home.html" class="btn-simple btn-orange">立即进入<i class="icon icon-triangle icon-triangle-white"></i></a></p>
+      <div class="tab-item">
+        <div class="box">
+          <div class="article">
+            <p>2013年，路虎启程“发现无止境 中国最美前线”探享之旅，自西向东横越10467公里中国版图，直驱边陲人迹罕至之境，挑战史无前例的全天候全地形路况，纵情尽揽伊犁的天地交融之千色，深入触涉腾冲的时光交汇之古香，探索上海的灵感碰撞之新尚，发现中国最前线的融合之美。</p>
+            <p>5月24日至7月5日，路虎与您，发现中国最美前线。</p>
+            <p class="btn"><a href="home.html" class="btn-simple">卫星路线图<i class="icon icon-triangle icon-orange"></i></a></p>
+          </div>
+          <div class="map"></div>
+        </div>
+      </div>
+      <div class="tab-item" style="display:none;">
+        <div class="box">
+          <div class="article article-wide">
+            <p>活动时间：2013年5月24日至7月5日。</p>
+            <p>参与方式：</p>
+            <p>1、登录活动官方网站，注册会员并登录；<br />
+            2、点击沿途站点的互动图标，参与活动虚拟行程，每行进1公里，可获得<span>＋0.1</span>分 活动积分；<br />
+            3、参与并正确回答随机出现的沿途问题，可获得<span>＋20</span>分 活动积分；<br />
+            4、评论活动照片，或分享照片到微博，可获得<span>＋5</span>分 活动积分；<br />
+            5、参与伊犁、腾冲、上海3站的互动游戏，可获得<span>＋100</span>分；<br />
+            6、依据以上活动的积分排名，获享路虎中国限量好礼。</p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-item" style="display:none;">
+        <div class="box">
+          <div class="article article-wide">
+            <table>
+              <tr class="highlight">
+                <td style="width:316px">&middot; 一等奖 1名 （活动积分排名最高者）</td>
+                <td>获得路虎揽胜极光使用权一年。</td>
+              </tr>
+              <tr>
+                <td>&middot; 二等奖 1000名 （积分排名前1000名）</td>
+                <td>获得路虎中国专享礼品一份。</td>
+              </tr>
+            </table>
+            <p class="notice">* 最终获奖名单将于2013年7月15日公布于活动官方网站。</p>
+          </div>
+          <div class="prize">（奖品以实物为准）</div>
+        </div>
+      </div>
     </div>
   </div>
   <a href="" target="_blank" class="logo"><img src="img/logo.gif" alt="lr logo" /></a>
@@ -41,14 +80,14 @@
       <p>
         <span class="col1 col-margin first"></span>
         <span class="col1 col-margin"></span>
-        <span class="col1 col-margin"></span>
+        <span class="col1 col-margin active"></span>
         <span class="col1 col-margin"></span>
       </p>
     </div>
     <div class="expand" style="display:none;">
       <div class="blocks">
-        <p class="home col-square active">
-          <a>
+        <p class="home col-square">
+          <a href="index.html">
             <i class="separator"></i>
             <span>首页</span>
           </a>
@@ -66,8 +105,8 @@
             <b></b>
           </a>
         </p>
-        <p class="col1 col-square">
-          <a href="about2.html">
+        <p class="col1 col-square active">
+          <a>
             <span>活动介绍</span>
             <b></b>
           </a>

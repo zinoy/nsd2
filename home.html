@@ -48,7 +48,10 @@
         </div>
       </div>
       <div class="mask mask-white" style="display:none;"></div>
-      <div class="right-button browse"><a class="btn-simple">浏览当天图像<i class="icon icon-triangle icon-orange"></i></a></div>
+      <div class="right-button">
+        <a class="btn-simple btn-square close" title="关闭"><i class="icon icon-cross"></i></a>
+        <a class="btn-simple browse">浏览当天图像<i class="icon icon-triangle icon-orange"></i></a>
+      </div>
       <div class="right-button back" style="display:none;"><a class="btn-simple">返回</a></div>
     </div>
     <div id="head">
@@ -64,8 +67,9 @@
             <textarea name="status" placeholder="发表您的观点能赢取更多积分"></textarea>
             <a class="btn-cancel">取消</a>
             <input type="hidden" name="ac" value="galleryshare" />
-            <input type="hidden" name="token" value="1WeklmIyBwjWCI7vf9cf" />
+            <input type="hidden" name="token" />
             <input type="hidden" name="pic" />
+            <input type="hidden" name="url" />
             <p><a class="btn"><span style="width:0">分享至：</span><i></i></a></p>
           </div>
         </form>
@@ -113,13 +117,20 @@
           <a>登录</a>
           <a>注册</a>
         </p>
+        <p class="bar" style="display:none;">
+          <a class="exit">退出</a>
+          <span>我的积分：<b>15</b></span>
+        </p>
+        <p class="btns btn-left" style="display:none;">
+          <a>我的发现</a>
+        </p>
       </div>
       <div class="separator"><i></i></div>
       <div id="ui_info" class="section">
         <ul>
           <li>
             <i class="icon icon-location"></i>
-            <span class="text-bold">浙江省杭州市拱墅区</span>
+            <span class="text-bold dual">新疆维吾尔自治区巴音郭楞蒙古自治州尉犁县</span>
           </li>
           <li>
             <i class="icon icon-duration"></i>
@@ -180,7 +191,7 @@
           </a>
         </p>
         <p class="col1 col-square">
-          <a>
+          <a href="about2.html">
             <span>活动介绍</span>
             <b></b>
           </a>
