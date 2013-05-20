@@ -505,6 +505,10 @@
             if (e.keyCode != 13) {
                 return;
             }
+        } else if (e.charCode) {
+            if (e.charCode != 13) {
+                return;
+            }
         }
         var form = $(this).parents('form');
         var email = form.find('[name="email"]');
