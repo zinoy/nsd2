@@ -83,7 +83,7 @@
         $('#main .copy').css('left', iw + 10);
         $('.col1').width(iw - 20);
         $('.col1-full').css('width', iw);
-        $('#detail').css({
+        $('#detail,#points_history').css({
             height : sh - 40,
             'padding-left' : iw + 10,
             width : iw * 4
