@@ -93,8 +93,9 @@
         $('#content .order2,.gallery-list').css('right', -iw);
         $('#content .img > img').width($('#content .article').width());
         $('#content p.float-left > img,#content p.float-right > img').width($('#content .article').width() / 2);
-        $('#content .gallery-list img').width($('#content .gallery-list ul').width());
-        $('#content .img-hover > span').add('#kv_index').each(setImageSize);
+        $('#content .gallery-list img').width($('#content .gallery-list ul').width()).removeAttr('height');
+        $('#content .img-hover > span,#content .img-expand,#content .img-share,#kv_index').each(setImageSize);
+        $('#content .img-share input').width($('#content .img-share span').width() - 90);
         $('#gallery .frame').each(setImageSize);
         $('#gallery .switch a').each(setImageSize);
         $('#nav .contract > p').css('width', sw - (iw + 20));
@@ -113,13 +114,15 @@
     }
 
     function setImageSize(idx, obj) {
-        var img = $(obj).prev(), frame = false, _switch = false;
+        var img = $(obj).prev(), frame = false, _switch = false, _content = false;
         if (img.length == 0 || img.prop('tagName').toLowerCase() != 'img') {
             img = $(obj).children();
             if ($(obj).hasClass('frame'))
                 frame = true;
-            else
+            else if ($(obj).parent().hasClass('switch'))
                 _switch = true;
+            else
+                _content = true;
         }
         if (img.height() == 0) {
             setTimeout(function() {
@@ -127,7 +130,9 @@
             }, 200);
         } else {
             var sw = $('.screen').width(), sh = $('.screen').height(), iw = $('.col1').width();
-            if (frame) {
+            if (_content) {
+                $(obj).children('img').width($(obj).width());
+            } else if (frame) {
                 img.width(sw).css('top', (sh - img.height()) / 2);
             } else if (_switch) {
                 $(obj).width(iw * .6);
@@ -303,8 +308,8 @@
         }, showGallery = function() {
             var idx = $(this).data('index');
             shared.gallery_id = idx;
-            $('#gallery > .frame').eq(shared.gallery_id).addClass('visible');
-            $('#gallery > .pager a').eq(shared.gallery_id).addClass('active');
+            $('#gallery > .frame').removeClass('visible').eq(shared.gallery_id).css('left', 0).addClass('visible');
+            $('#gallery > .pager a').removeClass('active').eq(shared.gallery_id).addClass('active');
             setSwitch();
             $('#gallery').css('top', 0);
             $('#ui_info').hide();
@@ -358,6 +363,7 @@
         $('#gallery > .frame').click(hideGallery);
         $('#gallery > .pager a').click(goFrame);
         $('#content .gallery-list li a').click(showGallery);
+        $('#content .img-share').append('<span><input type="text" placeholder="发表您的观点能赢取更多积分" /><a class="btn"><b>分享至：</b><i class="icon-weibo"></i></a></span>').find('a').click(postStatus);
         //hasLayout
         $('#gallery').css('top', '100%').show();
         $('.gallery-list').removeClass('visible');
@@ -426,7 +432,7 @@
             anchor : new google.maps.Point(8, 7.5)
         }];
         var wayPoints = [];
-        var initPoint = new google.maps.LatLng(28.68883, 115.884);
+        var initPoint = new google.maps.LatLng(35.353216, 98.349609);
         var mapOptions = {
             center : initPoint,
             zoom : 5,
@@ -535,6 +541,7 @@
                     repeat : '6px'
                 }]
             },
+            preserveViewport : true,
             suppressMarkers : true
         });
     }
@@ -622,6 +629,66 @@
         $('#ui_user .btns').show();
         $('#ui_user .bar').hide();
         $('#ui_user .btn-left').hide();
+    }
+
+    function postStatus() {
+        if (connecting)
+            return;
+
+        var status, input, serialized = false;
+        if (this !== window && $(this).parent().prop('tagName').toLowerCase() == 'span') {
+            input = $(this).prev();
+            status = input.val();
+        } else {
+            status = $('#gallery .share textarea').val();
+            serialized = true;
+        }
+        if (status == '') {
+            alert("还是说一点什么吧。");
+            $('#gallery .share textarea').focus();
+            return false;
+        }
+        if (nsd.user.token == null) {
+            alert("请先登录。");
+            return;
+        }
+        if (!nsd.user.weibo) {
+            alert("请先绑定一个微博账号。");
+            openWeiboAuth();
+            return;
+        }
+        connecting = true;
+        var postData;
+        if (serialized) {
+            $('input[name="pic"]').val($('#gallery .switch a').eq(shared.gallery_id).children().attr('src'));
+            $('input[name="token"]').val(nsd.user.token);
+            $('input[name="url"]').val(window.location.href);
+            $('input[name="gid"]').val($('#gallery .frame.visible').data('id'));
+            postData = $('#gallery .share form').serialize();
+        } else {
+            postData = {
+                ac : 'galleryshare',
+                status : status,
+                pic : $(this).parent().prev().attr('src'),
+                token : nsd.user.token
+            }
+        }
+        $.post(config.api_path, postData, function(data) {
+            connecting = false;
+            if (generalErrorHandle(data)) {
+                setUserPoints(data.points);
+                alert("分享成功！\n恭喜您获得了 " + data.amount + " 点积分。");
+                $('#gallery .share textarea').val('路虎中国#发现无止境 中国最美前线#探享之旅');
+                $('#gallery .share form').removeClass('bg');
+                $('#gallery .share').css('height', '');
+                $('#gallery .mask').hide();
+                $('#gallery .share p.submit span').width(0);
+                $('#gallery .share p.submit').removeClass('submit');
+            } else if (data.code == 114) {
+                alert("分享成功！");
+                input.val('');
+            }
+        });
     }
 
     function showPointsHistory() {
@@ -784,41 +851,7 @@
                 $(this).children('span').width(0);
         }).click(function() {
             if ($(this).parent().hasClass('submit')) {
-                if (connecting)
-                    return;
-                var status = $('#gallery .share textarea').val();
-                if (status == '') {
-                    alert("还是说一点什么吧。");
-                    $('#gallery .share textarea').focus();
-                    return false;
-                }
-                if (nsd.user.token == null) {
-                    alert("请先登录。");
-                    return;
-                }
-                if (!nsd.user.weibo) {
-                    alert("请先绑定一个微博账号。");
-                    openWeiboAuth();
-                    return;
-                }
-                connecting = true;
-                $('input[name="pic"]').val($('#gallery .switch a').eq(shared.gallery_id).children().attr('src'));
-                $('input[name="token"]').val(nsd.user.token);
-                $('input[name="url"]').val(window.location.href);
-                $('input[name="gid"]').val($('#gallery .frame.visible').data('id'));
-                $.post(config.api_path, $('#gallery .share form').serialize(), function(data) {
-                    connecting = false;
-                    if (generalErrorHandle(data)) {
-                        setUserPoints(data.points);
-                        alert("分享成功！\n恭喜您获得了 " + data.amount + " 点积分。");
-                        $('#gallery .share textarea').val('');
-                        $('#gallery .share form').removeClass('bg');
-                        $('#gallery .share').css('height', '');
-                        $('#gallery .mask').hide();
-                        $('#gallery .share p.submit span').width(0);
-                        $('#gallery .share p.submit').removeClass('submit');
-                    }
-                });
+                postStatus();
             } else {
                 $('#gallery .share form').addClass('bg');
                 $('#gallery .share').height($('#gallery .share form').height());

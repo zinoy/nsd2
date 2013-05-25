@@ -132,8 +132,8 @@ a{cursor:pointer}
 #content #detail,#content #points_history{height:532px;margin-bottom:20px;overflow:auto;overflow-y:scroll;padding:20px 0 0 150px;width:560px}
 #content img{display:block}
 #content .img-hover{position:relative}
-#content .img-hover span{left:0;position:absolute;top:0}
-#content .img-hover a{display:block}
+#content .img-hover span{background:url(../img/spacer.gif);left:0;position:absolute;top:0}
+#content .img-hover a{display:block;margin:0 auto}
 #content .img-hover a:hover{background:url(../img/icon-image-hover.gif) no-repeat left top,url(../img/icon-image-hover.gif) no-repeat right top,url(../img/icon-image-hover.gif) no-repeat left bottom,url(../img/icon-image-hover.gif) no-repeat right bottom;border:solid 3px #fff}
 #content .right-button{position:absolute;right:40px;top:20px;z-index:7}
 #content .article{overflow:hidden;padding:0 10px 40px}
@@ -143,6 +143,12 @@ a{cursor:pointer}
 #content .article p{font-size:14px;line-height:20px;margin:20px 0}
 #content .article p.float-left{margin:0 20px 0 0}
 #content .article p.float-right{margin:0 0 0 20px}
+#content .img-share{text-align:center}
+#content .img-share span{background:url(../img/pattern-nav.png);display:block;padding:10px 15px 20px}
+#content .img-share span input{background:#fff;border:0;font-size:12px;height:20px;padding:2px}
+#content .img-share span a{background:#e05206;color:#fff;display:inline-block;height:20px;line-height:16px;padding:4px 5px 0;vertical-align:middle;white-space:nowrap}
+#content .img-share span a b{display:inline-block;font-weight:normal;vertical-align:text-top}
+#content .img-share span a i.icon-weibo{background:url(../img/icon-weibo.gif) no-repeat;display:inline-block;height:15px;vertical-align:text-top;width:19px}
 #content .timeline h2{color:#000;font-size:18px;font-weight:bold;margin:20px 0 25px 15px}
 #content .timeline .block{border-left:dashed 1px #c8c8c8;margin-left:25px}
 #content .timeline .item{margin:10px 0 10px -25px;overflow:hidden}
@@ -169,11 +175,11 @@ a{cursor:pointer}
 #gallery .share .bg textarea{border:0;font:12px/18px monospace;display:inline-block;height:97px;padding:5px 10px;resize:none;text-align:left;width:513px}
 #gallery .share .bg p.submit{height:24px;margin:8px 0 0}
 #gallery .share .bg .btn-cancel{color:#848484;display:block;font-size:12px;position:absolute}
-#gallery .share a.btn{background:#ff5900;color:#fff;display:inline-block;height:24px;line-height:24px;padding:0 4px}
-#gallery .share a.btn span{display:inline-block;overflow:hidden;white-space:nowrap}
-#gallery .share a.btn i{background:url(../img/icon-weibo.gif) no-repeat center center;display:inline-block;height:15px;margin-top:-2px;vertical-align:middle;width:19px}
+#gallery .share a.btn{background:#ff5900;color:#fff;display:inline-block;height:18px;line-height:18px;padding:3px 4px;vertical-align:middle}
+#gallery .share a.btn span{display:inline-block;overflow:hidden;vertical-align:text-top;white-space:nowrap}
+#gallery .share a.btn i{background:url(../img/icon-weibo.gif) no-repeat center center;display:inline-block;height:15px;line-height:15px;margin-top:1px;vertical-align:text-top;width:19px}
 #gallery .pager{bottom:56px;font:0/0 a;height:0;left:0;position:absolute;text-align:center;width:100%;z-index:6}
-#gallery .pager a{border:solid 1px #fff;display:inline-block;height:8px;margin:0 8px;padding:2px;width:8px}
+#gallery .pager a{background:url(../img/spacer.gif);border:solid 1px #fff;display:inline-block;height:8px;margin:0 8px;padding:2px;width:8px}
 #gallery .pager a.active i{background:#e05206;display:block;height:8px}
 
 #head{bottom:20px;color:#fff;padding:5px;position:absolute;right:20px;text-align:right;text-shadow:1px 1px 0 #000}
@@ -261,7 +267,7 @@ a{cursor:pointer}
 #about{position:absolute;width:100%;z-index:7}
 #about .head{background:url(../img/head-line.png) no-repeat;color:#000;font:0/0 a;height:102px;position:absolute;top:-114px;width:380px}
 #about .frame{background:#fff;bottom:0px;height:428px;position:absolute;width:100%}
-#about .tabs{background-color:#e5e5e5;background-image:-webkit-linear-gradient(bottom,#f5f5f5,#fff);background-image:linear-gradient(bottom,#cdcdcd,#fff);height:45px}
+#about .tabs{background-color:#e5e5e5;background-image:-moz-linear-gradient(bottom,#f5f5f5,#fff);background-image:-webkit-linear-gradient(bottom,#f5f5f5,#fff);background-image:linear-gradient(bottom,#cdcdcd,#fff);height:45px}
 #about .tab-item{}
 #about .box{margin:0 auto;padding-top:20px;position:relative;width:980px}
 #about .tabs .box{padding-top:6px}
