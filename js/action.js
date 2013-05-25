@@ -94,7 +94,7 @@
         $('#content .img > img').width($('#content .article').width());
         $('#content p.float-left > img,#content p.float-right > img').width($('#content .article').width() / 2);
         $('#content .gallery-list img').width($('#content .gallery-list ul').width());
-        $('#content .img-hover > span').each(setImageSize);
+        $('#content .img-hover > span').add('#kv_index').each(setImageSize);
         $('#gallery .frame').each(setImageSize);
         $('#gallery .switch a').each(setImageSize);
         $('#nav .contract > p').css('width', sw - (iw + 20));
@@ -106,6 +106,7 @@
             $('#user_action .bg').css('top', (sh - $('#user_action .bg').height()) / 2);
             $('#user_action .select p').css('left', $('#user_action .select a.email').position().left + $('#user_action .select a.email').width() - $('#user_action .select p').width() + 40);
         }
+        $('#points_history blockquote > img').width($('#points_history blockquote').width());
         $('.col-square').each(function() {
             $(this).css('height', $(this).width());
         });
@@ -372,12 +373,51 @@
             var x = Number(args[args.length - 2]);
             var y = Number(args[args.length - 1]);
             $('#google_map .pattern').css('transform', 'matrix(1,0,0,1,' + (-x) + ',' + (-y) + ')');
+        } else {
+            var left = $('#google_map .pattern').parent().css('left');
+            var top = $('#google_map .pattern').parent().css('top');
+            left = -Number(left.substr(0, left.length - 2));
+            top = -Number(top.substr(0, top.length - 2));
+            console.log(left, top);
+            $('#google_map .pattern').css({
+                left : left,
+                top : top
+            });
+        }
+    }
+
+    function checkBounds() {
+        if (!config.allowedBounds.contains(nsd.map.getCenter())) {
+            var C = nsd.map.getCenter();
+            var X = C.lng();
+            var Y = C.lat();
+
+            var AmaxX = config.allowedBounds.getNorthEast().lng();
+            var AmaxY = config.allowedBounds.getNorthEast().lat();
+            var AminX = config.allowedBounds.getSouthWest().lng();
+            var AminY = config.allowedBounds.getSouthWest().lat();
+
+            if (X < AminX) {
+                X = AminX;
+            }
+            if (X > AmaxX) {
+                X = AmaxX;
+            }
+            if (Y < AminY) {
+                Y = AminY;
+            }
+            if (Y > AmaxY) {
+                Y = AmaxY;
+            }
+
+            nsd.map.setCenter(new google.maps.LatLng(Y, X));
         }
     }
 
     function initMap() {
         if (window.google === undefined)
             return;
+        config.allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(15.707663, 72.685547), new google.maps.LatLng(54.826008, 136.582031));
         var _maker = ["ol-vehicle.png", "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
             url : "img/ol-stop.png",
             anchor : new google.maps.Point(11, 10.5)
@@ -399,6 +439,7 @@
         nsd.map = new google.maps.Map(document.getElementById("google_map"), mapOptions);
         google.maps.event.addListener(nsd.map, 'bounds_changed', movePattern);
         google.maps.event.addListener(nsd.map, 'zoom_changed', movePattern);
+        google.maps.event.addListener(nsd.map, 'center_changed', checkBounds);
         //google.maps.event.addListener(nsd.map, 'idle', movePattern);
         google.maps.event.addListenerOnce(nsd.map, 'idle', function() {
             var pt = $('#google_map .pattern').remove();
@@ -552,7 +593,7 @@
     }
 
     function userSignIn(data) {
-        if (data.token == null || data.token == "")
+        if (data.token == null || data.token == "" || data.token == "null")
             return false;
         nsd.user.token = data.token;
         setCookie("auth_token", data.token);
@@ -577,6 +618,49 @@
         $('#ui_user .btns').show();
         $('#ui_user .bar').hide();
         $('#ui_user .btn-left').hide();
+    }
+
+    function showPointsHistory() {
+        $.post(config.api_path, {
+            ac : 'pointshistory',
+            token : nsd.user.token
+        }, function(data) {
+            console.log(data);
+            var container = $('#points_history .article').empty();
+            var date;
+            for (var i = 0; i < data.list.length; i++) {
+                var obj = data.list[i];
+                var curDate = dateFormat(new Date(obj.AddTime));
+                if (!date || date != curDate) {
+                    date = curDate;
+                    container.append('<h2>' + date + '</h2><div class="block"></div>');
+                }
+                var block = container.find('.block:last');
+                var item = $('<div class="item"/>').appendTo(block);
+                var point = $('<i class="circle"/>').text('+' + shared.formatNumber(obj.Amount)).appendTo(item);
+                switch(obj.Type) {
+                    case 1:
+                        item.append('<p class="single-line">行进<b>' + obj.Quantity + '</b>公里</p>');
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        item.append('<blockquote><img src="' + obj.Content1 + '" /><div class="comment"><h5>我的评论</h5><p>' + obj.Content2 + '</p></div></blockquote>')
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    default:
+                        return;
+                }
+            }
+            $('#detail,.right-button a,#content .mask-white').hide();
+            $('#content,#points_history,.right-button .satellite').show();
+            $('#content .gallery-list').removeClass('visible');
+            $('#gallery').css('top', '100%');
+            adjust();
+        });
     }
 
     function setWeiboUser(data) {
@@ -672,13 +756,18 @@
         });
         $('#content .right-button a.close').click(function() {
             var mk = $('#content').data('progress');
-            google.maps.event.addListenerOnce(mk.origin, 'click', markerClickHandle);
-            if (mk.obj)
-                mk.obj.setMap();
-            nsd.map.setOptions({
-                draggable : true
-            });
-            $('#content').data('progress', null).hide();
+            if (mk) {
+                google.maps.event.addListenerOnce(mk.origin, 'click', markerClickHandle);
+                if (mk.obj)
+                    mk.obj.setMap();
+                nsd.map.setOptions({
+                    draggable : true
+                });
+                $('#content').data('progress', null);
+            }
+            $('#content').hide();
+            $('#detail,.right-button a').show();
+            $('#points_history,.right-button .satellite').hide();
         });
         $('#content .right-button.back a').click(function() {
             $('.gallery-list').removeClass('visible');
@@ -712,11 +801,13 @@
                 $('input[name="pic"]').val($('#gallery .switch a').eq(shared.gallery_id).children().attr('src'));
                 $('input[name="token"]').val(nsd.user.token);
                 $('input[name="url"]').val(window.location.href);
+                $('input[name="gid"]').val($('#gallery .frame.visible').data('id'));
                 $.post(config.api_path, $('#gallery .share form').serialize(), function(data) {
                     connecting = false;
                     if (generalErrorHandle(data)) {
                         setUserPoints(data.points);
                         alert("分享成功！\n恭喜您获得了 " + data.amount + " 点积分。");
+                        $('#gallery .share textarea').val('');
                         $('#gallery .share form').removeClass('bg');
                         $('#gallery .share').css('height', '');
                         $('#gallery .mask').hide();
@@ -761,6 +852,7 @@
             }
             adjust();
         });
+        $('#ui_user .bar>span').click(showPointsHistory);
         $('#ui_user a.exit').click(userSignOut);
         $('#user_action a.weibo').click(function() {
             openWeiboAuth();
