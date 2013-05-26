@@ -8,6 +8,7 @@
     var connecting = false;
     config.api_path = "api/action.aspx";
     shared.animation = {};
+    shared.screen = {};
     shared.animation.flash = function(obj) {
         var icon = obj.getIcon();
         icon.fillOpacity = .45;
@@ -16,7 +17,13 @@
     nsd.user = {};
     nsd.user.weibo = false;
     shared.gallery_id = 0;
-    shared.formatNumber = function(num) {
+    shared.mode = {};
+    shared.mode.map = true;
+    shared.mode.panorama = false;
+    shared.mode.gallery = false;
+    shared.mode.detail = false;
+
+    function formatNumber(num) {
         var str = String(Math.floor(num));
         if (str.length <= 3)
             return str;
@@ -35,6 +42,7 @@
         }
         return r;
     }
+
     //cookie
     function getCookie(c_name) {
         var c_value = document.cookie;
@@ -67,6 +75,8 @@
         $('body').css('overflow-x', 'hidden');
         var wh = $(window).height(), ww = $(window).width(), sw = ww < 1280 ? 1280 : ww, sh = wh < 480 ? 480 : wh;
         $('body').css('overflow', '');
+        shared.screen.height = sh;
+        shared.screen.width = sw;
         $('.screen,#google_map .pattern,#google_map,#nav .expand,#user_action').css({
             height : sh,
             width : sw
@@ -77,6 +87,7 @@
             height : sh,
             width : sw
         };
+        shared.screen.column = iw;
         $('#google_map .pattern i').not(':first').css('margin-left', iw - 20);
         $('#map_control').css('bottom', 30);
         $('#ui_board').css('left', iw * 7);
@@ -94,7 +105,7 @@
         $('#content .img > img').width($('#content .article').width());
         $('#content p.float-left > img,#content p.float-right > img').width($('#content .article').width() / 2);
         $('#content .gallery-list img').width($('#content .gallery-list ul').width()).removeAttr('height');
-        $('#content .img-hover > span,#content .img-expand,#content .img-share,#kv_index').each(setImageSize);
+        $('#content .img-hover > span,#content .img-expand,#content .img-expand > span,#content .img-share,#kv_index').each(setImageSize);
         $('#content .img-share input').width($('#content .img-share span').width() - 90);
         $('#gallery .frame').each(setImageSize);
         $('#gallery .switch a').each(setImageSize);
@@ -111,6 +122,9 @@
         $('.col-square').each(function() {
             $(this).css('height', $(this).width());
         });
+        if (shared.mode.panorama) {
+            $('#panorama .info .circle').css('left', (sw - 90) / 2);
+        }
     }
 
     function setImageSize(idx, obj) {
@@ -129,11 +143,16 @@
                 setImageSize(idx, obj);
             }, 200);
         } else {
-            var sw = $('.screen').width(), sh = $('.screen').height(), iw = $('.col1').width();
+            var sw = shared.screen.width, sh = shared.screen.height, iw = shared.screen.column;
             if (_content) {
                 $(obj).children('img').width($(obj).width());
             } else if (frame) {
+                img.css({
+                    'height' : '',
+                    'left' : 0
+                });
                 img.width(sw).css('top', (sh - img.height()) / 2);
+                checkImageSize(img);
             } else if (_switch) {
                 $(obj).width(iw * .6);
                 var ih = img.height();
@@ -145,11 +164,21 @@
                 $(obj).css({
                     height : img.height(),
                     width : img.width()
-                }).children().css({
+                }).children('a').css({
                     height : img.height() - 6,
                     width : img.width() - 6
                 });
             }
+        }
+    }
+
+    function checkImageSize(img) {
+        if (img.height() < shared.screen.height) {
+            img.css('width', '');
+            img.height(shared.screen.height).css({
+                'top' : 0,
+                'left' : (shared.screen.width - img.width()) / 2
+            });
         }
     }
 
@@ -256,7 +285,7 @@
         var currTime = new Date(loc_data.CurrentTime + "+0800");
         $('#ui_info li').eq(1).children('b').html(dayPass(currTime));
         $('#ui_info li').eq(1).children('span').html(dateFormat(currTime));
-        $('#ui_info li').eq(2).children('b').html(shared.formatNumber(dist));
+        $('#ui_info li').eq(2).children('b').html(formatNumber(dist));
         $('#ui_info li').eq(3).children('span').html(loc_data.Latitude + ',' + loc_data.Longitude);
         $('#ui_info li').eq(4).children('b').html(loc_data.PhotoCount);
 
@@ -363,6 +392,9 @@
         $('#gallery > .frame').click(hideGallery);
         $('#gallery > .pager a').click(goFrame);
         $('#content .gallery-list li a').click(showGallery);
+        $('#content .img-expand > span').click(function() {
+            $(this).parent().toggleClass('blockquote-expand');
+        });
         $('#content .img-share').append('<span><input type="text" placeholder="发表您的观点能赢取更多积分" /><a class="btn"><b>分享至：</b><i class="icon-weibo"></i></a></span>').find('a').click(postStatus);
         //hasLayout
         $('#gallery').css('top', '100%').show();
@@ -546,6 +578,93 @@
         });
     }
 
+    //TODO need to be modified for multi-place display
+    function showPanorama(id) {
+        $.getJSON('files/yili.json', {
+            seed : Math.random()
+        }, function(data) {
+            nsd.data.panorama = data;
+            shared.mode.panorama = true;
+            shared.panorama = {};
+            shared.panorama.count = data.list[0].items.length;
+            shared.panorama.discovered = 0;
+
+            $('#panorama .view .dot').remove();
+            $('#panorama .info .bar > span > span').html('<b>1</b> / ' + data.count);
+            $('#panorama .info .circle b').text(0);
+
+            var ratio = shared.screen.height / data.list[0].height;
+            for (var i = 0; i < data.list[0].items.length; i++) {
+                var obj = data.list[0].items[i];
+                var dot = $('<a class="dot"><span><i><b></b></i></span></a>');
+                dot.css({
+                    left : obj.x * ratio,
+                    top : obj.y * ratio
+                });
+                $('#panorama .view > img').before(dot);
+            }
+            $('#panorama .browse').empty();
+            for (var j = 0; j < data.count; j++) {
+                var thumb = $('<p class="img-hover"><img src="' + data.list[j].thumbnail + '" /><span><a></a></span></p>');
+                $('#panorama .browse').append(thumb);
+            }
+            $('#panorama').mousemove(function(e) {
+                shared.panorama.mouse = e.clientX;
+            });
+            $('#panorama .dot').click(showPanel);
+            $('#panorama .view').after($('#panorama .view').clone().css('left', shared.screen.width)).addClass('active').data('left', 0);
+            adjust();
+            movePanorama();
+        });
+    }
+
+    function movePanorama() {
+        var pos = -(shared.panorama.mouse - shared.screen.width / 2);
+        if (pos) {
+            var offset = Math.sin(Math.PI / 2 * pos / (shared.screen.width / 2)) * 5;
+            if (offset >= 1 || offset <= -1) {
+                var left = $('#panorama .view').data('left') + offset;
+                var wi = $('#panorama .view img').width();
+                var idx = $('#panorama .view.active').index('.view');
+                var next = 1 - idx;
+                if (wi + left <= shared.screen.width) {
+                    left = shared.screen.width;
+                } else if (left - wi >= shared.screen.width - wi) {
+                    left = shared.screen.width - wi;
+                }
+                $('#panorama .view').data('left', left);
+                $('#panorama .view').eq(idx).css('left', left);
+                $('#panorama .view').eq(next).css('left', left - wi);
+            }
+        }
+        shared.panorama.timer = setTimeout(movePanorama, 50);
+    }
+
+    function showPanel() {
+        if ($('#panorama .panel:visible').length > 0 || $('#panorama .bar > span.active').length > 0)
+            return;
+        clearTimeout(shared.panorama.timer);
+        var idx = $(this).index('.dot');
+        var pos = $(this).position();
+        var offset = $(this).parent().position().left;
+        if (!$(this).data('selected')) {
+            $('#panorama .dot:nth-child(' + (idx + 1) + ')').data('selected', true);
+            shared.panorama.discovered += 1;
+        }
+        $(this).addClass('active');
+        $('#panorama .info .circle').removeClass('active').html('发现<b>' + shared.panorama.discovered + '</b>');
+        $('#panorama .panel').children().text(nsd.data.panorama.list[0].items[idx].desc).css('margin-top', pos.top + 45);
+        $('#panorama .panel').css('left', pos.left + offset).show();
+        $('#panorama .dot').not('.active').hide();
+        $('#panorama .mask').addClass('close').one('click', function() {
+            $('#panorama .dot.active').removeClass('active');
+            $('#panorama .panel').hide();
+            $('#panorama .dot').show();
+            $('#panorama .mask').removeClass('close').hide();
+            movePanorama();
+        }).show();
+    }
+
     function submitUser(e) {
         if (connecting)
             return false;
@@ -604,8 +723,10 @@
     }
 
     function userSignIn(data) {
-        if (data.token == null || data.token == "" || data.token == "null")
+        if (data.token == null || data.token == "" || data.token == "null") {
+            userSignOut();
             return false;
+        }
         nsd.user.token = data.token;
         setCookie("auth_token", data.token);
         if (data.sinaid != null && data.sinaid != "" && data.sinaid != 0) {
@@ -638,14 +759,14 @@
         var status, input, serialized = false;
         if (this !== window && $(this).parent().prop('tagName').toLowerCase() == 'span') {
             input = $(this).prev();
-            status = input.val();
         } else {
-            status = $('#gallery .share textarea').val();
+            input = $('#gallery .share textarea');
             serialized = true;
         }
+        status = input.val();
         if (status == '') {
             alert("还是说一点什么吧。");
-            $('#gallery .share textarea').focus();
+            input.focus();
             return false;
         }
         if (nsd.user.token == null) {
@@ -678,7 +799,7 @@
             if (generalErrorHandle(data)) {
                 setUserPoints(data.points);
                 alert("分享成功！\n恭喜您获得了 " + data.amount + " 点积分。");
-                $('#gallery .share textarea').val('路虎中国#发现无止境 中国最美前线#探享之旅');
+                input.val('');
                 $('#gallery .share form').removeClass('bg');
                 $('#gallery .share').css('height', '');
                 $('#gallery .mask').hide();
@@ -696,34 +817,37 @@
             ac : 'pointshistory',
             token : nsd.user.token
         }, function(data) {
-            console.log(data);
-            var container = $('#points_history .article').empty();
-            var date;
-            for (var i = 0; i < data.list.length; i++) {
-                var obj = data.list[i];
-                var curDate = dateFormat(new Date(obj.AddTime));
-                if (!date || date != curDate) {
-                    date = curDate;
-                    container.append('<h2>' + date + '</h2><div class="block"></div>');
-                }
-                var block = container.find('.block:last');
-                var item = $('<div class="item"/>').appendTo(block);
-                var point = $('<i class="circle"/>').text('+' + shared.formatNumber(obj.Amount)).appendTo(item);
-                switch(obj.Type) {
-                    case 1:
-                        item.append('<p class="single-line">行进<b>' + obj.Quantity + '</b>公里</p>');
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        item.append('<blockquote><img src="' + obj.Content1 + '" /><div class="comment"><h5>我的评论</h5><p>' + obj.Content2 + '</p></div></blockquote>')
-                        break;
-                    case 4:
-                        break;
-                    case 5:
-                        break;
-                    default:
-                        return;
+            if (generalErrorHandle(data)) {
+                var container = $('#points_history .article').empty();
+                var date;
+                for (var i = 0; i < data.list.length; i++) {
+                    var obj = data.list[i];
+                    var curDate = dateFormat(new Date(obj.AddTime));
+                    if (!date || date != curDate) {
+                        date = curDate;
+                        container.append('<h2>' + date + '</h2><div class="block"></div>');
+                    }
+                    var block = container.find('.block:last');
+                    var item = $('<div class="item"/>');
+                    var point = $('<i class="circle"/>').text('+' + formatNumber(obj.Amount)).appendTo(item);
+                    switch(obj.Type) {
+                        case 1:
+                            item.append('<p class="single-line">行进<b>' + obj.Quantity + '</b>公里</p>');
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            item.append('<blockquote><img src="' + obj.Content1 + '" /><div class="comment"><h5>我的评论</h5><p>' + obj.Content2 + '</p></div></blockquote>')
+                            break;
+                        case 4:
+                            break;
+                        case 5:
+                            item.append('<p class="single-line">' + obj.Summary + '</p>')
+                            break;
+                        default:
+                            return;
+                    }
+                    block.append(item);
                 }
             }
             $('#detail,.right-button a,#content .mask-white').hide();
@@ -745,7 +869,7 @@
     function setUserPoints(pt) {
         nsd.user.points = pt;
         setCookie("user_points", pt);
-        $('#ui_user .bar span b').text(shared.formatNumber(pt));
+        $('#ui_user .bar span b').text(formatNumber(pt));
     }
 
     function openWeiboAuth() {
@@ -787,6 +911,22 @@
         $('#nav .expand').click(function() {
             $('#nav .contract').show();
             $('#nav .expand').hide();
+        });
+        $('#footer .share li').click(function() {
+            var title = '发现无止境 中国最美前线', content = '路虎中国#发现无止境 中国最美前线#探享之旅，直驱边陲人迹罕至之境，挑战史无前例的全天候全地形路况，纵情尽揽伊犁的天地交融之千色，深入触涉腾冲的时光交汇之古香，探索上海的灵感碰撞之新尚，发现中国最前线的融合之美。', pic = '', url = 'http://lr-nsd.com/';
+            switch ($(this).attr('class')) {
+                case 'weibo':
+                    shareToWeibo(content, pic, url);
+                    break;
+                case 'renren':
+                    shareToRenren(title, content, pic, url);
+                    break;
+                case 'douban':
+                    shareToDouban(content, pic, url);
+                    break;
+                default:
+                    break;
+            }
         });
         $('#detail').scroll(function() {
             var progress = $('#content').data('progress');
@@ -875,6 +1015,7 @@
         $('#ui_user .btns a').click(function() {
             var idx = $(this).index();
             if ($(this).parent().hasClass('btn-left')) {
+                showPointsHistory();
                 return;
             }
             $('#user_action').show();
@@ -940,6 +1081,34 @@
             $('#about .tabs li.active').removeClass('active');
             $(this).addClass('active');
         });
+        $('#panorama .info .circle').click(function() {
+            if ($('#panorama .panel:visible').length > 0)
+                return;
+            if ($(this).hasClass('active')) {
+                $('#panorama .mask').hide();
+                $('#panorama .info .circle').html('发现<b>' + shared.panorama.discovered + '</b>');
+            } else {
+                $('#panorama .mask').show();
+                $('#panorama .info .circle').html('剩余<b>' + (shared.panorama.count - shared.panorama.discovered) + '</b>');
+            }
+            $(this).toggleClass('active');
+        });
+        $('#panorama .info .bar > span').click(function() {
+            if ($('#panorama .panel:visible').length > 0 || $('#panorama .info .circle.active').length > 0)
+                return;
+            if ($(this).hasClass('active')) {
+                $(this).children('i').hide();
+                $('#panorama .info .browse').hide();
+                $('#panorama .info .circle').show();
+                $(this).children('span').show();
+            } else {
+                $(this).children('i').show();
+                $('#panorama .info .browse').show();
+                $('#panorama .info .circle').hide();
+                $(this).children('span').hide();
+            }
+            $(this).toggleClass('active');
+        });
     }
 
     $(function() {
@@ -953,6 +1122,8 @@
         adjust();
         $(window).resize(adjust);
         initMap();
+        //TODO will be remoted
+        showPanorama();
         delegateListener();
     });
 })(jQuery, window);
