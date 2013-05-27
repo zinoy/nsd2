@@ -16,6 +16,7 @@
     };
     nsd.user = {};
     nsd.user.weibo = false;
+    nsd.geoinfo = {};
     shared.gallery_id = 0;
     shared.mode = {};
     shared.mode.map = true;
@@ -123,7 +124,21 @@
             $(this).css('height', $(this).width());
         });
         if (shared.mode.panorama) {
+            var ow = $('#panorama .view').data('width'), oh = $('#panorama .view').data('height'), pimg = $('#panorama .view img');
+            pimg.css({
+                height : '',
+                left : 0
+            });
+            pimg.width(sw).css('top', (sh - pimg.height()) / 2);
+            checkImageSize(pimg);
             $('#panorama .info .circle').css('left', (sw - 90) / 2);
+            var rx = pimg.width() / ow, ry = pimg.height() / oh, pos = pimg.position();
+            $('#panorama .dot').each(function() {
+                $(this).css({
+                    left : $(this).data('left') * rx + pos.left,
+                    top : $(this).data('top') * ry + pos.top
+                })
+            });
         }
     }
 
@@ -229,6 +244,12 @@
         return Math.ceil(span / 1000 / 3600 / 24);
     }
 
+    function switchMenu(idx) {
+        $('#nav .active').removeClass('active');
+        $('#nav .contract span').eq(idx).addClass('active');
+        $('#nav .expand .blocks > p').eq(idx + 1).addClass('active');
+    }
+
     function markerClickHandle(e) {
         var progress;
         if (nsd.user.token != null) {
@@ -309,6 +330,9 @@
                     }).appendTo(li);
                     li.append('<span><a data-index="' + i + '"></a></span>');
                 }
+                $('#detail .panorama a').click(function() {
+                    getPanorama(0);
+                });
                 initGallery(data, loc.Location);
                 setTimeout(adjust, 200);
                 //clearInterval(timer);
@@ -464,7 +488,7 @@
             anchor : new google.maps.Point(8, 7.5)
         }];
         var wayPoints = [];
-        var initPoint = new google.maps.LatLng(35.353216, 98.349609);
+        var initPoint = new google.maps.LatLng(40.353216, 98.349609);
         var mapOptions = {
             center : initPoint,
             zoom : 5,
@@ -576,46 +600,88 @@
             preserveViewport : true,
             suppressMarkers : true
         });
+
+        var now = new Date();
+        nsd.geoinfo.location = "伊犁";
+        nsd.geoinfo.past = dayPass(now);
+        nsd.geoinfo.date = dateFormat(now);
+        nsd.geoinfo.distance = 0;
+        nsd.geoinfo.latlng = '43.91719,81.3241';
+        nsd.geoinfo.pics = 31;
+
+        $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
+        $('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
+        $('#ui_info li').eq(1).children('span').html(nsd.geoinfo.date);
+        $('#ui_info li').eq(2).children('b').html(formatNumber(nsd.geoinfo.distance));
+        $('#ui_info li').eq(3).children('span').html(nsd.geoinfo.latlng);
+        $('#ui_info li').eq(4).children('b').html(nsd.geoinfo.pics);
     }
 
     //TODO need to be modified for multi-place display
-    function showPanorama(id) {
+    function getPanorama(idx) {
+        if (nsd.data.panorama !== undefined) {
+            showPanorama(nsd.data.panorama, idx);
+            return;
+        }
         $.getJSON('files/yili.json', {
             seed : Math.random()
         }, function(data) {
             nsd.data.panorama = data;
             shared.mode.panorama = true;
             shared.panorama = {};
-            shared.panorama.count = data.list[0].items.length;
             shared.panorama.discovered = 0;
-
-            $('#panorama .view .dot').remove();
-            $('#panorama .info .bar > span > span').html('<b>1</b> / ' + data.count);
-            $('#panorama .info .circle b').text(0);
-
-            var ratio = shared.screen.height / data.list[0].height;
-            for (var i = 0; i < data.list[0].items.length; i++) {
-                var obj = data.list[0].items[i];
-                var dot = $('<a class="dot"><span><i><b></b></i></span></a>');
-                dot.css({
-                    left : obj.x * ratio,
-                    top : obj.y * ratio
-                });
-                $('#panorama .view > img').before(dot);
+            shared.panorama.array = [];
+            shared.panorama.count = 0;
+            shared.panorama.scene = data.count;
+            for (var i in data.list) {
+                shared.panorama.count += data.list[i].items.length;
             }
             $('#panorama .browse').empty();
             for (var j = 0; j < data.count; j++) {
-                var thumb = $('<p class="img-hover"><img src="' + data.list[j].thumbnail + '" /><span><a></a></span></p>');
+                var thumb = $('<p class="img-hover"><img src="' + data.list[j].file + 't.jpg" /><span><a></a></span></p>');
                 $('#panorama .browse').append(thumb);
             }
-            $('#panorama').mousemove(function(e) {
-                shared.panorama.mouse = e.clientX;
+            $('#panorama .browse a').click(function() {
+                var nid = $(this).index('#panorama .browse a');
+                showPanorama(data, nid);
             });
-            $('#panorama .dot').click(showPanel);
-            $('#panorama .view').after($('#panorama .view').clone().css('left', shared.screen.width)).addClass('active').data('left', 0);
-            adjust();
-            movePanorama();
+
+            showPanorama(data, idx);
         });
+    }
+
+    function showPanorama(data, idx) {
+        shared.panorama.index = idx;
+
+        $('#panorama .view .dot').remove();
+        $('#panorama .info .bar > span > span').html('<b>' + (idx + 1) + '</b> / ' + data.count);
+        $('#panorama .info .circle b').text(shared.panorama.discovered);
+
+        //var ratio = shared.screen.height / data.list[0].height;
+        for (var i = 0; i < data.list[idx].items.length; i++) {
+            var obj = data.list[idx].items[i];
+            var dot = $('<a class="dot"><span><i><b></b></i></span></a>');
+            dot.data({
+                left : obj.x,
+                top : obj.y,
+                id : obj.id
+            });
+            $('#panorama .view > img').before(dot);
+        }
+        /*$('#panorama').mousemove(function(e) {
+        shared.panorama.mouse = e.clientX;
+        });*/
+        //$('#panorama .view').after($('#panorama .view').clone().css('left', shared.screen.width)).addClass('active').data('left', 0);
+        $('#panorama .view > img').attr('src', data.list[idx].file + 'b.jpg');
+        $('#panorama .view').data({
+            height : data.list[idx].height,
+            width : data.list[idx].width
+        });
+        $('#panorama .dot').click(showPanel);
+        $('#ui_board,#nav').hide();
+        $('#panorama').show();
+        adjust();
+        //movePanorama();
     }
 
     function movePanorama() {
@@ -643,25 +709,47 @@
     function showPanel() {
         if ($('#panorama .panel:visible').length > 0 || $('#panorama .bar > span.active').length > 0)
             return;
-        clearTimeout(shared.panorama.timer);
+        //clearTimeout(shared.panorama.timer);
         var idx = $(this).index('.dot');
         var pos = $(this).position();
         var offset = $(this).parent().position().left;
-        if (!$(this).data('selected')) {
-            $('#panorama .dot:nth-child(' + (idx + 1) + ')').data('selected', true);
+        var id = $(this).data('id');
+        if (!shared.panorama.array[id]) {
+            //$('#panorama .dot:nth-child(' + (idx + 1) + ')').data('selected', true);
+            shared.panorama.array[id] = 1;
             shared.panorama.discovered += 1;
+            if (shared.panorama.discovered == shared.panorama.count) {
+                $.post(config.api_path, {
+                    ac : 'gamecomplete',
+                    token : nsd.user.token,
+                    game : 1
+                }, function(data) {
+                    if (generalErrorHandle(data)) {
+                        alert('恭喜你！通过互动游戏获得 ' + data.amount + ' 分。');
+                        setUserPoints(data.points);
+                    }
+                });
+            }
         }
         $(this).addClass('active');
         $('#panorama .info .circle').removeClass('active').html('发现<b>' + shared.panorama.discovered + '</b>');
-        $('#panorama .panel').children().text(nsd.data.panorama.list[0].items[idx].desc).css('margin-top', pos.top + 45);
         $('#panorama .panel').css('left', pos.left + offset).show();
+        if (pos.left + offset + $('#panorama .panel').width() + 16 > shared.screen.width) {
+            $('#panorama .panel').css('left', pos.left - offset - $('#panorama .panel').width() - 16);
+        }
+        var ch = $('#panorama .panel').children().text(nsd.data.panorama.list[shared.panorama.index].items[idx].desc).height();
+        if (pos.top + 45 + ch + 20 > shared.screen.height) {
+            $('#panorama .panel p').css('margin-top', pos.top - 45 - ch);
+        } else {
+            $('#panorama .panel p').css('margin-top', pos.top + 45);
+        }
         $('#panorama .dot').not('.active').hide();
         $('#panorama .mask').addClass('close').one('click', function() {
             $('#panorama .dot.active').removeClass('active');
             $('#panorama .panel').hide();
             $('#panorama .dot').show();
             $('#panorama .mask').removeClass('close').hide();
-            movePanorama();
+            //movePanorama();
         }).show();
     }
 
@@ -837,25 +925,27 @@
                         case 2:
                             break;
                         case 3:
-                            item.append('<blockquote><img src="' + obj.Content1 + '" /><div class="comment"><h5>我的评论</h5><p>' + obj.Content2 + '</p></div></blockquote>')
+                            item.append('<blockquote><img src="' + obj.Content1 + '" /><div class="comment"><h5>我的评论</h5><p>' + obj.Content2 + '</p></div></blockquote>');
                             break;
                         case 4:
+                            item.append('<img src="' + obj.Content1 + '" />')
                             break;
                         case 5:
-                            item.append('<p class="single-line">' + obj.Summary + '</p>')
+                            item.append('<p class="single-line">' + obj.Summary + '</p>');
                             break;
                         default:
                             return;
                     }
                     block.append(item);
                 }
+                $('#detail,.right-button a,#content .mask-white').hide();
+                $('#content,#points_history,.right-button .satellite').show();
+                $('#content .gallery-list').removeClass('visible');
+                $('#gallery').css('top', '100%');
+                adjust();
             }
-            $('#detail,.right-button a,#content .mask-white').hide();
-            $('#content,#points_history,.right-button .satellite').show();
-            $('#content .gallery-list').removeClass('visible');
-            $('#gallery').css('top', '100%');
-            adjust();
         });
+        switchMenu(1);
     }
 
     function setWeiboUser(data) {
@@ -911,6 +1001,49 @@
         $('#nav .expand').click(function() {
             $('#nav .contract').show();
             $('#nav .expand').hide();
+        });
+        $('#nav .expand p').click(function() {
+            if (!$(this).hasClass('active')) {
+                var idx = $(this).index();
+                switch(idx) {
+                    case 1:
+                        $('.gallery-list').removeClass('visible');
+                        $('#content .mask,#content .right-button.back').hide();
+                        $('#about,#vehicle').hide();
+                        $('#main > .mask-alpha3').hide();
+                        $('#pattern-about').hide();
+                        $('#points_history,.right-button .satellite').hide();
+                        $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
+                        $('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
+                        $('#ui_info li').eq(1).children('span').html(nsd.geoinfo.date);
+                        $('#ui_info li').eq(2).children('b').html(formatNumber(nsd.geoinfo.distance));
+                        $('#ui_info li').eq(3).children('span').html(nsd.geoinfo.latlng);
+                        $('#ui_info li').eq(4).children('b').html(nsd.geoinfo.pics);
+                        break;
+                    case 2:
+                        showPointsHistory();
+                        break;
+                    case 3:
+                        $('#about').show();
+                        $('#main > .mask-alpha3').show();
+                        $('#pattern-about').show();
+                        break;
+                    case 4:
+                        $('#vehicle').show();
+                        $('#main > .mask-alpha3').show();
+                        $('#pattern-about').show();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            switchMenu(idx - 1);
+        });
+        $('#about .btn-simple').click(function() {
+            $('#about').hide();
+            $('#main > .mask-alpha3').hide();
+            $('#pattern-about').hide();
+            switchMenu(0);
         });
         $('#footer .share li').click(function() {
             var title = '发现无止境 中国最美前线', content = '路虎中国#发现无止境 中国最美前线#探享之旅，直驱边陲人迹罕至之境，挑战史无前例的全天候全地形路况，纵情尽揽伊犁的天地交融之千色，深入触涉腾冲的时光交汇之古香，探索上海的灵感碰撞之新尚，发现中国最前线的融合之美。', pic = '', url = 'http://lr-nsd.com/';
@@ -976,9 +1109,16 @@
                 });
                 $('#content').data('progress', null);
             }
+            switchMenu(0);
             $('#content').hide();
             $('#detail,.right-button a').show();
             $('#points_history,.right-button .satellite').hide();
+            $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
+            $('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
+            $('#ui_info li').eq(1).children('span').html(nsd.geoinfo.date);
+            $('#ui_info li').eq(2).children('b').html(formatNumber(nsd.geoinfo.distance));
+            $('#ui_info li').eq(3).children('span').html(nsd.geoinfo.latlng);
+            $('#ui_info li').eq(4).children('b').html(nsd.geoinfo.pics);
         });
         $('#content .right-button.back a').click(function() {
             $('.gallery-list').removeClass('visible');
@@ -1109,10 +1249,28 @@
             }
             $(this).toggleClass('active');
         });
+        $('#panorama .info .bar > a').click(function() {
+            var nid;
+            if ($(this).hasClass('next')) {
+                nid = shared.panorama.index + 1;
+                if (nid >= shared.panorama.scene)
+                    return;
+            } else {
+                nid = shared.panorama.index - 1
+                if (nid < 0)
+                    return;
+            }
+            getPanorama(nid);
+        });
+        $('#panorama a.close').click(function() {
+            $('#panorama').hide();
+            $('#ui_board,#nav').show();
+        });
     }
 
     $(function() {
         nsd.data = {};
+
         var weibo = getCookie("weibo_user");
         nsd.user.weibo = weibo || false;
         userSignIn({
@@ -1123,7 +1281,7 @@
         $(window).resize(adjust);
         initMap();
         //TODO will be remoted
-        showPanorama();
+        //getPanorama(0);
         delegateListener();
     });
 })(jQuery, window);
