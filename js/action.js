@@ -90,7 +90,6 @@
         };
         shared.screen.column = iw;
         $('#google_map .pattern i').not(':first').css('margin-left', iw - 20);
-        $('#map_control').css('bottom', 30);
         $('#ui_board').css('left', iw * 7);
         $('#main .copy').css('left', iw + 10);
         $('.col1').width(iw - 20);
@@ -416,10 +415,12 @@
         $('#gallery > .frame').click(hideGallery);
         $('#gallery > .pager a').click(goFrame);
         $('#content .gallery-list li a').click(showGallery);
-        $('#content .img-expand > span').click(function() {
+        $('#content .img-expand > span').mouseover(function() {
+            $(this).parent().addClass('blockquote-expand');
+        }).click(function() {
             $(this).parent().toggleClass('blockquote-expand');
         });
-        $('#content .img-share').append('<span><input type="text" placeholder="发表您的观点能赢取更多积分" /><a class="btn"><b>分享至：</b><i class="icon-weibo"></i></a></span>').find('a').click(postStatus);
+        $('#content .img-share').append('<span><input type="text" placeholder="发表您的观点能赢取更多积分" value="路虎中国#发现无止境 中国最美前线#探享之旅" /><a class="btn"><b>分享至：</b><i class="icon-weibo"></i></a></span>').find('a').click(postStatus);
         //hasLayout
         $('#gallery').css('top', '100%').show();
         $('.gallery-list').removeClass('visible');
@@ -981,7 +982,7 @@
             alert("请先登录。");
             userSignOut();
         } else if (data.code == 112) {
-            alert("微博账号已绑定到其它账号，请直接使用微博账号登录。");
+            alert("微博账号已绑定到其它账号，请直接用微博账号登录。");
         } else if (data.code == 113) {
             alert("请先绑定你的微博账号。");
             openWeiboAuth();
@@ -991,6 +992,37 @@
             alert("发生错误，请重试。");
         }
         return false;
+    }
+
+    function showBottomPanel(id) {
+        var define = ["#about", "#vehicle"];
+        if (id >= define.length || id < 0)
+            return;
+        $(define[id]).show();
+        TweenLite.fromTo(define[id] + ' .frame', .3, {
+            bottom : -$(define[id] + ' .frame').height()
+        }, {
+            bottom : 0,
+            ease : Power2.easeOut
+        });
+        TweenLite.fromTo(define[id] + ' .frame .head', .4, {
+            opacity : 0
+        }, {
+            opacity : 1,
+            delay : .2,
+            ease : Power2.easeOut
+        });
+        $('#main > .mask-alpha3').show();
+        $('#main > .pattern-about').show();
+    }
+
+    function resetScreen() {
+        $('.gallery-list').removeClass('visible');
+        $('#content .mask,#content .right-button.back').hide();
+        $('#about,#vehicle').hide();
+        $('#main > .mask-alpha3').hide();
+        $('#main > .pattern-about').hide();
+        $('#points_history,.right-button .satellite').hide();
     }
 
     function delegateListener() {
@@ -1004,15 +1036,11 @@
         });
         $('#nav .expand p').click(function() {
             if (!$(this).hasClass('active')) {
+                resetScreen();
                 var idx = $(this).index();
+                switchMenu(idx - 1);
                 switch(idx) {
                     case 1:
-                        $('.gallery-list').removeClass('visible');
-                        $('#content .mask,#content .right-button.back').hide();
-                        $('#about,#vehicle').hide();
-                        $('#main > .mask-alpha3').hide();
-                        $('#pattern-about').hide();
-                        $('#points_history,.right-button .satellite').hide();
                         $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
                         $('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
                         $('#ui_info li').eq(1).children('span').html(nsd.geoinfo.date);
@@ -1023,27 +1051,32 @@
                     case 2:
                         //showPointsHistory();
                         getPanorama(0);
+                        switchMenu(0);
                         break;
                     case 3:
-                        $('#about').show();
-                        $('#main > .mask-alpha3').show();
-                        $('#pattern-about').show();
+                        showBottomPanel(0);
                         break;
                     case 4:
-                        $('#vehicle').show();
-                        $('#main > .mask-alpha3').show();
-                        $('#pattern-about').show();
+                        showBottomPanel(1);
                         break;
                     default:
                         break;
                 }
             }
-            switchMenu(idx - 1);
         });
+        $('#btn_rule').click(function() {
+            resetScreen();
+            showBottomPanel(0);
+            switchMenu(2);
+        })
         $('#about .btn-simple').click(function() {
             $('#about').hide();
             $('#main > .mask-alpha3').hide();
-            $('#pattern-about').hide();
+            $('#main > .pattern-about').hide();
+            switchMenu(0);
+        });
+        $('.cursor-close').click(function() {
+            resetScreen();
             switchMenu(0);
         });
         $('#footer .share li').click(function() {

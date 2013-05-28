@@ -54,6 +54,7 @@ a{cursor:pointer}
 .text-bold{font-weight:bold !important}
 .visible{visibility:visible !important}
 .pattern-about{background:url(../img/pattern-bg.png) repeat;height:100%;left:0;position:absolute;top:0;width:100%}
+.cursor-close{cursor:url(../img/cursor-close.cur) 26 26,default}
 
 /* column */
 .col-margin{}
@@ -224,9 +225,9 @@ a{cursor:pointer}
 #panorama .hint .circle{background:url(../img/icon-panorama.png) no-repeat center top;color:#fff;font-size:14px;font-weight:bold;padding-top:110px;position:absolute;white-space:nowrap}
 #panorama .hint .circle b{color:#e05206}
 
-#head{bottom:20px;color:#fff;padding:5px;position:absolute;right:20px;text-align:right;text-shadow:1px 1px 0 #000}
-#head span{font-size:18px;line-height:20px}
-#head h2{font-size:30px;line-height:35px;margin:0}
+#head{bottom:30px;color:#fff;padding:5px;position:absolute;right:20px;text-align:right;text-shadow:1px 1px 0 #000}
+#head span{font-size:22px;line-height:24px}
+#head h2{font-size:36px;line-height:38px;margin:0}
 
 #nav{position:absolute;width:100%;z-index:9}
 #nav div.separator{bottom:0;font:0/0 a;left:0;position:absolute}
@@ -336,8 +337,11 @@ a{cursor:pointer}
 #vehicle .evoque-links{left:321px;position:absolute;top:40px}
 #vehicle .fl2-links{left:870px;position:absolute;top:40px}
 
+#btn_rule{background:#fff;bottom:120px;color:#333;cursor:pointer;height:17px;line-height:14px;left:20px;padding-top:3px;position:absolute;text-align:center;width:120px}
+#btn_rule .icon-triangle-down{-webkit-transform:rotateZ(-135deg);background:url(../img/arrow-btn-tl.gif) no-repeat;height:7px;margin:2px 0 0 5px;vertical-align:text-top;width:7px}
+
 /* map objects define*/
-#map_control{background:url(../img/control-map.jpg) no-repeat;border:solid 3px #fff;cursor:pointer;height:74px;left:20px;position:absolute;width:114px}
+#map_control{background:url(../img/control-map.jpg) no-repeat;border:solid 3px #fff;bottom:30px;cursor:pointer;height:74px;left:20px;position:absolute;width:114px}
 #map_control i{cursor:pointer;height:23px;position:absolute;top:26px;width:23px}
 #map_control i.in{right:-3px}
 #map_control i.out{left:-3px}
