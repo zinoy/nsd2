@@ -1021,7 +1021,8 @@
                         $('#ui_info li').eq(4).children('b').html(nsd.geoinfo.pics);
                         break;
                     case 2:
-                        showPointsHistory();
+                        //showPointsHistory();
+                        getPanorama(0);
                         break;
                     case 3:
                         $('#about').show();
@@ -1268,20 +1269,25 @@
         });
     }
 
-    $(function() {
-        nsd.data = {};
+    if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+        window.location.href = "http://lr-nsd.com/mobile";
+        return;
+    } else {
+        $(function() {
+            nsd.data = {};
 
-        var weibo = getCookie("weibo_user");
-        nsd.user.weibo = weibo || false;
-        userSignIn({
-            token : getCookie("auth_token"),
-            points : Number(getCookie("user_points"))
+            var weibo = getCookie("weibo_user");
+            nsd.user.weibo = weibo || false;
+            userSignIn({
+                token : getCookie("auth_token"),
+                points : Number(getCookie("user_points"))
+            });
+            adjust();
+            $(window).resize(adjust);
+            initMap();
+            //TODO will be remoted
+            //getPanorama(0);
+            delegateListener();
         });
-        adjust();
-        $(window).resize(adjust);
-        initMap();
-        //TODO will be remoted
-        //getPanorama(0);
-        delegateListener();
-    });
+    }
 })(jQuery, window);
