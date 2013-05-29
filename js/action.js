@@ -3,6 +3,7 @@
     var config = {};
     var shared = {};
     var markers = [];
+    var spots;
     window.nsd = nsd;
     window.setuser = setWeiboUser;
     var connecting = false;
@@ -105,8 +106,10 @@
         $('#content .img > img').width($('#content .article').width());
         $('#content p.float-left > img,#content p.float-right > img').width($('#content .article').width() / 2);
         $('#content .gallery-list img').width($('#content .gallery-list ul').width()).removeAttr('height');
+        $('#content .img-share span.ready').removeClass('ready');
         $('#content .img-hover > span,#content .img-expand,#content .img-expand > span,#content .img-share,#kv_index').each(setImageSize);
         $('#content .img-share input').width($('#content .img-share span').width() - 90);
+        $('#content .img-share span').addClass('ready');
         $('#gallery .frame').each(setImageSize);
         $('#gallery .switch a').each(setImageSize);
         $('#nav .contract > p').css('width', sw - (iw + 20));
@@ -420,7 +423,7 @@
         }).click(function() {
             $(this).parent().toggleClass('blockquote-expand');
         });
-        $('#content .img-share').append('<span><input type="text" placeholder="发表您的观点能赢取更多积分" value="路虎中国#发现无止境 中国最美前线#探享之旅" /><a class="btn"><b>分享至：</b><i class="icon-weibo"></i></a></span>').find('a').click(postStatus);
+        $('#content .img-share').append('<span><input type="text" placeholder="发表您的观点能赢取更多积分" /><a class="btn"><b>分享至：</b><i class="icon-weibo"></i></a></span>').find('a').click(postStatus);
         //hasLayout
         $('#gallery').css('top', '100%').show();
         $('.gallery-list').removeClass('visible');
@@ -488,6 +491,7 @@
             url : "img/ol-spot.png",
             anchor : new google.maps.Point(8, 7.5)
         }];
+        spots = [new google.maps.LatLng(43.91719, 81.3241), new google.maps.LatLng(25.021529, 98.490264), new google.maps.LatLng(31.240985, 121.474113)];
         var wayPoints = [];
         var initPoint = new google.maps.LatLng(40.353216, 98.349609);
         var mapOptions = {
@@ -601,6 +605,7 @@
             preserveViewport : true,
             suppressMarkers : true
         });
+        shared.route = directionsDisplay;
 
         var now = new Date();
         nsd.geoinfo.location = "伊犁";
@@ -608,7 +613,7 @@
         nsd.geoinfo.date = dateFormat(now);
         nsd.geoinfo.distance = 0;
         nsd.geoinfo.latlng = '43.91719,81.3241';
-        nsd.geoinfo.pics = 31;
+        nsd.geoinfo.pics = 41;
 
         $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
         $('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
@@ -1025,6 +1030,77 @@
         $('#points_history,.right-button .satellite').hide();
     }
 
+    //TODO my
+    function goMyDiscovery() {
+        shared.route.setMap(null);
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].obj.setMap(null);
+        }
+        var wayPoints = [];
+        wayPoints.push({
+            location : spots[1]
+        });
+        var dashed = {
+            path : 'M 0,0 0,1',
+            strokeColor : "#ffffff",
+            strokeOpacity : 1,
+            scale : 2
+        };
+        var directionsDisplay = new google.maps.DirectionsRenderer({
+            polylineOptions : {
+                clickable : false,
+                strokeOpacity : 0,
+                icons : [{
+                    icon : dashed,
+                    offset : '0',
+                    repeat : '6px'
+                }]
+            },
+            suppressMarkers : true
+        });
+        shared.my_route = directionsDisplay;
+
+        var directionsService = new google.maps.DirectionsService();
+        directionsDisplay.setMap(nsd.map);
+        var request = {
+            origin : spots[0],
+            destination : spots[2],
+            travelMode : google.maps.DirectionsTravelMode.DRIVING,
+            waypoints : wayPoints
+        };
+        directionsService.route(request, function(response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(response);
+            }
+        });
+
+        if (nsd.user.token) {
+            $.post(config.api_path, {
+                ac : 'pointshistory',
+                token : nsd.user.token
+            }, showMyDiscovery);
+        } else {
+            showMyDiscovery();
+        }
+    }
+
+    function showMyDiscovery(data) {
+        var anchors = [new google.maps.Point(52, 106), new google.maps.Point(33, 66)];
+        for (var i = 0; i < spots.length; i++) {
+            var marker = new google.maps.Marker({
+                position : spots[i],
+                map : nsd.map,
+                icon : i == 0 ? {
+                    url : 'img/my_' + i + '.png',
+                    anchor : anchors[0]
+                } : {
+                    url : 'img/my_' + i + '_off.png',
+                    anchor : anchors[1]
+                }
+            });
+        }
+    }
+
     function delegateListener() {
         $('#nav .btn').click(function() {
             $('#nav .contract').hide();
@@ -1050,7 +1126,10 @@
                         break;
                     case 2:
                         //showPointsHistory();
-                        getPanorama(0);
+                        if (window.nsd_exp)
+                            goMyDiscovery();
+                        else
+                            getPanorama(0);
                         switchMenu(0);
                         break;
                     case 3:
