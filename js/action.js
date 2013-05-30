@@ -45,6 +45,11 @@
         return r;
     }
 
+    function formatFloat(num) {
+        num = Math.floor(num * 10);
+        return num / 10;
+    }
+
     //cookie
     function getCookie(c_name) {
         var c_value = document.cookie;
@@ -253,8 +258,39 @@
     }
 
     function markerClickHandle(e) {
+        var loc, loc_data;
+        var dist = 0;
+        for (var i = 0; i < markers.length; i++) {
+            dist += markers[i].distance;
+            if (this === markers[i].obj) {
+                loc = markers[i];
+                loc_data = nsd.data.location[i];
+                break;
+            }
+        }
+
+        if (loc.status == 2) {
+            nsd.map.setZoom(8);
+            nsd.map.panTo(this.getPosition());
+            var by = nsd.size.height / 2 - (nsd.size.height - $('#ui_board').height() + 10) / 2 - 20;
+            var bx = nsd.size.width / 2 - nsd.size.column;
+            nsd.map.panBy(-bx, -by);
+            nsd.map.setOptions({
+                draggable : false
+            });
+            clearInterval(config.timer);
+            var timer_sec = 0;
+            config.timer = setInterval(function() {
+                timer_sec++;
+                if (timer_sec < 10) {
+                    movePattern();
+                } else {
+                    clearInterval(config.timer);
+                }
+            }, 500);
+        }
         var progress;
-        if (nsd.user.token != null) {
+        if (nsd.user.token != null && loc.status == 2) {
             progress = new google.maps.Marker({
                 position : this.getPosition(),
                 clickable : false,
@@ -275,41 +311,13 @@
             origin : this,
             obj : progress
         });
-        nsd.map.setZoom(8);
-        nsd.map.panTo(this.getPosition());
-        var by = nsd.size.height / 2 - (nsd.size.height - $('#ui_board').height() + 10) / 2 - 20;
-        var bx = nsd.size.width / 2 - nsd.size.column;
-        nsd.map.panBy(-bx, -by);
-        nsd.map.setOptions({
-            draggable : false
-        });
-        clearInterval(config.timer);
-        var timer_sec = 0;
-        config.timer = setInterval(function() {
-            timer_sec++;
-            if (timer_sec < 10) {
-                movePattern();
-            } else {
-                clearInterval(config.timer);
-            }
-        }, 500);
-        var loc, loc_data;
-        var dist = 0;
-        for (var i = 0; i < markers.length; i++) {
-            dist += markers[i].distance;
-            if (this === markers[i].obj) {
-                loc = markers[i];
-                loc_data = nsd.data.location[i];
-                break;
-            }
-        }
 
         $('#ui_info li').eq(0).children('span').html(loc_data.Location);
         var currTime = new Date(loc_data.CurrentTime + "+0800");
         $('#ui_info li').eq(1).children('b').html(dayPass(currTime));
         $('#ui_info li').eq(1).children('span').html(dateFormat(currTime));
         $('#ui_info li').eq(2).children('b').html(formatNumber(dist));
-        $('#ui_info li').eq(3).children('span').html(loc_data.Latitude + ',' + loc_data.Longitude);
+        $('#ui_info li').eq(3).children('span').html(formatFloat(loc_data.Latitude) + ',' + formatFloat(loc_data.Longitude));
         $('#ui_info li').eq(4).children('b').html(loc_data.PhotoCount);
 
         shared.location = loc.id;
@@ -318,31 +326,33 @@
             loc : loc.id
         }, function(data) {
             if (generalErrorHandle(data)) {
-                var item = nsd.data.location[loc.index];
-                $('#detail h2').html(item.Title);
-                $('#detail .content').html(item.RichContent);
-                $('#content').show();
-                $('.gallery-list ul').empty();
-                for (var i = 0; i < data.list.length; i++) {
-                    var item = data.list[i];
-                    var li = $('<li class="img-hover"/>').appendTo('.gallery-list ul');
-                    var img = $('<img/>').attr({
-                        src : item.FileName + 't.jpg',
-                        alt : loc.Location
-                    }).appendTo(li);
-                    li.append('<span><a data-index="' + i + '"></a></span>');
+                if (loc.status == 2) {
+                    var item = nsd.data.location[loc.index];
+                    $('#detail h2').html(item.Title);
+                    $('#detail .content').html(item.RichContent);
+                    $('#content').show();
+                    $('.gallery-list ul').empty();
+                    for (var i = 0; i < data.list.length; i++) {
+                        var item = data.list[i];
+                        var li = $('<li class="img-hover"/>').appendTo('.gallery-list ul');
+                        var img = $('<img/>').attr({
+                            src : item.FileName + 't.jpg',
+                            alt : loc_data.Location
+                        }).appendTo(li);
+                        li.append('<span><a data-index="' + i + '"></a></span>');
+                    }
+                    $('#detail .panorama a').click(function() {
+                        getPanorama(0);
+                    });
                 }
-                $('#detail .panorama a').click(function() {
-                    getPanorama(0);
-                });
-                initGallery(data, loc.Location);
+                initGallery(data, loc);
                 setTimeout(adjust, 200);
                 //clearInterval(timer);
             }
         });
     }
 
-    function initGallery(data, name) {
+    function initGallery(data, loc) {
         if (data === undefined)
             return;
         var list = data.list;
@@ -362,6 +372,8 @@
             $('#ui_info').show();
         }, showGallery = function() {
             var idx = $(this).data('index');
+            if (idx === undefined)
+                idx = 0;
             shared.gallery_id = idx;
             $('#gallery > .frame').removeClass('visible').eq(shared.gallery_id).css('left', 0).addClass('visible');
             $('#gallery > .pager a').removeClass('active').eq(shared.gallery_id).addClass('active');
@@ -369,7 +381,7 @@
             $('#gallery').css('top', 0);
             $('#ui_info').hide();
         }, goFrame = function() {
-            if ($(this).hasClass('active'))
+            if ($(this).hasClass('active') || shared.animating)
                 return;
             var idx = $(this).data('index');
             if (!$.isNumeric(idx)) {
@@ -385,17 +397,33 @@
                 $('#gallery > .frame').eq(idx).css('left', -width).addClass('visible');
                 end = width;
             }
-            $('#gallery > .frame').eq(idx).animate({
-                left : 0
-            }, 1000);
-            $('#gallery > .frame').eq(oid).animate({
-                left : end
-            }, 1000, function() {
-                $(this).removeClass('visible');
-                setSwitch();
-                $('#gallery .pager a.active').removeClass('active');
-                $('#gallery .pager a').eq(idx).addClass('active');
+            shared.animating = true;
+            TweenLite.to($('#gallery > .frame').eq(idx), .8, {
+                left : 0,
+                ease : Power2.easeOut
             });
+            TweenLite.to($('#gallery > .frame').eq(oid), .8, {
+                left : end,
+                ease : Power2.easeOut,
+                onComplete : function() {
+                    shared.animating = false;
+                    $(this).removeClass('visible');
+                    setSwitch();
+                    $('#gallery .pager a.active').removeClass('active');
+                    $('#gallery .pager a').eq(idx).addClass('active');
+                }
+            });
+            /*$('#gallery > .frame').eq(idx).animate({
+             left : 0
+             }, 1000);
+             $('#gallery > .frame').eq(oid).animate({
+             left : end
+             }, 1000, function() {
+             $(this).removeClass('visible');
+             setSwitch();
+             $('#gallery .pager a.active').removeClass('active');
+             $('#gallery .pager a').eq(idx).addClass('active');
+             });*/
         };
         $('#gallery > .frame').remove();
         $('#gallery > .pager,#gallery > .switch').empty();
@@ -404,7 +432,7 @@
             var frame = $('<div class="frame"/>').appendTo('#gallery');
             var img = $('<img/>').attr({
                 src : item.FileName + 'b.jpg',
-                alt : name
+                alt : ''
             }).appendTo(frame);
             frame.data('id', item.ID);
             $('#gallery > .pager').append('<a><i></i></a>');
@@ -415,7 +443,6 @@
             $('#gallery > .switch').append('<a data-index="1"><img src="' + list[1].FileName + 't.jpg' + '" /></a>');
         }
         //event register
-        $('#gallery > .frame').click(hideGallery);
         $('#gallery > .pager a').click(goFrame);
         $('#content .gallery-list li a').click(showGallery);
         $('#content .img-expand > span').mouseover(function() {
@@ -428,7 +455,16 @@
         $('#gallery').css('top', '100%').show();
         $('.gallery-list').removeClass('visible');
         $('#content .mask,#content .right-button.back').hide();
-        movePattern();
+        if (loc.status == 3) {
+            $('#gallery > .frame').click(function() {
+                hideGallery();
+                backToHome();
+            });
+            showGallery();
+        } else {
+            $('#gallery > .frame').click(hideGallery);
+            movePattern();
+        }
     }
 
     function movePattern() {
@@ -546,14 +582,15 @@
                         index : i,
                         obj : marker,
                         type : loc.Type,
-                        distance : loc.Distance
+                        distance : loc.Distance,
+                        status : loc.Status
                     });
                     if (loc.Type < 5) {
                         wayPoints.push({
                             location : pt
                         });
                     }
-                    if (loc.Status == 2) {
+                    if (loc.Status == 2 || loc.Status == 3) {
                         google.maps.event.addListener(marker, 'mouseover', function(e) {
                             if ($('#content').data('progress') == null) {
                                 this.setIcon({
@@ -612,8 +649,8 @@
         nsd.geoinfo.past = dayPass(now);
         nsd.geoinfo.date = dateFormat(now);
         nsd.geoinfo.distance = 0;
-        nsd.geoinfo.latlng = '43.91719,81.3241';
-        nsd.geoinfo.pics = 41;
+        nsd.geoinfo.latlng = '43.9,81.3';
+        nsd.geoinfo.pics = 75;
 
         $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
         $('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
@@ -731,7 +768,7 @@
                     game : 1
                 }, function(data) {
                     if (generalErrorHandle(data)) {
-                        alert('恭喜你！通过互动游戏获得 ' + data.amount + ' 分。');
+                        alert('恭喜你！通过互动游戏获得 ' + data.amount + ' 点积分。');
                         setUserPoints(data.points);
                     }
                 });
@@ -1086,19 +1123,72 @@
 
     function showMyDiscovery(data) {
         var anchors = [new google.maps.Point(52, 106), new google.maps.Point(33, 66)];
+        var game_spots = [];
         for (var i = 0; i < spots.length; i++) {
+            var icon;
+            if (i > 0) {
+                icon = {
+                    url : 'img/my_' + i + '_off.png',
+                    anchor : anchors[1]
+                };
+            } else {
+                icon = {
+                    url : 'img/my_' + i + '.png',
+                    anchor : anchors[0]
+                };
+                if (data !== undefined) {
+                    var sp = findLocation(i, data.list);
+                    if (sp) {
+                        icon.url = 'img/my_' + i + '_on.png';
+                        icon.anchor = anchors[1];
+                    }
+                }
+            }
             var marker = new google.maps.Marker({
                 position : spots[i],
                 map : nsd.map,
-                icon : i == 0 ? {
-                    url : 'img/my_' + i + '.png',
-                    anchor : anchors[0]
-                } : {
-                    url : 'img/my_' + i + '_off.png',
-                    anchor : anchors[1]
-                }
+                icon : icon
             });
+            game_spots.push(marker);
+            google.maps.event.addListener(marker, 'click', function(e) {
+                var idx = $.inArray(this, game_spots);
+                if (idx == 0)
+                    getPanorama(0, idx);
+            });
+            $('#ui_info').hide();
         }
+    }
+
+    function backToHome() {
+        var mk = $('#content').data('progress');
+        if (mk) {
+            google.maps.event.addListenerOnce(mk.origin, 'click', markerClickHandle);
+            if (mk.obj)
+                mk.obj.setMap();
+            nsd.map.setOptions({
+                draggable : true
+            });
+            $('#content').data('progress', null);
+        }
+        switchMenu(0);
+        $('#content').hide();
+        $('#detail,.right-button a').show();
+        $('#points_history,.right-button .satellite').hide();
+        $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
+        $('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
+        $('#ui_info li').eq(1).children('span').html(nsd.geoinfo.date);
+        $('#ui_info li').eq(2).children('b').html(formatNumber(nsd.geoinfo.distance));
+        $('#ui_info li').eq(3).children('span').html(nsd.geoinfo.latlng);
+        $('#ui_info li').eq(4).children('b').html(nsd.geoinfo.pics);
+    }
+
+    function findLocation(loc, list) {
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].ContentID == loc) {
+                return true;
+            }
+        }
+        return false;
     }
 
     function delegateListener() {
@@ -1123,14 +1213,21 @@
                         $('#ui_info li').eq(2).children('b').html(formatNumber(nsd.geoinfo.distance));
                         $('#ui_info li').eq(3).children('span').html(nsd.geoinfo.latlng);
                         $('#ui_info li').eq(4).children('b').html(nsd.geoinfo.pics);
+                        if (shared.my_route !== undefined) {
+                            shared.my_route.setMap(null);
+                            shared.route.setMap(nsd.map);
+                            shared.my_route = null;
+                        }
+
                         break;
                     case 2:
                         //showPointsHistory();
-                        if (window.nsd_exp)
+                        if (window.nsd_exp) {
                             goMyDiscovery();
-                        else
+                            switchMenu(1);
+                        } else {
                             getPanorama(0);
-                        switchMenu(0);
+                        }
                         break;
                     case 3:
                         showBottomPanel(0);
@@ -1211,28 +1308,7 @@
             $('.gallery-list').addClass('visible');
             $('#content .mask,#content .right-button.back').show();
         });
-        $('#content .right-button a.close').click(function() {
-            var mk = $('#content').data('progress');
-            if (mk) {
-                google.maps.event.addListenerOnce(mk.origin, 'click', markerClickHandle);
-                if (mk.obj)
-                    mk.obj.setMap();
-                nsd.map.setOptions({
-                    draggable : true
-                });
-                $('#content').data('progress', null);
-            }
-            switchMenu(0);
-            $('#content').hide();
-            $('#detail,.right-button a').show();
-            $('#points_history,.right-button .satellite').hide();
-            $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
-            $('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
-            $('#ui_info li').eq(1).children('span').html(nsd.geoinfo.date);
-            $('#ui_info li').eq(2).children('b').html(formatNumber(nsd.geoinfo.distance));
-            $('#ui_info li').eq(3).children('span').html(nsd.geoinfo.latlng);
-            $('#ui_info li').eq(4).children('b').html(nsd.geoinfo.pics);
-        });
+        $('#content .right-button a.close').click(backToHome);
         $('#content .right-button.back a').click(function() {
             $('.gallery-list').removeClass('visible');
             $('#content .mask,#content .right-button.back').hide();
@@ -1268,7 +1344,14 @@
         $('#ui_user .btns a').click(function() {
             var idx = $(this).index();
             if ($(this).parent().hasClass('btn-left')) {
-                showPointsHistory();
+                if (window.nsd_exp) {
+                    $(this).text("发现最美前线");
+                    goMyDiscovery();
+                    switchMenu(1);
+                } else {
+                    getPanorama(0);
+                }
+                //showPointsHistory();
                 return;
             }
             $('#user_action').show();
