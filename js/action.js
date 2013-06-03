@@ -308,6 +308,7 @@
             loc : loc.ID
         }, function(data) {
             if (generalErrorHandle(data)) {
+                nsd.data.gallery = data;
                 initGallery(data, loc, true);
                 adjust();
             }
@@ -346,7 +347,8 @@
         $('#content').data('progress', {
             p : 0,
             origin : this,
-            obj : progress
+            obj : progress,
+            location : loc_data
         });
 
         $('#ui_info li').eq(0).children('span').html(loc_data.Location);
@@ -363,21 +365,12 @@
             loc : loc.id
         }, function(data) {
             if (generalErrorHandle(data)) {
+                nsd.data.gallery = data;
                 if (loc.status == 2) {
                     var item = nsd.data.location[loc.index];
                     $('#detail h2').html(item.Title);
                     $('#detail .content').html(item.RichContent);
                     $('#content').show();
-                    $('.gallery-list ul').empty();
-                    for (var i = 0; i < data.list.length; i++) {
-                        var item = data.list[i];
-                        var li = $('<li class="img-hover"/>').appendTo('.gallery-list ul');
-                        var img = $('<img/>').attr({
-                            src : item.FileName + 't.jpg',
-                            alt : loc_data.Location
-                        }).appendTo(li);
-                        li.append('<span><a data-index="' + i + '"></a></span>');
-                    }
                     $('#detail .panorama a').click(function(e) {
                         e.stopPropagation();
                         getPanorama(0);
@@ -439,103 +432,17 @@
             return;
         var list = data.list;
         shared.gallery_id = 0;
-        var setSwitch = function() {
-            var next_id = shared.gallery_id + 1, prev_id = shared.gallery_id - 1;
-            if (next_id >= list.length)
-                next_id = 0;
-            if (prev_id < 0)
-                prev_id = list.length - 1;
-            if (list.length == 2)
-                prev_id += 2;
-            $('#gallery > .switch a').removeClass().off('click').eq(next_id).addClass('next').end().eq(prev_id).addClass('prev');
-            $('#gallery > .switch .next,#gallery > .switch .prev').click(goFrame);
-        }, hideGallery = function() {
+        var hideGallery = function() {
             $('#gallery').css('top', '100%');
             $('#ui_info,#nav').show();
-        }, showGallery = function(e) {
-            //e.stopPropagation();
-            var idx = $(this).data('index');
-            if (idx === undefined)
-                idx = 0;
-            shared.gallery_id = idx;
-            $('#gallery > .frame').removeClass('visible').eq(shared.gallery_id).css('left', 0).addClass('visible');
-            //$('#gallery > .pager a').removeClass('active').eq(shared.gallery_id).addClass('active');
-            $('#gallery > .pager span > b').text(idx + 1);
-            setSwitch();
-            $('#gallery').css('top', 0);
-            $('#ui_info,#nav').hide();
-        }, goFrame = function() {
-            if (shared.animating)
-                return;
-            var idx = $(this).data('index');
-            var oid = shared.gallery_id, width = $('#gallery > .frame').width(), end;
-            if ($(this).hasClass('next')) {
-                if (!$.isNumeric(idx))
-                    idx = $('#gallery > .switch .next').data('index');
-                shared.gallery_id = idx;
-                $('#gallery > .frame').eq(idx).css('left', width).addClass('visible');
-                end = -width;
-            } else {
-                if (!$.isNumeric(idx))
-                    idx = $('#gallery > .switch .prev').data('index');
-                shared.gallery_id = idx;
-                $('#gallery > .frame').eq(idx).css('left', -width).addClass('visible');
-                end = width;
-            }
-            shared.animating = true;
-            TweenLite.to($('#gallery > .frame').eq(idx), .8, {
-                left : 0,
-                ease : Power2.easeOut
-            });
-            TweenLite.to($('#gallery > .frame').eq(oid), .8, {
-                left : end,
-                ease : Power2.easeOut,
-                onComplete : function() {
-                    shared.animating = false;
-                    $(this).removeClass('visible');
-                    setSwitch();
-                    $('#gallery > .pager span > b').text(idx + 1);
-                }
-            });
-            /*$('#gallery > .frame').eq(idx).animate({
-             left : 0
-             }, 1000);
-             $('#gallery > .frame').eq(oid).animate({
-             left : end
-             }, 1000, function() {
-             $(this).removeClass('visible');
-             setSwitch();
-             $('#gallery .pager a.active').removeClass('active');
-             $('#gallery .pager a').eq(idx).addClass('active');
-             });*/
         };
-        $('#gallery > .frame').remove();
-        $('#gallery > .switch').empty();
-        for (var i = 0; i < list.length; i++) {
-            var item = list[i];
-            var frame = $('<div class="frame"/>').appendTo('#gallery');
-            var img = $('<img/>').attr({
-                src : item.FileName + 'b.jpg',
-                alt : ''
-            }).appendTo(frame);
-            frame.data('id', item.ID);
-            //$('#gallery > .pager').append('<a><i></i></a>');
-            $('#gallery > .switch').append('<a data-index="' + i + '"><img src="' + item.FileName + 't.jpg' + '" /></a>');
-        }
-        $('#gallery > .pager span').html('<b>1</b> / ' + list.length);
-        if (list.length == 2) {
-            $('#gallery > .switch').append('<a data-index="0"><img src="' + list[0].FileName + 't.jpg' + '" /></a>');
-            $('#gallery > .switch').append('<a data-index="1"><img src="' + list[1].FileName + 't.jpg' + '" /></a>');
-        }
         //event register
-        $('#gallery > .pager a').click(goFrame);
-        $('#content .gallery-list li a').click(showGallery);
         $('#content .img-share').append('<span><input type="text" placeholder="发表您的观点能赢取更多积分" /><a class="btn"><b>分享至：</b><i class="icon-weibo"></i></a></span>').find('span').click(function(e) {
             e.stopPropagation();
         }).end().find('a').click(postStatus);
         //hasLayout
-        $('#gallery').css('top', '100%').show();
-        $('.gallery-list').removeClass('visible');
+        //$('#gallery').css('top', '100%').show();
+        //$('.gallery-list').removeClass('visible');
         $('#content .mask,#content .right-button.back').hide();
         if (loc.status == 3 || loc.Status == 3 || show) {
             $('#gallery > .frame').click(function() {
@@ -544,9 +451,132 @@
             });
             showGallery();
         } else {
-            $('#gallery > .frame').click(hideGallery);
             movePattern();
         }
+    }
+
+    function setSwitch() {
+        var list = nsd.data.gallery.list;
+        var next_id = shared.gallery_id + 1, prev_id = shared.gallery_id - 1;
+        if (next_id >= list.length)
+            next_id = 0;
+        if (prev_id < 0)
+            prev_id = list.length - 1;
+        if (list.length == 2)
+            prev_id += 2;
+        var ids = [prev_id, next_id];
+        $('#gallery > .frame').not('.active').remove();
+        $('#gallery > .switch').empty();
+        for (var i = 0; i < 2; i++) {
+            var item = list[ids[i]];
+            var frame = $('<div class="frame"/>').appendTo('#gallery');
+            var img = $('<img/>').attr({
+                src : item.FileName + 'b.jpg',
+                alt : ''
+            }).appendTo(frame);
+            frame.data('id', item.ID);
+            $('#gallery > .switch').append('<a data-index="' + ids[i] + '"><img src="' + item.FileName + 't.jpg' + '" /></a>');
+        }
+        if (list.length == 2) {
+            $('#gallery > .switch').append('<a data-index="0"><img src="' + list[0].FileName + 't.jpg' + '" /></a>');
+            $('#gallery > .switch').append('<a data-index="1"><img src="' + list[1].FileName + 't.jpg' + '" /></a>');
+        }
+        $('#gallery > .switch a').eq(1).addClass('next').end().eq(0).addClass('prev');
+        $('#gallery > .switch .next,#gallery > .switch .prev').click(goFrame);
+        $('#gallery > .frame').click(hideGallery);
+        adjust();
+    }
+
+    function hideGallery() {
+        $('#gallery').css('top', '100%').hide();
+        $('#ui_info,#nav').show();
+    }
+
+    function goFrame() {
+        if (shared.animating)
+            return;
+        var idx = $(this).data('index');
+        var oid = shared.gallery_id, width = $('#gallery > .frame').width(), start, end, ids;
+        var frames = $('#gallery > .frame').not('.active');
+        if ($(this).hasClass('next')) {
+            if (!$.isNumeric(idx))
+                idx = $('#gallery > .switch .next').data('index');
+            shared.gallery_id = idx;
+            //$('#gallery > .frame').eq(idx).css('left', width).addClass('visible');
+            start = {
+                left : width
+            };
+            end = -width;
+            ids = 1;
+        } else {
+            if (!$.isNumeric(idx))
+                idx = $('#gallery > .switch .prev').data('index');
+            shared.gallery_id = idx;
+            //$('#gallery > .frame').eq(idx).css('left', -width).addClass('visible');
+            start = {
+                left : -width
+            };
+            end = width;
+            ids = 0;
+        }
+        shared.animating = true;
+        TweenLite.fromTo(frames.eq(ids).addClass('visible'), .8, start, {
+            left : 0,
+            ease : Power2.easeOut
+        });
+        TweenLite.to('#gallery > .frame.active', .8, {
+            left : end,
+            ease : Power2.easeOut,
+            onComplete : function() {
+                shared.animating = false;
+                $('#gallery > .frame.active').removeClass('active');
+                frames.eq(ids).addClass('active');
+                setSwitch();
+                $('#gallery > .pager span > b').text(idx + 1);
+            }
+        });
+        /*$('#gallery > .frame').eq(idx).animate({
+         left : 0
+         }, 1000);
+         $('#gallery > .frame').eq(oid).animate({
+         left : end
+         }, 1000, function() {
+         $(this).removeClass('visible');
+         setSwitch();
+         $('#gallery .pager a.active').removeClass('active');
+         $('#gallery .pager a').eq(idx).addClass('active');
+         });*/
+    }
+
+    function showGallery() {
+        var list = nsd.data.gallery.list;
+        $('#gallery > .frame').remove();
+        var idx = $(this).data('index');
+        if (idx === undefined)
+            idx = 0;
+        shared.gallery_id = idx;
+        setSwitch();
+        //for (var i = 0; i < list.length; i++) {
+        var item = list[idx];
+        var frame = $('<div class="frame"/>').appendTo('#gallery');
+        var img = $('<img/>').attr({
+            src : item.FileName + 'b.jpg',
+            alt : ''
+        }).appendTo(frame);
+        frame.data('id', item.ID).addClass('visible active');
+        //$('#gallery > .pager').append('<a><i></i></a>');
+        //}
+        $('#gallery > .pager span').html('<b>1</b> / ' + list.length);
+        //event register
+        $('#gallery > .pager a').click(goFrame);
+        $('#gallery > .frame').click(hideGallery);
+
+        //$('#gallery > .frame').removeClass('visible').eq(shared.gallery_id).css('left', 0).addClass('visible');
+        //$('#gallery > .pager a').removeClass('active').eq(shared.gallery_id).addClass('active');
+        $('#gallery > .pager span > b').text(idx + 1);
+        $('#gallery').css('top', 0).show();
+        $('#ui_info,#nav').hide();
+        adjust();
     }
 
     function movePattern() {
@@ -601,7 +631,7 @@
     function initMap() {
         if (window.google === undefined)
             return;
-        config.allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(15.707663, 72.685547), new google.maps.LatLng(54.826008, 136.582031));
+        config.allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(18.895114, 75.21579), new google.maps.LatLng(45.90816, 121.89743));
         var _maker = ["ol-vehicle.png", "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
             url : "img/ol-stop.png",
             anchor : new google.maps.Point(11, 10.5)
@@ -1379,6 +1409,7 @@
                 ease : Power2.easeOut,
                 onComplete : function() {
                     $('#content').hide();
+                    $('.gallery-list ul').empty();
                 }
             });
 
@@ -1528,7 +1559,22 @@
         });
         $('#content .right-button a.browse').click(function(e) {
             e.stopPropagation();
-            $('.gallery-list').addClass('visible');
+            var data = nsd.data.gallery;
+            var loc = $('#content').data('progress').location;
+            $('.gallery-list ul').empty();
+            for (var i = 0; i < data.list.length; i++) {
+                var item = data.list[i];
+                var li = $('<li class="img-hover"/>').appendTo('.gallery-list ul');
+                var img = $('<img/>').attr({
+                    src : item.FileName + 't.jpg',
+                    alt : loc.Location
+                }).appendTo(li);
+                li.append('<span><a data-index="' + i + '"></a></span>');
+            }
+            adjust();
+            $('#content .gallery-list li a').click(showGallery);
+            $('#content .gallery-list').css('opacity', 0).addClass('visible');
+            effect.fadeIn('#content .gallery-list', .4);
             $('#content .mask,#content .right-button.back').show();
         });
         $('#content').click(backToHome);
@@ -1559,7 +1605,7 @@
                 $(this).parent().addClass('submit');
                 $('#gallery textarea').hide();
                 effect.fadeIn('#gallery .mask', .2);
-                //effect.fadeIn('#gallery .share form', 1, .8);
+                effect.fadeIn('#gallery .share form', .3);
                 TweenLite.to('#gallery .share', .4, {
                     height : fh - ah - 8,
                     ease : Power2.easeOut
@@ -1581,7 +1627,7 @@
                     $('#gallery .mask').hide();
                     $('#gallery .share p.submit span').width(0);
                     $('#gallery .share p.submit').removeClass('submit');
-                })
+                });
             });
         });
         $('#ui_user .btns a').click(function() {
