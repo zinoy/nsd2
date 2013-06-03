@@ -722,7 +722,10 @@
                 $('#ui_info li').eq(1).children('span').html(nsd.geoinfo.date);
                 $('#ui_info li').eq(2).children('b').html(formatNumber(nsd.geoinfo.distance));
                 $('#ui_info li').eq(3).children('span').html(nsd.geoinfo.latlng);
-                $('#ui_info li').eq(4).children('b').html(nsd.geoinfo.pics);
+                $('#ui_info li').eq(4).children('b').html(formatNumber(nsd.geoinfo.pics));
+                $('#intro .stat li').eq(0).children('span').text(formatNumber(nsd.geoinfo.distance));
+                $('#intro .stat li').eq(1).children('span').text(data.list.length);
+                $('#intro .stat li').eq(2).children('span').text(formatNumber(nsd.geoinfo.pics));
 
                 var diststr = String(distance);
                 var digioff = 6 - diststr.length;
