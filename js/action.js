@@ -25,6 +25,7 @@
     shared.mode.panorama = false;
     shared.mode.gallery = false;
     shared.mode.detail = false;
+    shared.mode.my_journey = false;
 
     effect.fadeIn = function(obj, duration, delay, callback) {
         TweenLite.delayedCall(delay, function() {
@@ -50,6 +51,8 @@
                     callback();
             }
         });
+    };
+    effect.spin = function() {
     };
 
     function formatNumber(num) {
@@ -629,8 +632,6 @@
     }
 
     function initMap() {
-        if (window.google === undefined)
-            return;
         config.allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(18.895114, 75.21579), new google.maps.LatLng(45.90816, 121.89743));
         var _maker = ["ol-vehicle.png", "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
             url : "img/ol-stop.png",
@@ -728,11 +729,12 @@
                 var request = {
                     origin : markers[0].obj.getPosition(),
                     destination : markers[markers.length - 1].obj.getPosition(),
-                    travelMode : google.maps.DirectionsTravelMode.DRIVING,
-                    waypoints : wayPoints
+                    travelMode : google.maps.DirectionsTravelMode.DRIVING//,
+                    //waypoints : wayPoints
                 };
                 directionsService.route(request, function(response, status) {
                     if (status == google.maps.DirectionsStatus.OK) {
+                        shared.main_route = response;
                         directionsDisplay.setDirections(response);
                     }
                 });
@@ -1042,6 +1044,7 @@
             setCookie("weibo_user", true);
             nsd.user.weibo = true;
         }
+        shared.game_spots = undefined;
         setUserPoints(data.points);
         $('#ui_user .btns').hide();
         $('#ui_user .bar').show();
@@ -1053,6 +1056,7 @@
         nsd.user.token = null;
         nsd.user.points = null;
         nsd.user.weibo = false;
+        shared.game_spots = undefined;
         setCookie("auth_token", null, new Date());
         setCookie("user_points", "", new Date());
         setCookie("weibo_user", "", new Date());
@@ -1286,13 +1290,20 @@
 
     //TODO my
     function goMyDiscovery() {
-        shared.route.setMap(null);
+        //shared.route.setMap(null);
+        shared.mode.my_journey = true;
         for (var i = 0; i < markers.length; i++) {
             markers[i].obj.setMap(null);
         }
         var wayPoints = [];
         wayPoints.push({
             location : spots[1]
+        });
+        wayPoints.push({
+            location : new google.maps.LatLng(21.345505, 110.287258)
+        });
+        wayPoints.push({
+            location : new google.maps.LatLng(24.595675, 118.010818)
         });
         var dashed = {
             path : 'M 0,0 0,1',
@@ -1312,21 +1323,26 @@
             },
             suppressMarkers : true
         });
-        shared.my_route = directionsDisplay;
+        //shared.my_route = directionsDisplay;
 
-        var directionsService = new google.maps.DirectionsService();
-        directionsDisplay.setMap(nsd.map);
-        var request = {
-            origin : spots[0],
-            destination : spots[2],
-            travelMode : google.maps.DirectionsTravelMode.DRIVING,
-            waypoints : wayPoints
-        };
-        directionsService.route(request, function(response, status) {
-            if (status == google.maps.DirectionsStatus.OK) {
-                directionsDisplay.setDirections(response);
-            }
-        });
+        if (shared.my_route === undefined) {
+            var directionsService = new google.maps.DirectionsService();
+            directionsDisplay.setMap(nsd.map);
+            var request = {
+                origin : spots[0],
+                destination : spots[2],
+                travelMode : google.maps.DirectionsTravelMode.DRIVING,
+                waypoints : wayPoints
+            };
+            directionsService.route(request, function(response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    shared.my_route = response;
+                    shared.route.setDirections(response);
+                }
+            });
+        } else {
+            shared.route.setDirections(shared.my_route);
+        }
 
         if (nsd.user.token) {
             $.post(config.api_path, {
@@ -1342,6 +1358,10 @@
         var anchors = [new google.maps.Point(52, 106), new google.maps.Point(33, 66)];
         var game_spots = [];
         for (var i = 0; i < spots.length; i++) {
+            if (shared.game_spots !== undefined) {
+                shared.game_spots[i].setMap(nsd.map);
+                continue;
+            }
             var icon;
             if (i > 0) {
                 icon = {
@@ -1354,7 +1374,7 @@
                     anchor : anchors[0]
                 };
                 if (data !== undefined) {
-                    var sp = findLocation(i, data.list);
+                    var sp = findLocation(i + 1, data.list);
                     if (sp) {
                         icon.url = 'img/my_' + i + '_on.png';
                         icon.anchor = anchors[1];
@@ -1370,10 +1390,12 @@
             google.maps.event.addListener(marker, 'click', function(e) {
                 var idx = $.inArray(this, game_spots);
                 if (idx == 0)
-                    getPanorama(0, idx);
+                    getPanorama(0);
             });
-            $('#ui_info').hide();
         }
+        $('#ui_info').hide();
+        if (shared.game_spots === undefined)
+            shared.game_spots = game_spots;
     }
 
     function backToHome(e) {
@@ -1426,7 +1448,7 @@
 
     function findLocation(loc, list) {
         for (var i = 0; i < list.length; i++) {
-            if (list[i].ContentID == loc) {
+            if (list[i].ContentID == loc && list[i].Type == 4) {
                 return true;
             }
         }
@@ -1463,21 +1485,21 @@
                 switch(idx) {
                     case 1:
                         backToHome();
-                        if (shared.my_route !== undefined) {
-                            shared.my_route.setMap(null);
-                            shared.route.setMap(nsd.map);
-                            shared.my_route = null;
+                        if (shared.mode.my_journey) {
+                            shared.route.setDirections(shared.main_route);
+                            for (var i = 0; i < markers.length; i++) {
+                                markers[i].obj.setMap(nsd.map);
+                            }
+                            for (var j = 0; j < shared.game_spots.length; j++) {
+                                shared.game_spots[j].setMap(null);
+                            }
+                            shared.mode.my_journey = false;
                         }
-
                         break;
                     case 2:
                         //showPointsHistory();
-                        if (window.nsd_exp) {
-                            goMyDiscovery();
-                            switchMenu(1);
-                        } else {
-                            getPanorama(0);
-                        }
+                        goMyDiscovery();
+                        switchMenu(1);
                         break;
                     case 3:
                         showBottomPanel(0);
@@ -1633,13 +1655,8 @@
         $('#ui_user .btns a').click(function() {
             var idx = $(this).index();
             if ($(this).parent().hasClass('btn-left')) {
-                if (window.nsd_exp) {
-                    $(this).text("发现最美前线");
-                    goMyDiscovery();
-                    switchMenu(1);
-                } else {
-                    getPanorama(0);
-                }
+                goMyDiscovery();
+                switchMenu(1);
                 //showPointsHistory();
                 return;
             }
@@ -1767,12 +1784,22 @@
                 token : getCookie("auth_token"),
                 points : Number(getCookie("user_points"))
             });
-            adjust();
             $(window).resize(adjust);
-            initMap();
+            if (window.google === undefined) {
+                var first = getCookie("first_visit");
+                if (first !== null && first != "") {
+                    window.location.href = "home.html";
+                    return;
+                } else {
+                    setCookie("first_visit", "yes");
+                }
+            } else {
+                initMap();
+            }
             //TODO will be remoted
             //getPanorama(0);
             delegateListener();
+            adjust();
         });
     }
 })(jQuery, window);

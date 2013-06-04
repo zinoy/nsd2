@@ -358,7 +358,7 @@ a{cursor:pointer}
 #media .site3{left:730px}
 
 #btn_rule{background:#fff;bottom:120px;color:#333;cursor:pointer;height:17px;line-height:14px;left:20px;padding-top:3px;position:absolute;text-align:center;width:120px}
-#btn_rule .icon-triangle-down{-webkit-transform:rotateZ(-135deg);background:url(../img/arrow-btn-tl.gif) no-repeat;height:7px;margin:2px 0 0 5px;vertical-align:text-top;width:7px}
+#btn_rule .icon-triangle-down{-moz-transform:rotateZ(-135deg);-webkit-transform:rotateZ(-135deg);transform:rotateZ(-135deg);background:url(../img/arrow-btn-tl.gif) no-repeat;height:7px;margin:2px 0 0 5px;vertical-align:text-top;width:7px}
 
 /* map objects define*/
 #map_control{background:url(../img/control-map.jpg) no-repeat;border:solid 3px #fff;bottom:30px;cursor:pointer;height:74px;left:20px;position:absolute;width:114px}
