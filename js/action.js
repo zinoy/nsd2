@@ -974,6 +974,7 @@
             });
         }
         effect.fadeIn('#panorama .panel p', .2, .4);
+        switchMenu(1);
     }
 
     function submitUser(e) {
@@ -1044,7 +1045,15 @@
             setCookie("weibo_user", true);
             nsd.user.weibo = true;
         }
-        shared.game_spots = undefined;
+        if (shared.game_spots !== undefined) {
+            for (var j = 0; j < shared.game_spots.length; j++) {
+                shared.game_spots[j].setMap(null);
+            }
+            shared.game_spots = undefined;
+        }
+        if (shared.mode.my_journey) {
+            goMyDiscovery();
+        }
         setUserPoints(data.points);
         $('#ui_user .btns').hide();
         $('#ui_user .bar').show();
@@ -1056,7 +1065,15 @@
         nsd.user.token = null;
         nsd.user.points = null;
         nsd.user.weibo = false;
-        shared.game_spots = undefined;
+        if (shared.game_spots !== undefined) {
+            for (var j = 0; j < shared.game_spots.length; j++) {
+                shared.game_spots[j].setMap(null);
+            }
+            shared.game_spots = undefined;
+        }
+        if (shared.mode.my_journey) {
+            goMyDiscovery();
+        }
         setCookie("auth_token", null, new Date());
         setCookie("user_points", "", new Date());
         setCookie("weibo_user", "", new Date());
@@ -1355,6 +1372,9 @@
     }
 
     function showMyDiscovery(data) {
+        if (data !== undefined) {
+            generalErrorHandle(data);
+        }
         var anchors = [new google.maps.Point(52, 106), new google.maps.Point(33, 66)];
         var game_spots = [];
         for (var i = 0; i < spots.length; i++) {
@@ -1486,6 +1506,8 @@
                     case 1:
                         backToHome();
                         if (shared.mode.my_journey) {
+                            $('#panorama').hide();
+                            $('#ui_board').show();
                             shared.route.setDirections(shared.main_route);
                             for (var i = 0; i < markers.length; i++) {
                                 markers[i].obj.setMap(nsd.map);
@@ -1771,7 +1793,7 @@
         });
     }
 
-    if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+    if (/Android|webOS|iPhone|iPod|IEMobile|BlackBerry/i.test(navigator.userAgent)) {
         window.location.href = "http://lr-nsd.com/mobile";
         return;
     } else {
