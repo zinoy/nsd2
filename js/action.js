@@ -464,6 +464,8 @@
                         }
                     }, 500);
                 }
+                $(document).scrollTop(0);
+                $('#content .article').scrollTop(0);
             }
         });
     }
