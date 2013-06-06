@@ -204,7 +204,7 @@ a{cursor:pointer}
 #panorama{height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%;z-index:6}
 #panorama .mask{background-image:url(../img/pattern-nav.png);z-index:auto}
 #panorama .mask.close{cursor:url(../img/cursor-close.cur) 26 26,default;}
-#panorama .btn-square{position:absolute;right:5px;top:6px;z-index:5}
+#panorama .close{position:absolute;right:10px;top:10px;z-index:4}
 #panorama .view{height:100%;position:absolute;top:0}
 #panorama .view .dot{position:absolute;z-index:3}
 #panorama .view .dot span{background:rgba(255,255,255,.2);border-radius:16px;height:32px;left:-16px;position:absolute;top:-16px;width:32px}
@@ -230,8 +230,8 @@ a{cursor:pointer}
 #panorama .info .bar span b{color:#fff;font-size:22px;font-weight:normal}
 #panorama .info .bar a.next{-moz-transform:scaleX(-1);-webkit-transform:scaleX(-1);-o-transform:scaleX(-1);-ms-transform:scaleX(-1);transform:scaleX(-1)}
 #panorama .info .bar .icon-browse{background:url(../img/icon-browse.gif) no-repeat center center;height:25px;line-height:10px;vertical-align:text-top;width:10px}
-#panorama .hint{background:url(../img/pattern-nav.png) repeat rgba(0,0,0,.3);height:100%;position:absolute;top:0;width:100%}
-#panorama .hint .circle{background:url(../img/icon-panorama.png) no-repeat center top;color:#fff;font-size:14px;font-weight:bold;padding-top:110px;position:absolute;white-space:nowrap}
+#panorama .hint{background:url(../img/pattern-nav.png) repeat rgba(0,0,0,.3);height:100%;position:absolute;top:0;width:100%;z-index:5}
+#panorama .hint .circle{background:url(../img/icon-panorama.png) no-repeat center top;color:#fff;font-size:14px;font-weight:bold;margin:0 auto;padding-top:110px;text-align:center;white-space:nowrap;width:120px}
 #panorama .hint .circle b{color:#e05206}
 
 #head{bottom:30px;color:#fff;padding:5px;position:absolute;right:20px;text-align:right}
@@ -366,7 +366,12 @@ a{cursor:pointer}
 #map_control i.out{left:-3px}
 
 /* overlay notice */
-#alert{background:#fff;border-top:solid 1px #e05206;box-shadow:0 1px 9px rgba(0,0,0,.75);height:120px;position:absolute;visibility:hidden;width:420px;z-index:99}
+.overlay{background:#fff;border-top:solid 1px #e05206;box-shadow:0 1px 9px rgba(0,0,0,.75);height:120px;position:absolute;visibility:hidden;width:420px;z-index:99}
 #alert p{font-size:14px;font-weight:bold;padding-top:32px;text-align:center}
-#alert p b{color:#e05206}
+#alert p b,#auth p b{color:#e05206}
 #alert p i{font-family:lr-bold,sans-serif;font-size:20px;font-style:normal;margin:.4em}
+#auth .close{background:url(../img/icon-cross-white.png) no-repeat center center #e5e3e3;font:0/0 a;height:24px;position:absolute;right:0;top:0;width:24px}
+#auth .close:hover{background-color:#e05206}
+#auth p{font-weight:bold;margin-left:40px;padding-top:35px}
+#auth .btns{margin:25px 50px 0 0}
+#auth .btns a{border:solid 1px #e7e7e7;display:block;font-size:12px;height:26px;line-height:26px;margin-bottom:15px;text-align:center;width:86px}

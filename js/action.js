@@ -82,6 +82,20 @@
         });
     }
 
+    function showUserAlert(type) {
+        $('#auth').show();
+        adjust();
+        var pos = $('#auth').addClass('visible').position();
+        TweenLite.fromTo('#auth', .4, {
+            top : shared.screen.height * .1,
+            opacity : 0
+        }, {
+            top : pos.top,
+            opacity : 1,
+            ease : Power2.easeOut
+        });
+    }
+
     function formatNumber(num) {
         var str = String(Math.floor(num));
         if (str.length <= 3)
@@ -204,10 +218,11 @@
                     top : $(this).data('top') * ry + pos.top
                 })
             });
+            $('#panorama .hint .circle').css('margin-top', (shared.screen.height - $('#panorama .hint .circle').height()) / 2);
         }
         $('.overlay').each(function() {
             $(this).css({
-                left : (shared.screen.width - $(this).width()) / 2,
+                left : (shared.screen.width - $(this).width()) / 2 - 10,
                 top : shared.screen.height * .2
             })
         });
@@ -442,7 +457,11 @@
                 }, {
                     right : -cw * 2,
                     delay : .4,
-                    ease : Power2.easeOut
+                    ease : Power2.easeOut,
+                    onComplete : function() {
+                        $(document).scrollTop(0);
+                        $('#content .article').scrollTop(0);
+                    }
                 });
                 if (loc.status == 2) {
                     nsd.map.setZoom(7);
@@ -464,8 +483,6 @@
                         }
                     }, 500);
                 }
-                $(document).scrollTop(0);
-                $('#content .article').scrollTop(0);
             }
         });
     }
@@ -863,7 +880,14 @@
                 $('#panorama .bar .nav > span > span').show();
             });
 
+            $('#panorama .hint').show();
+            $('#panorama .info .circle').hide();
             showPanorama(data, idx);
+
+            setTimeout(function() {
+                effect.fadeOut('#panorama .hint', .4);
+                effect.fadeIn('#panorama .info .circle', .4);
+            }, 2000);
         });
     }
 
@@ -1140,7 +1164,8 @@
             return false;
         }
         if (nsd.user.token == null) {
-            alert("请先登录。");
+            //alert("请先登录。");
+            showUserAlert();
             return;
         }
         if (!nsd.user.weibo) {
@@ -1285,10 +1310,12 @@
         } else if (data.code == 102) {
             alert("邮箱或密码错误。");
         } else if (data.code === 110) {
-            alert("请先登录。");
+            ///alert("请先登录。");
+            showUserAlert();
             userSignOut();
         } else if (data.code === 111) {
-            alert("请先登录。");
+            //alert("请先登录。");
+            showUserAlert();
             userSignOut();
         } else if (data.code == 112) {
             alert("微博账号已绑定到其它账号，请直接用微博账号登录。");
@@ -1462,8 +1489,13 @@
             shared.game_spots = game_spots;
     }
 
-    function gotoNextLocation() {
-        var loc = $('#content').data('progress').location;
+    function gotoNextLocation(mk) {
+        if (mk) {
+            google.maps.event.addListenerOnce(mk.origin, 'click', markerClickHandle);
+            if (mk.obj)
+                mk.obj.setMap();
+        }
+        var loc = mk.location;
         var idx = $.inArray(loc, nsd.data.location) + 1;
         var valid = false;
         var obj;
@@ -1658,14 +1690,14 @@
                                 showAlert("恭喜您通过浏览行程获得了<i>" + data.amount + "</i>点积分。");
                                 progress.obj.setMap();
                             }
-                            gotoNextLocation();
+                            gotoNextLocation(progress);
                         });
                     } else {
-                        gotoNextLocation();
+                        gotoNextLocation(progress);
                     }
                 }
             } else if (p >= 1) {
-                gotoNextLocation();
+                gotoNextLocation(progress);
             }
             //TODO mouse wheel
         }).on('mousewheel', function(e, delta, deltaX, deltaY) {
@@ -1867,6 +1899,42 @@
         $('#panorama a.close').click(function() {
             $('#panorama').hide();
             $('#ui_board,#nav').show();
+        });
+        $('#auth .close').click(function() {
+            TweenLite.to('#auth', .2, {
+                top : shared.screen.height * .1,
+                opacity : 0,
+                ease : Power2.easeOut,
+                onComplete : function() {
+                    $('#auth').hide();
+                }
+            });
+        });
+        $('#auth .close').click(function() {
+            TweenLite.to('#auth', .2, {
+                top : shared.screen.height * .1,
+                opacity : 0,
+                ease : Power2.easeOut,
+                onComplete : function() {
+                    $('#auth').hide();
+                }
+            });
+        });
+        $('#auth .login').click(function() {
+            $('#auth').hide();
+            $('#user_action').show();
+            $('#user_action .pattern').hide();
+            $('#user_action .select').show();
+            adjust();
+        });
+        $('#auth .reg').click(function() {
+            $('#auth').hide();
+            $('#user_action').show();
+            $('#user_action .pattern').hide();
+            $('#user_action .select').hide();
+            $('#user_action .register').show();
+            $('.register input:first').focus();
+            adjust();
         });
     }
 
