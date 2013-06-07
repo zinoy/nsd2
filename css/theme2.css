@@ -204,7 +204,7 @@ a{cursor:pointer}
 #panorama{height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%;z-index:6}
 #panorama .mask{background-image:url(../img/pattern-nav.png);z-index:auto}
 #panorama .mask.close{cursor:url(../img/cursor-close.cur) 26 26,default;}
-#panorama .close{position:absolute;right:10px;top:10px;z-index:4}
+#panorama .btn-square{position:absolute;right:10px;top:10px;z-index:4}
 #panorama .view{height:100%;position:absolute;top:0}
 #panorama .view .dot{position:absolute;z-index:3}
 #panorama .view .dot span{background:rgba(255,255,255,.2);border-radius:16px;height:32px;left:-16px;position:absolute;top:-16px;width:32px}

@@ -378,11 +378,10 @@
             }
         }
 
-        showLocation(loc, loc_data);
+        showLocation(loc, loc_data, dist);
     }
 
-    function showLocation(loc, loc_data) {
-        var dist = 0;
+    function showLocation(loc, loc_data, dist) {
         var progress;
         if (nsd.user.token != null && loc.status == 2) {
             progress = new google.maps.Marker({
