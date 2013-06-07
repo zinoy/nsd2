@@ -758,7 +758,7 @@
                         distance : loc.Distance,
                         status : loc.Status
                     });
-                    if (loc.Type < 5) {
+                    if (loc.Type == 5 && i > 8) {
                         wayPoints.push({
                             location : pt
                         });
@@ -785,8 +785,8 @@
                 var request = {
                     origin : markers[0].obj.getPosition(),
                     destination : markers[markers.length - 1].obj.getPosition(),
-                    travelMode : google.maps.DirectionsTravelMode.DRIVING//,
-                    //waypoints : wayPoints
+                    travelMode : google.maps.DirectionsTravelMode.DRIVING,
+                    waypoints : wayPoints
                 };
                 directionsService.route(request, function(response, status) {
                     if (status == google.maps.DirectionsStatus.OK) {
