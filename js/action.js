@@ -873,10 +873,10 @@
             $('#panorama .browse a').click(function() {
                 var nid = $(this).index('#panorama .browse a');
                 showPanorama(data, nid);
-                $('#panorama .bar .nav > span > i').hide();
-                $('#panorama .bar .browse').hide();
+                $('#panorama .bar > span > i').hide();
+                $('#panorama .browse').hide();
                 $('#panorama .info .circle').show();
-                $('#panorama .bar .nav > span > span').show();
+                $('#panorama .bar > span > span').show();
             });
 
             $('#panorama .hint').show();
@@ -894,7 +894,7 @@
         shared.panorama.index = idx;
 
         $('#panorama .view .dot').remove();
-        $('#panorama .bar .nav > span > span').html('<b>' + (idx + 1) + '</b> / ' + data.count);
+        $('#panorama .bar > span > span').html('<b>' + (idx + 1) + '</b> / ' + data.count);
         $('#panorama .info .circle b').text(shared.panorama.discovered);
 
         //var ratio = shared.screen.height / data.list[0].height;
