@@ -96,6 +96,20 @@
         });
     }
 
+    function showBrowserAlert() {
+        $('#chromeframe').show();
+        adjust();
+        $('#chromeframe').addClass('visible');
+        TweenLite.fromTo('#chromeframe', .4, {
+            top : 0,
+            opacity : 0
+        }, {
+            top : shared.screen.height * .1,
+            opacity : 1,
+            ease : Power2.easeOut
+        });
+    }
+
     function formatNumber(num) {
         var str = String(Math.floor(num));
         if (str.length <= 3)
@@ -343,6 +357,11 @@
     function showLatestPic() {
         if ($('#content:visible').length > 0)
             return;
+        if (nsd.user.token == null) {
+            showUserAlert();
+            return;
+        }
+
         var loc;
         var dist = 0;
         for (var i = nsd.data.location.length - 1; i >= 0; i--) {
@@ -367,6 +386,11 @@
     }
 
     function markerClickHandle(e) {
+        if (nsd.user.token == null) {
+            showUserAlert();
+            google.maps.event.addListenerOnce(this, 'click', markerClickHandle);
+            return;
+        }
         var loc, loc_data;
         var dist = 0;
         for (var i = 0; i < markers.length; i++) {
@@ -417,7 +441,8 @@
         shared.location = loc.id;
         $.post(config.api_path, {
             ac : "imgbyloc",
-            loc : loc.id
+            loc : loc.id,
+            seed : Math.random()
         }, function(data) {
             if (generalErrorHandle(data)) {
                 nsd.data.gallery = data;
@@ -731,7 +756,8 @@
         });
 
         $.getJSON(config.api_path, {
-            ac : "getlocation"
+            ac : "getlocation",
+            seed : Math.random()
         }, function(data) {
             if (generalErrorHandle(data)) {
                 nsd.data.location = data.list;
@@ -792,6 +818,7 @@
                     if (status == google.maps.DirectionsStatus.OK) {
                         shared.main_route = response;
                         directionsDisplay.setDirections(response);
+                        movePattern();
                     }
                 });
 
@@ -949,6 +976,11 @@
     function showPanel() {
         if ($('#panorama .panel:visible').length > 0 || $('#panorama .bar > span.active').length > 0)
             return;
+        if (nsd.user.token == null) {
+            showUserAlert();
+            return;
+        }
+
         //clearTimeout(shared.panorama.timer);
         var idx = $(this).index('.dot');
         var pos = $(this).position();
@@ -1214,7 +1246,8 @@
         resetScreen();
         $.post(config.api_path, {
             ac : 'pointshistory',
-            token : nsd.user.token
+            token : nsd.user.token,
+            seed : Math.random()
         }, function(data) {
             if (generalErrorHandle(data)) {
                 var container = $('#points_history .article').empty();
@@ -1434,7 +1467,8 @@
         if (nsd.user.token) {
             $.post(config.api_path, {
                 ac : 'pointshistory',
-                token : nsd.user.token
+                token : nsd.user.token,
+                seed : Math.random()
             }, showMyDiscovery);
         } else {
             showMyDiscovery();
@@ -1626,6 +1660,7 @@
                         showBottomPanel(2);
                         break;
                     default:
+                        switchMenu(0);
                         break;
                 }
             }
@@ -1919,6 +1954,17 @@
                 }
             });
         });
+        $('#auth .more a').click(function() {
+            TweenLite.to('#auth', .2, {
+                top : shared.screen.height * .1,
+                opacity : 0,
+                ease : Power2.easeOut,
+                onComplete : function() {
+                    $('#auth').hide();
+                }
+            });
+            showBottomPanel(0);
+        });
         $('#auth .login').click(function() {
             $('#auth').hide();
             $('#user_action').show();
@@ -1934,6 +1980,17 @@
             $('#user_action .register').show();
             $('.register input:first').focus();
             adjust();
+        });
+        $('#chromeframe .ignore a').click(function() {
+            setCookie("upgrade_ignore", "yes", 1);
+            TweenLite.to('#chromeframe', .2, {
+                top : shared.screen.height * .1,
+                opacity : 0,
+                ease : Power2.easeOut,
+                onComplete : function() {
+                    $('#chromeframe').hide();
+                }
+            });
         });
     }
 
@@ -1960,6 +2017,10 @@
                     setCookie("first_visit", "yes", 90);
                 }
             } else {
+                var ignore = getCookie("upgrade_ignore");
+                if ($('html').hasClass('lt-ie9') && (ignore == null || ignore == "")) {
+                    setTimeout(showBrowserAlert, 1000);
+                }
                 initMap();
             }
             //TODO will be remoted
