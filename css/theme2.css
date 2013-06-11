@@ -177,6 +177,17 @@ a{cursor:pointer}
 #content .timeline blockquote .comment h5{font-size:12px;margin:0 0 3px}
 #content .timeline blockquote .comment p{font-size:12px}
 
+#content #quiz{background:url(../img/arrow-lt-white.gif) no-repeat 2px 2px #e05206;color:#fff;cursor:default;font-size:14px;margin:20px 10px 0;padding-bottom:12px;padding-left:20px;position:relative}
+#content #quiz .submit{background:#000;cursor:pointer;height:100%;position:absolute;right:-80px;top:0}
+#content #quiz .submit .spacer{float:left;height:50%;margin-bottom:-7px;width:100%}
+#content #quiz .submit a{display:block;height:14px;line-height:14px;text-align:center;width:80px}
+#content #quiz p{margin:0;padding:12px 0 0}
+#content #quiz p a{cursor:pointer;margin-right:10px;white-space:nowrap}
+#content #quiz p a i{border:solid 1px #fff;display:inline-block;height:8px;margin-right:.4em;padding:2px;vertical-align:text-top;width:8px}
+#content #quiz p a label{cursor:pointer;display:inline-block;line-height:12px;vertical-align:text-top}
+#content #quiz p a.active b{background:#fff;display:block;height:100%;width:100%}
+#content #quiz p.option{white-space:normal}
+
 #gallery{height:100%;left:0;position:absolute;top:0;width:100%;z-index:2}
 #gallery .frame{background:url(../img/img-loader.gif) no-repeat center center #e2e1e1;cursor:url(../img/cursor-close.cur) 26 26,pointer;height:100%;overflow:hidden;position:absolute;visibility:hidden;width:100%}
 #gallery .frame img,#gallery .switch img{left:0;position:absolute}

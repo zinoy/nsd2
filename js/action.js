@@ -26,6 +26,7 @@
     shared.mode.gallery = false;
     shared.mode.detail = false;
     shared.mode.my_journey = false;
+    shared.mode.quiz = false;
 
     effect.fadeIn = function(obj, duration, delay, callback) {
         TweenLite.delayedCall(delay, function() {
@@ -54,6 +55,19 @@
     };
     effect.spin = function() {
     };
+
+    function rand(min, max) {
+        max--;
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function shuffle(o) {
+        var arr = o.slice(0), r = [];
+        while (arr.length > 0) {
+            r.push(arr.splice(rand(0, arr.length), 1)[0]);
+        }
+        return r;
+    }
 
     function showAlert(txt) {
         $('#alert').show();
@@ -201,6 +215,7 @@
         $('#content .img-hover > span,#content .img-expand,#content .img-expand > span,#content .img-share,#kv_index').each(setImageSize);
         $('#content .img-share input').width($('#content .img-share span').width() - 90 - 30);
         $('#content .img-share span').addClass('ready');
+        $('#content #quiz').width($('#content .content').width() - 80 - 20);
         $('#gallery .frame').each(setImageSize);
         $('#gallery .switch a').each(setImageSize);
         $('#nav .contract > p').css('width', sw - (iw + 20));
@@ -460,6 +475,7 @@
                 adjust();
                 $('#content').addClass('visible');
                 $('#detail,.right-button .browse').show();
+                getQuiz(loc.id);
 
                 TweenLite.fromTo('#content', .4, {
                     left : -$('#content').width()
@@ -480,7 +496,7 @@
                     right : 0
                 }, {
                     right : -cw * 2,
-                    delay : .4,
+                    delay : .5,
                     ease : Power2.easeOut,
                     onComplete : function() {
                         $(document).scrollTop(0);
@@ -509,6 +525,102 @@
                 }
             }
         });
+    }
+
+    function getQuiz(loc) {
+        if (nsd.data.quiz === undefined) {
+            $.getJSON("data/quiz.json", function(data) {
+                nsd.data.quiz = data;
+                showQuiz(loc);
+            });
+        } else {
+            showQuiz(loc);
+        }
+    }
+
+    //TODO quiz
+    function showQuiz(loc) {
+        var data = nsd.data.quiz, obj;
+        for (var i = 0; i < data.list.length; i++) {
+            if (data.list[i].loc === loc) {
+                obj = data.list[i];
+                break;
+            }
+        }
+        $('#quiz').hide();
+        if (obj !== undefined) {
+            var seed = Math.random();
+            if (seed > .5) {
+                return;
+            }
+            shared.mode.quiz = true;
+            var data = {};
+            data.id = obj.id;
+            data.q = obj.q;
+            data.a = obj.opt[obj.a];
+            data.opt = shuffle(obj.opt);
+            $('#quiz p.lead').html(obj.q);
+            $('#quiz p.option').empty();
+            for (var j = 0; j < obj.opt.length; j++) {
+                $('#quiz p.option').append('<a><i><b></b></i><label>' + data.opt[j] + '</label></a>');
+            }
+            $('#quiz p.option a').click(function() {
+                if ($(this).hasClass('active'))
+                    return;
+                $('#quiz p.option a.active').removeClass('active');
+                $(this).addClass('active');
+            });
+            $('#quiz').data('obj', data).show();
+        }
+    }
+
+    function submitQuiz() {
+        if (connecting) {
+            return;
+        }
+        var selected = $('#quiz p.option a.active');
+        if (selected.length == 0) {
+            alert("请选择一个你认为正确的选项。");
+            return;
+        }
+        var val = selected.find('label').text();
+        var obj = $('#quiz').data('obj');
+        if (val == obj.a) {
+            connecting = true;
+            $.post(config.api_path, {
+                ac : "quiz",
+                token : nsd.user.token,
+                quiz : obj.id,
+                qt : obj.q,
+                as : val
+            }, function(data) {
+                if (generalErrorHandle(data)) {
+                    showAlert('答对了！恭喜你获得<i>' + data.amount + '</i>点积分。');
+                    setUserPoints(data.points);
+                } else if (data.code == 114) {
+                    showAlert('恭喜你，回答正确！');
+                }
+                TweenLite.to('#quiz', .4, {
+                    height : 0,
+                    ease : Power2.easeOut,
+                    onComplete : function() {
+                        $('#quiz').hide().css('height', '');
+                    }
+                })
+                shared.mode.quiz = false;
+                connecting = false;
+            });
+        } else {
+            alert("很遗憾，回答错误。");
+            TweenLite.to('#quiz', .4, {
+                height : 0,
+                ease : Power2.easeOut,
+                onComplete : function() {
+                    $('#quiz').hide().css('height', '');
+                }
+            })
+            shared.mode.quiz = false;
+        }
     }
 
     function initGallery(data, loc, show) {
@@ -784,7 +896,7 @@
                         distance : loc.Distance,
                         status : loc.Status
                     });
-                    if (loc.Type == 5 && i > 8) {
+                    if (loc.WayPoint) {
                         wayPoints.push({
                             location : pt
                         });
@@ -879,7 +991,7 @@
             showPanorama(nsd.data.panorama, idx);
             return;
         }
-        $.getJSON('files/yili.json', {
+        $.getJSON('data/yili.json', {
             seed : Math.random()
         }, function(data) {
             nsd.data.panorama = data;
@@ -1267,6 +1379,7 @@
                             item.append('<p class="single-line">行进<b>' + obj.Quantity + '</b>公里</p>');
                             break;
                         case 2:
+                            item.append('<p class="single-line selection">回答随机问题</p>');
                             break;
                         case 3:
                             item.append('<blockquote><img src="' + obj.Content1 + '" /><div class="comment"><h5>我的评论</h5><p>' + obj.Content2 + '</p></div></blockquote>');
@@ -1556,7 +1669,10 @@
             });
             $('#content').data('progress', null);
         }
-        switchMenu(0);
+        if (shared.mode.my_journey)
+            switchMenu(1);
+        else
+            switchMenu(0);
         if ($('#content:visible').length > 0) {
             TweenLite.to('#content .order1', .2, {
                 right : 0,
@@ -1674,11 +1790,27 @@
             $('#about').hide();
             $('#main > .mask-alpha3').hide();
             $('#main > .pattern-about').hide();
+            backToHome();
+            if (shared.mode.my_journey) {
+                $('#panorama').hide();
+                $('#ui_board').show();
+                shared.route.setDirections(shared.main_route);
+                for (var i = 0; i < markers.length; i++) {
+                    markers[i].obj.setMap(nsd.map);
+                }
+                for (var j = 0; j < shared.game_spots.length; j++) {
+                    shared.game_spots[j].setMap(null);
+                }
+                shared.mode.my_journey = false;
+            }
             switchMenu(0);
         });
         $('.cursor-close').click(function() {
             resetScreen();
-            switchMenu(0);
+            if (shared.mode.my_journey)
+                switchMenu(1);
+            else
+                switchMenu(0);
         });
         $('#footer .share li').click(function() {
             var title = '发现无止境 中国最美前线', content = '路虎中国#发现无止境 中国最美前线#探享之旅，直驱边陲人迹罕至之境，挑战史无前例的全天候全地形路况，纵情尽揽伊犁的天地交融之千色，深入触涉腾冲的时光交汇之古香，探索上海的灵感碰撞之新尚，发现中国最前线的融合之美。', pic = '', url = 'http://lr-nsd.com/';
@@ -1770,7 +1902,7 @@
             $('.gallery-list').removeClass('visible');
             $('#content .mask,#content .right-button.back').hide();
         });
-        $('#content .gallery-list').click(function(e) {
+        $('#content .gallery-list,#content #quiz').click(function(e) {
             e.stopPropagation();
         });
         $('#content .mask-white').click(function(e) {
@@ -1992,6 +2124,7 @@
                 }
             });
         });
+        $('#quiz .submit').click(submitQuiz);
     }
 
     if (/Android|webOS|iPhone|iPod|IEMobile|BlackBerry/i.test(navigator.userAgent)) {
