@@ -142,7 +142,7 @@ a{cursor:pointer}
 #content h2 span{display:block;font-size:18px;font-weight:bold;line-height:22px}
 #content h2 b{background:#000;display:block;font:0/0 a;height:5px;margin-top:20px;width:46px}
 #content .article{overflow:auto;overflow-y:scroll}
-#content .article .content{overflow:hidden;padding:0 10px 40px}
+#content .article .content{clear:left;overflow:hidden;padding:0 10px 40px}
 #content .article p{font-size:14px;line-height:20px;margin:20px 0}
 #content .article p.float-left{margin:0 20px 0 0}
 #content .article p.float-right{margin:0 0 0 20px}
@@ -177,16 +177,16 @@ a{cursor:pointer}
 #content .timeline blockquote .comment h5{font-size:12px;margin:0 0 3px}
 #content .timeline blockquote .comment p{font-size:12px}
 
-#content #quiz{background:url(../img/arrow-lt-white.gif) no-repeat 2px 2px #e05206;color:#fff;cursor:default;font-size:14px;margin:20px 10px 0;padding-bottom:12px;padding-left:20px;position:relative}
+#content #quiz{background:url(../img/arrow-lt-white.gif) no-repeat 2px 2px #e05206;color:#fff;cursor:default;font-size:14px;margin:20px 10px 0;padding-left:20px;position:relative}
 #content #quiz .submit{background:#000;cursor:pointer;height:100%;position:absolute;right:-80px;top:0}
 #content #quiz .submit .spacer{float:left;height:50%;margin-bottom:-7px;width:100%}
 #content #quiz .submit a{display:block;height:14px;line-height:14px;text-align:center;width:80px}
 #content #quiz p{margin:0;padding:12px 0 0}
-#content #quiz p a{cursor:pointer;margin-right:10px;white-space:nowrap}
+#content #quiz p a{cursor:pointer;float:left;margin-bottom:12px;margin-right:30px;white-space:nowrap}
 #content #quiz p a i{border:solid 1px #fff;display:inline-block;height:8px;margin-right:.4em;padding:2px;vertical-align:text-top;width:8px}
 #content #quiz p a label{cursor:pointer;display:inline-block;line-height:12px;vertical-align:text-top}
 #content #quiz p a.active b{background:#fff;display:block;height:100%;width:100%}
-#content #quiz p.option{white-space:normal}
+#content #quiz p.option{overflow:hidden}
 
 #gallery{height:100%;left:0;position:absolute;top:0;width:100%;z-index:2}
 #gallery .frame{background:url(../img/img-loader.gif) no-repeat center center #e2e1e1;cursor:url(../img/cursor-close.cur) 26 26,pointer;height:100%;overflow:hidden;position:absolute;visibility:hidden;width:100%}
@@ -244,6 +244,25 @@ a{cursor:pointer}
 #panorama .hint{background:url(../img/pattern-nav.png) repeat rgba(0,0,0,.3);height:100%;position:absolute;top:0;width:100%;z-index:5}
 #panorama .hint .circle{background:url(../img/icon-panorama.png) no-repeat center top;color:#fff;font-size:14px;font-weight:bold;margin:0 auto;padding-top:110px;text-align:center;white-space:nowrap;width:120px}
 #panorama .hint .circle b{color:#e05206}
+
+#difference{background:#e2e1e1;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%;z-index:5}
+#difference .btn-square{position:absolute;right:10px;top:10px;z-index:4}
+#difference .view{font:0/0 a;height:100%;position:absolute;top:0}
+#difference .view img{cursor:pointer;margin:0 10px}
+#difference .timer{bottom:80px;position:absolute;right:40px}
+#difference .info{bottom:0;left:0;position:absolute;width:100%;z-index:3}
+#difference .info .browse{background:#fff;padding:10px 0;text-align:center;width:100%}
+#difference .info .browse p{display:inline-block;margin:0 4px;position:relative}
+#difference .info .browse img{display:block;height:100px}
+#difference .info .img-hover span{background:url(../img/spacer.gif);height:100%;left:0;position:absolute;top:0;width:100%}
+#difference .info .img-hover a{display:block;height:100%;width:100%}
+#difference .info .img-hover a:hover{background:url(../img/icon-image-hover.gif) no-repeat left top,url(../img/icon-image-hover.gif) no-repeat right top,url(../img/icon-image-hover.gif) no-repeat left bottom,url(../img/icon-image-hover.gif) no-repeat right bottom}
+#difference .info .bar{background-color:rgba(255,255,255,.2);border-bottom:solid 2px #e05206;font:0/0 a;height:35px;text-align:center;width:100%}
+#difference .info .bar a{background:url(../img/icon-arrow.gif) no-repeat center center #000;display:inline-block;height:35px;width:32px}
+#difference .info .bar span{background:#e05206;color:#913300;cursor:pointer;display:inline-block;font:18px/25px lr-medium,sans-serif;height:30px;padding-top:5px;text-align:center;vertical-align:top;width:72px}
+#difference .info .bar span span{padding:0}
+#difference .info .bar span b{color:#fff;font-size:22px;font-weight:normal}
+#difference .info .bar a.next{-moz-transform:scaleX(-1);-webkit-transform:scaleX(-1);-o-transform:scaleX(-1);-ms-transform:scaleX(-1);transform:scaleX(-1)}
 
 #head{bottom:30px;color:#fff;padding:5px;position:absolute;right:20px;text-align:right}
 #head span{background:#e05206;display:inline-block;font-size:22px;height:28px;line-height:26px;padding:0 3px 0 8px}

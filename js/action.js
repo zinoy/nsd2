@@ -401,9 +401,14 @@
     }
 
     function markerClickHandle(e) {
+        if (shared.mode.detail) {
+            return;
+        }
+        console.log('click_handle');
         if (nsd.user.token == null) {
             showUserAlert();
-            google.maps.event.addListenerOnce(this, 'click', markerClickHandle);
+            //google.maps.event.addListenerOnce(this, 'click', markerClickHandle);
+            //console.log('marker_click_handle', this);
             return;
         }
         var loc, loc_data;
@@ -416,7 +421,7 @@
                 break;
             }
         }
-
+        shared.mode.detail = true;
         showLocation(loc, loc_data, dist);
     }
 
@@ -500,9 +505,11 @@
                     ease : Power2.easeOut,
                     onComplete : function() {
                         $(document).scrollTop(0);
-                        $('#content .article').scrollTop(0);
+                        $('#content .article').scroll(markerScrollHandle);
                     }
                 });
+                $(document).scrollTop(0);
+                $('#content .article').scrollTop(0)
                 if (loc.status == 2) {
                     nsd.map.setZoom(7);
                     nsd.map.panTo($('#content').data('progress').origin.getPosition());
@@ -525,6 +532,50 @@
                 }
             }
         });
+    }
+
+    function markerScrollHandle() {
+        if (shared.location > 0) {
+            var progress = $('#content').data('progress');
+            var tp = $(this).scrollTop();
+            var max = $('#detail .article .content').height() - $(this).height();
+            var p = tp / max;
+
+            if (progress && progress.obj) {
+                if (p > progress.p) {
+                    var icon = progress.obj.getIcon();
+                    icon.path = getProgressSymbolPath(p);
+                    progress.obj.setIcon(icon);
+                    progress.p = p;
+                }
+                if (p >= 1) {
+                    $('#content .article').off('scroll');
+                    progress.p = 100;
+                    //add point
+                    if (nsd.user.token != null) {
+                        $.post(config.api_path, {
+                            ac : 'followroute',
+                            token : nsd.user.token,
+                            loc : shared.location
+                        }, function(data) {
+                            if (generalErrorHandle(data)) {
+                                shared.animation.flash(progress.obj);
+                                setUserPoints(data.points);
+                                showAlert("恭喜您通过浏览行程获得了<i>" + data.amount + "</i>点积分。");
+                                progress.obj.setMap();
+                            }
+                            gotoNextLocation(progress);
+                        });
+                        shared.location = 0;
+                    } else {
+                        gotoNextLocation(progress);
+                    }
+                }
+            } else if (p >= 1) {
+                $('#content .article').off('scroll');
+                gotoNextLocation(progress);
+            }
+        }
     }
 
     function getQuiz(loc) {
@@ -559,7 +610,7 @@
             data.q = obj.q;
             data.a = obj.opt[obj.a];
             data.opt = shuffle(obj.opt);
-            $('#quiz p.lead').html(obj.q);
+            $('#quiz p.lead').html('问答题：' + obj.q);
             $('#quiz p.option').empty();
             for (var j = 0; j < obj.opt.length; j++) {
                 $('#quiz p.option').append('<a><i><b></b></i><label>' + data.opt[j] + '</label></a>');
@@ -600,7 +651,7 @@
                 } else if (data.code == 114) {
                     showAlert('恭喜你，回答正确！');
                 }
-                TweenLite.to('#quiz', .4, {
+                TweenLite.to('#quiz', .2, {
                     height : 0,
                     ease : Power2.easeOut,
                     onComplete : function() {
@@ -612,7 +663,7 @@
             });
         } else {
             alert("很遗憾，回答错误。");
-            TweenLite.to('#quiz', .4, {
+            TweenLite.to('#quiz', .2, {
                 height : 0,
                 ease : Power2.easeOut,
                 onComplete : function() {
@@ -914,7 +965,7 @@
                             var obj = findMarkerFromList(this, markers);
                             this.setIcon(_maker[obj.type]);
                         });
-                        google.maps.event.addListenerOnce(marker, 'click', markerClickHandle);
+                        google.maps.event.addListener(marker, 'click', markerClickHandle);
                     }
                 }
 
@@ -1182,6 +1233,47 @@
         }
         effect.fadeIn('#panorama .panel p', .2, .4);
         switchMenu(1);
+    }
+
+    //TODO will be modified soon
+    function getDiff(idx) {
+        if (nsd.data.diff !== undefined) {
+            showDiff(nsd.data.diff, idx);
+            return;
+        }
+        $.getJSON('data/tengchong.json', {
+            seed : Math.random()
+        }, function(data) {
+            nsd.data.diff = data;
+            showDiff(data, idx);
+        });
+    }
+
+    function showDiff(data, idx) {
+        var obj = data.list[idx];
+        var fh = $('#difference .view').empty().append('<img src="' + obj.file[0] + 't.jpg" />').append('<img src="' + obj.file[1] + 't.jpg" />').height();
+        var ratio = fh / obj.height;
+        $('#difference .view img').height(fh).width(obj.width * ratio).click(clickDiff);
+        $('#difference .view').css('left', (shared.screen.width - $('#difference .view').width()) / 2).data('data', {
+            item : obj.items.slice(0),
+            ratio : ratio
+        });
+    }
+
+    function clickDiff(e) {
+        var data = $('#difference .view').data('data');
+        var x = e.offsetX / data.ratio, y = e.offsetY / data.ratio;
+        var list = data.item;
+        for (var i = 0; i < list.length; i++) {
+            var rect = list[i].rect;
+            if (x > rect[0] && x < rect[2] && y > rect[1] && y < rect[3]) {
+                list.splice(i, 1);
+                $('#difference .view').data('data', data);
+                console.log('in');
+                return;
+            }
+        }
+        console.log('out');
     }
 
     function submitUser(e) {
@@ -1600,7 +1692,7 @@
                 continue;
             }
             var icon;
-            if (i > 0) {
+            if (i > 1) {
                 icon = {
                     url : 'img/my_' + i + '_off.png',
                     anchor : anchors[1]
@@ -1628,6 +1720,8 @@
                 var idx = $.inArray(this, game_spots);
                 if (idx == 0)
                     getPanorama(0);
+                else if ( idx = 1)
+                    getDiff(0);
             });
         }
         $('#ui_info').hide();
@@ -1636,37 +1730,40 @@
     }
 
     function gotoNextLocation(mk) {
-        if (mk) {
-            google.maps.event.addListenerOnce(mk.origin, 'click', markerClickHandle);
-            if (mk.obj)
-                mk.obj.setMap();
-        }
+        if (mk === undefined)
+            return;
+        //google.maps.event.addListenerOnce(mk.origin, 'click', markerClickHandle);
+        //console.log('marker_click_next', mk.origin);
+        if (mk.obj)
+            mk.obj.setMap();
         var loc = mk.location;
-        var idx = $.inArray(loc, nsd.data.location) + 1;
-        var valid = false;
-        var obj;
-        for (; idx < nsd.data.location.length; idx++) {
-            obj = nsd.data.location[idx];
-            if (obj.Status > 1) {
-                valid = true;
+        //var idx = $.inArray(loc, nsd.data.location) + 1;
+        var i = 0;
+        var obj, dist = 0;
+        for (; i < nsd.data.location.length; i++) {
+            dist += nsd.data.location[i].Distance;
+            if (nsd.data.location[i].ID > mk.location.ID && nsd.data.location[i].Status > 1) {
+                obj = nsd.data.location[i];
                 break;
             }
         }
-        if (valid) {
-            var loc = markers[idx];
-            showLocation(loc, obj);
+        if (obj !== undefined) {
+            var loc = markers[i];
+            showLocation(loc, obj, dist);
         }
     }
 
     function backToHome(e) {
         var mk = $('#content').data('progress');
         if (mk) {
-            google.maps.event.addListenerOnce(mk.origin, 'click', markerClickHandle);
+            //google.maps.event.addListenerOnce(mk.origin, 'click', markerClickHandle);
+            //console.log('marker_click_home', mk.origin);
             if (mk.obj)
                 mk.obj.setMap();
             nsd.map.setOptions({
                 draggable : true
             });
+            shared.mode.detail = false;
             $('#content').data('progress', null);
         }
         if (shared.mode.my_journey)
@@ -1828,45 +1925,8 @@
                     break;
             }
         });
-        $('#detail .article').scroll(function() {
-            var progress = $('#content').data('progress');
-            var tp = $(this).scrollTop();
-            var max = $('#detail .article .content').height() - $(this).height();
-            var p = tp / max;
-
-            if (progress && progress.obj) {
-                if (p > progress.p) {
-                    var icon = progress.obj.getIcon();
-                    icon.path = getProgressSymbolPath(p);
-                    progress.obj.setIcon(icon);
-                    progress.p = p;
-                }
-                if (p >= 1) {
-                    progress.p = 100;
-                    //add point
-                    if (nsd.user.token != null) {
-                        $.post(config.api_path, {
-                            ac : 'followroute',
-                            token : nsd.user.token,
-                            loc : shared.location
-                        }, function(data) {
-                            if (generalErrorHandle(data)) {
-                                shared.animation.flash(progress.obj);
-                                setUserPoints(data.points);
-                                showAlert("恭喜您通过浏览行程获得了<i>" + data.amount + "</i>点积分。");
-                                progress.obj.setMap();
-                            }
-                            gotoNextLocation(progress);
-                        });
-                    } else {
-                        gotoNextLocation(progress);
-                    }
-                }
-            } else if (p >= 1) {
-                gotoNextLocation(progress);
-            }
-            //TODO mouse wheel
-        }).on('mousewheel', function(e, delta, deltaX, deltaY) {
+        //TODO mouse wheel
+        $('#detail .article').on('mousewheel', function(e, delta, deltaX, deltaY) {
             if (delta == -1) {
                 var tp = $(this).scrollTop();
                 var max = $('#detail .article .content').height() - $(this).height();
@@ -2144,8 +2204,9 @@
             if (window.google === undefined) {
                 var first = getCookie("first_visit");
                 if (first !== null && first != "") {
-                    window.location.href = "home.html";
-                    return;
+                    //TODO will be reactivated
+                    //window.location.href = "home.html";
+                    //return;
                 } else {
                     setCookie("first_visit", "yes", 90);
                 }
@@ -2156,8 +2217,7 @@
                 }
                 initMap();
             }
-            //TODO will be remoted
-            //getPanorama(0);
+            getDiff(0);
             delegateListener();
             adjust();
         });
