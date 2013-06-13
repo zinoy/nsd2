@@ -183,7 +183,7 @@
         $('body').css('overflow', '');
         shared.screen.height = sh;
         shared.screen.width = sw;
-        $('.screen,#google_map .pattern,#google_map,#nav .expand,#user_action').css({
+        $('.screen,#google_map .pattern,#google_map,#nav .expand,#user_action,#welcome').css({
             height : sh,
             width : sw
         });
@@ -227,6 +227,7 @@
             $('#user_action .bg').css('top', (sh - $('#user_action .bg').height()) / 2);
             $('#user_action .select p').css('left', $('#user_action .select a.email').position().left + $('#user_action .select a.email').width() - $('#user_action .select p').width() + 40);
         }
+        $('#welcome .frame').css('top', (sh - $('#welcome .frame').height() - 50) / 2);
         $('#points_history blockquote > img').width($('#points_history blockquote').width());
         $('.col-square').each(function() {
             $(this).css('height', $(this).width());
@@ -404,11 +405,9 @@
         if (shared.mode.detail) {
             return;
         }
-        console.log('click_handle');
         if (nsd.user.token == null) {
             showUserAlert();
             //google.maps.event.addListenerOnce(this, 'click', markerClickHandle);
-            //console.log('marker_click_handle', this);
             return;
         }
         var loc, loc_data;
@@ -494,14 +493,14 @@
                     right : 0
                 }, {
                     right : -cw,
-                    delay : .4,
+                    delay : .3,
                     ease : Power2.easeOut
                 });
                 TweenLite.fromTo('#content .order1', .2, {
                     right : 0
                 }, {
                     right : -cw * 2,
-                    delay : .5,
+                    delay : .4,
                     ease : Power2.easeOut,
                     onComplete : function() {
                         $(document).scrollTop(0);
@@ -877,7 +876,7 @@
 
     function initMap() {
         config.allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(18.895114, 75.21579), new google.maps.LatLng(45.90816, 121.89743));
-        var _maker = ["ol-vehicle.png", "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
+        var _maker = ["img/ol-vehicle.png", "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
             url : "img/ol-stop.png",
             anchor : new google.maps.Point(11, 10.5)
         }, {
@@ -931,28 +930,29 @@
                     distance += loc.Distance;
                     pic_count += loc.PhotoCount;
                     var pt = new google.maps.LatLng(loc.Latitude, loc.Longitude);
-                    var marker = new google.maps.Marker({
-                        position : pt,
-                        map : nsd.map,
-                        icon : _maker[loc.Type],
-                        title : loc.Location,
-                        optimized : false,
-                        zIndex : (_maker.length - loc.Type) * 10
-                    });
-                    markers.push({
+                    var item = {
                         id : loc.ID,
                         index : i,
-                        obj : marker,
                         type : loc.Type,
+                        latlng : pt,
                         distance : loc.Distance,
                         status : loc.Status
-                    });
-                    if (loc.WayPoint) {
-                        wayPoints.push({
-                            location : pt
-                        });
-                    }
+                    };
                     if (loc.Status == 2 || loc.Status == 3) {
+                        var marker = new google.maps.Marker({
+                            position : pt,
+                            map : nsd.map,
+                            icon : _maker[loc.Type],
+                            title : loc.Location,
+                            optimized : false,
+                            zIndex : (_maker.length - loc.Type) * 10
+                        });
+                        item.obj = marker
+                        if (loc.WayPoint) {
+                            wayPoints.push({
+                                location : pt
+                            });
+                        }
                         google.maps.event.addListener(marker, 'mouseover', function(e) {
                             if ($('#content').data('progress') == null) {
                                 this.setIcon({
@@ -967,13 +967,14 @@
                         });
                         google.maps.event.addListener(marker, 'click', markerClickHandle);
                     }
+                    markers.push(item);
                 }
 
                 var directionsService = new google.maps.DirectionsService();
                 directionsDisplay.setMap(nsd.map);
                 var request = {
-                    origin : markers[0].obj.getPosition(),
-                    destination : markers[markers.length - 1].obj.getPosition(),
+                    origin : markers[0].latlng,
+                    destination : markers[markers.length - 1].latlng,
                     travelMode : google.maps.DirectionsTravelMode.DRIVING,
                     waypoints : wayPoints
                 };
@@ -984,6 +985,17 @@
                         movePattern();
                     }
                 });
+
+                if (markers[markers.length - 1].obj === undefined) {
+                    var lastPt = markers[markers.length - 1];
+                    var marker = new google.maps.Marker({
+                        position : lastPt.latlng,
+                        map : nsd.map,
+                        icon : _maker[0],
+                        title : "当前车队位置"
+                    });
+                    lastPt.obj = marker;
+                }
 
                 //TODO set default geo info
                 var place = data.list[data.list.length - 1];
@@ -1567,11 +1579,15 @@
         return false;
     }
 
-    function showBottomPanel(id) {
+    function showBottomPanel(id, tab) {
         var define = ["#about", "#vehicle", "#media"];
         if (id >= define.length || id < 0)
             return;
         $(define[id]).show();
+        if (id == 0 && tab !== undefined) {
+            $('#about .tabs li').removeClass('active').eq(tab).addClass('active');
+            $('#about .tab-item').hide().eq(tab).show();
+        }
         TweenLite.fromTo(define[id] + ' .frame', .3, {
             bottom : -$(define[id] + ' .frame').height()
         }, {
@@ -1618,7 +1634,8 @@
         //shared.route.setMap(null);
         shared.mode.my_journey = true;
         for (var i = 0; i < markers.length; i++) {
-            markers[i].obj.setMap(null);
+            if (markers[i].obj !== undefined)
+                markers[i].obj.setMap(null);
         }
         var wayPoints = [];
         wayPoints.push({
@@ -1850,7 +1867,8 @@
                             $('#ui_board').show();
                             shared.route.setDirections(shared.main_route);
                             for (var i = 0; i < markers.length; i++) {
-                                markers[i].obj.setMap(nsd.map);
+                                if (markers[i].obj !== undefined)
+                                    markers[i].obj.setMap(nsd.map);
                             }
                             for (var j = 0; j < shared.game_spots.length; j++) {
                                 shared.game_spots[j].setMap(null);
@@ -1860,11 +1878,16 @@
                         break;
                     case 2:
                         //showPointsHistory();
+                        if (nsd.user.token == null) {
+                            showUserAlert();
+                            switchMenu(0);
+                            return;
+                        }
                         goMyDiscovery();
                         switchMenu(1);
                         break;
                     case 3:
-                        showBottomPanel(0);
+                        showBottomPanel(0, 0);
                         break;
                     case 4:
                         showBottomPanel(1);
@@ -1880,7 +1903,7 @@
         });
         $('#btn_rule').click(function() {
             resetScreen();
-            showBottomPanel(0);
+            showBottomPanel(0, 1);
             switchMenu(2);
         })
         $('#about .btn-simple').click(function() {
@@ -1893,7 +1916,8 @@
                 $('#ui_board').show();
                 shared.route.setDirections(shared.main_route);
                 for (var i = 0; i < markers.length; i++) {
-                    markers[i].obj.setMap(nsd.map);
+                    if (markers[i].obj !== undefined)
+                        markers[i].obj.setMap(nsd.map);
                 }
                 for (var j = 0; j < shared.game_spots.length; j++) {
                     shared.game_spots[j].setMap(null);
@@ -2017,24 +2041,28 @@
                 //showPointsHistory();
                 return;
             }
-            $('#user_action').show();
             if (idx == 0) {
-                $('#user_action .pattern').hide();
-                $('#user_action .select').show();
+                //$('#user_action .pattern').hide();
+                //$('#user_action .select').show();
+                openWeiboAuth();
             } else {
+                $('#user_action').show();
                 $('#user_action .pattern').hide();
-                $('#user_action .select').hide();
-                $('#user_action .register').show();
-                $('.register input:first').focus();
+                /*$('#user_action .select').hide();
+                 $('#user_action .register').show();
+                 $('.register input:first').focus();*/
+                $('#user_action').addClass('wide');
+                $('.select').hide();
+                $('.login').show();
+                $('.login input:first').focus();
+                adjust();
             }
-            adjust();
+            //adjust();
         });
         $('#ui_user .bar > span').click(showPointsHistory);
         $('#ui_user a.exit').click(userSignOut);
         $('#ui_info .pic').click(showLatestPic);
-        $('#user_action a.weibo').click(function() {
-            openWeiboAuth();
-        });
+        $('#user_action a.weibo').click(openWeiboAuth);
         $('#user_action a.email').click(function() {
             $('#user_action').addClass('wide');
             $('.select').hide();
@@ -2185,6 +2213,15 @@
             });
         });
         $('#quiz .submit').click(submitQuiz);
+        $('#welcome .weibo').click(openWeiboAuth);
+        $('#welcome .skip,#welcome .mask').click(function() {
+            effect.fadeOut('#welcome', .4);
+        });
+        $('#welcome .links a').click(function() {
+            effect.fadeOut('#welcome', .2);
+            var idx = $(this).index();
+            showBottomPanel(0, idx + 1);
+        });
     }
 
     if (/Android|webOS|iPhone|iPod|IEMobile|BlackBerry/i.test(navigator.userAgent)) {
@@ -2205,8 +2242,8 @@
                 var first = getCookie("first_visit");
                 if (first !== null && first != "") {
                     //TODO will be reactivated
-                    //window.location.href = "home.html";
-                    //return;
+                    window.location.href = "home.html";
+                    return;
                 } else {
                     setCookie("first_visit", "yes", 90);
                 }
@@ -2220,6 +2257,9 @@
             getDiff(0);
             delegateListener();
             adjust();
+            setTimeout(function() {
+                effect.fadeOut('#welcome', .4);
+            }, 10000);
         });
     }
 })(jQuery, window);

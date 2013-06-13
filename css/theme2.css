@@ -101,6 +101,10 @@ a{cursor:pointer}
 #ui_user{}
 #ui_user .btns{font-size:0;margin:0;text-align:center}
 #ui_user .btns a{background:url(../img/ui-btn-user.png) no-repeat;color:#fff;display:inline-block;font-size:12px;height:30px;line-height:30px;margin:0 10px;text-align:center;width:120px}
+#ui_user .btns a.sina{background-image:url(../img/ui-btn-sina.png)}
+#ui_user .btns a.mail{background-image:url(../img/ui-btn-mail.png)}
+#ui_user .btns a i{background:url(../img/icon-weibo.gif) no-repeat;display:inline-block;height:15px;margin:-3px 0 0 5px;vertical-align:middle;width:18px}
+#ui_user .btns a.mail i{background-image:url(../img/icon-mail-grey.gif);width:19px}
 #ui_user .bar{background:rgba(0,0,0,.8);border-radius:3px;color:#fff;font-size:14px;height:30px;line-height:30px;margin:0 auto 4px;width:260px}
 #ui_user .bar a.exit{border-left:solid 1px #323232;color:#808080;float:right;font-size:12px;height:20px;line-height:20px;margin-top:5px;padding:0 10px}
 #ui_user .bar span{cursor:pointer;margin-left:10px}
@@ -289,9 +293,9 @@ a{cursor:pointer}
 #nav .expand p a i.separator{background:url(../img/ui-separator.gif) no-repeat center top;font:0/0 a;height:1px;left:-21px;position:absolute;top:-12px;width:20px}
 
 #user_action{left:0;position:absolute;top:0;width:100%;z-index:12}
-#user_action .mask{cursor:url(../img/cursor-close.cur) 26 26,pointer}
+#user_action .mask,#welcome .mask{background-image:url(../img/pattern-nav.png);cursor:url(../img/cursor-close.cur) 26 26,pointer}
 #user_action .bg{border-top:dashed 1px #5c6067;border-bottom:dashed 1px #5c6067;padding:5px 0;position:absolute;text-align:center;width:100%;z-index:8}
-#user_action .pattern{background:url(../img/pattern-action.png) repeat;padding:30px 0}
+#user_action .pattern{background-color:#E2E1E1;background-color:rgba(255,255,255,.7);padding:30px 0}
 #user_action .select{font-size:0}
 #user_action .select a{background:#e05206;color:#fff;display:inline-block;font-size:16px;font-weight:bold;height:40px;line-height:40px;padding:0 20px}
 #user_action .select a i{background:url(../img/icon-weibo.gif) no-repeat;display:inline-block;height:15px;margin:-3px 0 0 5px;vertical-align:middle;width:18px}
@@ -314,8 +318,21 @@ a{cursor:pointer}
 #user_action input.tiny{display:inline;float:left;margin-right:1px;width:107px}
 #user_action input.middle{display:inline;float:left;margin-right:1px;width:249px}
 #user_action button{background:url(../img/btn-arrow.gif) no-repeat center #e05206;border:0;color:#e05206;font:0/0 a;height:39px;width:30px}
-#user_action p.desc{-webkit-text-size-adjust:none;color:#fff;font-size:10px;height:auto;margin:6px 0 0;text-align:right;text-shadow:0 0 5px #000;width:300px}
+#user_action p.desc{-webkit-text-size-adjust:none;color:#fff;font-size:10px;height:auto;margin:6px 0 0;text-align:right;text-shadow:0 0 3px rgba(0,0,0,0.2);width:300px}
 #user_action p.desc a{color:#e05206;text-decoration:underline}
+
+#welcome{left:0;position:absolute;top:0;width:100%;z-index:10}
+#welcome .frame{border-top:dashed 1px #e2e1e1;border-bottom:dashed 1px #e2e1e1;left:0;padding:10px 0;position:absolute;width:100%;z-index:8}
+#welcome .panel{background:#fff;height:145px;padding:25px 0}
+#welcome .content{margin:0 auto;position:relative;width:760px}
+#welcome p{margin:12px 0}
+#welcome p.lead{font-size:20px}
+#welcome p.lead strong{color:#ff7800;display:block}
+#welcome p a{color:#656565;display:inline-block;line-height:28px;margin-right:10px;text-decoration:underline;vertical-align:text-top}
+#welcome p img{display:block}
+#welcome .prize{background:url(../img/prize-dual.jpg) no-repeat;color:#616161;left:398px;padding-top:111px;position:absolute;text-align:center;top:3px;width:430px}
+#welcome .prize b{color:#ff7800;font-weight:normal}
+#welcome .prize a{cursor:default;text-decoration:underline}
 
 #intro{background:#fff;*display:inline-block;overflow:hidden;padding-top:40px;width:1020px}
 #intro .column{display:inline;float:left;margin-left:20px;width:260px}
