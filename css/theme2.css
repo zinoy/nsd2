@@ -427,6 +427,7 @@ a{cursor:pointer}
 #auth p{font-weight:bold;margin-left:40px;padding-top:14px;width:210px}
 #auth .btns{margin:25px 50px 0 0}
 #auth .btns a{border:solid 1px #e7e7e7;display:block;font-size:12px;height:26px;line-height:26px;margin-bottom:15px;text-align:center;width:86px}
+#auth .btns a.weibo{background:#e05206;border-color:#e05206;color:#fff}
 #chromeframe p{margin:0;padding:30px 30px 0}
 #chromeframe p span{margin-top:24px}
 #chromeframe p a{color:#e05206}

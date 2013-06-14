@@ -1366,10 +1366,9 @@
             goMyDiscovery();
         }
         setUserPoints(data.points);
-        $('#ui_user .btns').hide();
+        $('#ui_user .btns,#user_action,#auth').hide();
         $('#ui_user .bar').show();
         $('#ui_user .btn-left').show();
-        $('#user_action').hide();
     }
 
     function userSignOut() {
@@ -1709,7 +1708,7 @@
                 continue;
             }
             var icon;
-            if (i > 1) {
+            if (i > 0) {
                 icon = {
                     url : 'img/my_' + i + '_off.png',
                     anchor : anchors[1]
@@ -2185,20 +2184,18 @@
             });
             showBottomPanel(0);
         });
-        $('#auth .login').click(function() {
+        $('#auth .weibo').click(function() {
+            openWeiboAuth();
             $('#auth').hide();
-            $('#user_action').show();
-            $('#user_action .pattern').hide();
-            $('#user_action .select').show();
-            adjust();
         });
-        $('#auth .reg').click(function() {
+        $('#auth .mail').click(function() {
             $('#auth').hide();
             $('#user_action').show();
             $('#user_action .pattern').hide();
-            $('#user_action .select').hide();
-            $('#user_action .register').show();
-            $('.register input:first').focus();
+            $('#user_action').addClass('wide');
+            $('.select').hide();
+            $('.login').show();
+            $('.login input:first').focus();
             adjust();
         });
         $('#chromeframe .ignore a').click(function() {
