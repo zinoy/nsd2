@@ -70,7 +70,7 @@ a{cursor:pointer}
 .icon{display:inline-block;font:0/0 a;vertical-align:middle}
 .icon-triangle{background:url(../img/arrow-btn-triangle.gif) no-repeat;height:8px;margin-top:-3px;margin-left:5px;width:4px}
 .icon-triangle-white{background-position:0 -8px}
-.icon-cross{background:url(../img/icon-cross.gif) no-repeat;height:20px;margin-top:-3px;width:20px}
+.icon-cross{background:url(../img/icon-cross.png) no-repeat;height:31px;width:31px}
 
 #main{background:#555;height:768px;overflow:hidden;position:relative}
 
@@ -101,7 +101,11 @@ a{cursor:pointer}
 #ui_user{}
 #ui_user .btns{font-size:0;margin:0;text-align:center}
 #ui_user .btns a{background:url(../img/ui-btn-user.png) no-repeat;color:#fff;display:inline-block;font-size:12px;height:30px;line-height:30px;margin:0 10px;text-align:center;width:120px}
+#ui_user .btns a span{background:url(../img/arrow-btn.png) no-repeat center -30px;display:block;height:30px;-webkit-transition:background-position .2s ease-out;transition:background-position .2s ease-out}
+#ui_user .btns a span:hover{background-position:center -60px}
 #ui_user .btns a.sina{background-image:url(../img/ui-btn-sina.png)}
+#ui_user .btns a.sina span{background-position:center top}
+#ui_user .btns a.sina span:hover{background-position:center -30px}
 #ui_user .btns a.mail{background-image:url(../img/ui-btn-mail.png)}
 #ui_user .btns a i{background:url(../img/icon-weibo.gif) no-repeat;display:inline-block;height:15px;margin:-3px 0 0 5px;vertical-align:middle;width:18px}
 #ui_user .btns a.mail i{background-image:url(../img/icon-mail-grey.gif);width:19px}
@@ -152,6 +156,7 @@ a{cursor:pointer}
 #content .article p.float-right{margin:0 0 0 20px}
 #content .mask-white{cursor:default}
 #content .panorama span{background:url(../img/icon-panorama.png) no-repeat center center}
+#content .diff span{background:url(../img/icon-diff.png) no-repeat center center}
 #content .img-expand{position:relative}
 #content .img-expand img{display:block}
 #content .img-expand span{background:url(../img/spacer.gif);left:0;position:absolute;top:0}
@@ -195,7 +200,7 @@ a{cursor:pointer}
 #gallery{height:100%;left:0;position:absolute;top:0;width:100%;z-index:2}
 #gallery .frame{background:url(../img/img-loader.gif) no-repeat center center #e2e1e1;cursor:url(../img/cursor-close.cur) 26 26,pointer;height:100%;overflow:hidden;position:absolute;visibility:hidden;width:100%}
 #gallery .frame img,#gallery .switch img{left:0;position:absolute}
-#gallery .switch a{background:url(../img/img-loader.gif) no-repeat center center #e2e1e1;border:solid 3px #fff;position:absolute;width:96px;z-index:6}
+#gallery .switch a{background:url(../img/img-loader.gif) no-repeat center center #e2e1e1;border:solid 3px #fff;box-shadow:0 3px 5px rgba(0,0,0,.34);;position:absolute;width:96px;z-index:6}
 #gallery .switch a.next{right:10px;visibility:visible}
 #gallery .switch a.prev{left:10px;visibility:visible}
 #gallery .switch img{width:100%}
@@ -208,19 +213,19 @@ a{cursor:pointer}
 #gallery .share .bg textarea{border:0;font:12px/18px monospace;display:inline-block;height:97px;margin-bottom:8px;padding:5px 10px;resize:none;text-align:left;width:513px}
 #gallery .share p.submit{bottom:-24px;height:24px;margin:0;position:absolute;width:100%}
 #gallery .share a.btn{background:#ff5900;color:#fff;display:inline-block;height:18px;line-height:18px;padding:3px 4px;vertical-align:middle}
-#gallery .share a.btn span{display:inline-block;overflow:hidden;vertical-align:text-top;white-space:nowrap}
+#gallery .share a.btn span{display:inline-block;overflow:hidden;vertical-align:text-top;white-space:nowrap;-webkit-transition:width .2s ease-out;transition:width .2s ease-out}
 #gallery .share a.btn i{background:url(../img/icon-weibo.gif) no-repeat center center;display:inline-block;height:15px;line-height:15px;margin-top:1px;vertical-align:text-top;width:19px}
-#gallery .pager{background-color:rgba(255,255,255,.2);bottom:0;font:0/0 a;height:35px;position:absolute;text-align:center;width:100%;z-index:6}
-#gallery .pager a{background:url(../img/icon-arrow.gif) no-repeat center center #000;display:inline-block;height:35px;width:32px}
+#gallery .pager,#panorama .info .bar{background-color:rgba(255,255,255,.2);bottom:0;font:0/0 a;height:35px;position:absolute;text-align:center;width:100%;z-index:6}
+#gallery .pager a,#panorama .info .bar a{background:url(../img/icon-arrow.gif) no-repeat center top #000;display:inline-block;height:35px;width:32px;-webkit-transition:background-position .2s ease-out;transition:background-position .2s ease-out}
+#gallery .pager a:hover,#panorama .info .bar a:hover{background-position:center -35px}
 #gallery .pager span{background:#e05206;color:#913300;display:inline-block;font:18px/25px lr-medium,sans-serif;height:30px;padding:5px 20px;text-align:center;vertical-align:top}
 #gallery .pager span b{color:#fff;font-size:22px;font-weight:normal}
-#gallery .pager a.next{-moz-transform:scaleX(-1);-webkit-transform:scaleX(-1);-o-transform:scaleX(-1);-ms-transform:scaleX(-1);transform:scaleX(-1)}
+#gallery .pager a.next,#panorama .info .bar a.next{-moz-transform:scaleX(-1);-webkit-transform:scaleX(-1);-o-transform:scaleX(-1);-ms-transform:scaleX(-1);transform:scaleX(-1)}
 
 #panorama{height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%;z-index:6}
 #panorama .mask{background-image:url(../img/pattern-nav.png);z-index:auto}
-#panorama .mask.close{cursor:url(../img/cursor-close.cur) 26 26,pointer;}
 #panorama .btn-square{position:absolute;right:10px;top:10px;z-index:4}
-#panorama .view{height:100%;position:absolute;top:0}
+#panorama .view{height:100%;position:absolute;top:0;visibility:hidden}
 #panorama .view .dot{position:absolute;z-index:3}
 #panorama .view .dot span{background:rgba(255,255,255,.2);border-radius:16px;height:32px;left:-16px;position:absolute;top:-16px;width:32px}
 #panorama .view .dot i{background:#585858;border:solid #fff 1px;border-radius:8px;display:block;height:12px;margin:9px auto 0;width:12px}
@@ -238,35 +243,41 @@ a{cursor:pointer}
 #panorama .info .img-hover span{background:url(../img/spacer.gif);height:100%;left:0;position:absolute;top:0;width:100%}
 #panorama .info .img-hover a{display:block;height:100%;width:100%}
 #panorama .info .img-hover a:hover{background:url(../img/icon-image-hover.gif) no-repeat left top,url(../img/icon-image-hover.gif) no-repeat right top,url(../img/icon-image-hover.gif) no-repeat left bottom,url(../img/icon-image-hover.gif) no-repeat right bottom}
-#panorama .info .bar{background-color:rgba(255,255,255,.2);border-bottom:solid 2px #e05206;font:0/0 a;height:35px;text-align:center;width:100%}
-#panorama .info .bar a{background:url(../img/icon-arrow.gif) no-repeat center center #000;display:inline-block;height:35px;width:32px}
+#panorama .info .bar{position:static}
+#panorama .info .bar a{}
 #panorama .info .bar span{background:#e05206;color:#913300;cursor:pointer;display:inline-block;font:18px/25px lr-medium,sans-serif;height:30px;padding-top:5px;text-align:center;vertical-align:top;width:72px}
 #panorama .info .bar span span{padding:0}
 #panorama .info .bar span b{color:#fff;font-size:22px;font-weight:normal}
-#panorama .info .bar a.next{-moz-transform:scaleX(-1);-webkit-transform:scaleX(-1);-o-transform:scaleX(-1);-ms-transform:scaleX(-1);transform:scaleX(-1)}
+#panorama .info .bar a.next{}
 #panorama .info .bar .icon-browse{background:url(../img/icon-browse.gif) no-repeat center center;height:25px;line-height:10px;vertical-align:text-top;width:10px}
 #panorama .hint{background:url(../img/pattern-nav.png) repeat rgba(0,0,0,.3);height:100%;position:absolute;top:0;width:100%;z-index:5}
 #panorama .hint .circle{background:url(../img/icon-panorama.png) no-repeat center top;color:#fff;font-size:14px;font-weight:bold;margin:0 auto;padding-top:110px;text-align:center;white-space:nowrap;width:120px}
 #panorama .hint .circle b{color:#e05206}
 
-#difference{background:#e2e1e1;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%;z-index:5}
+#difference{background:#7f7f7f;height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%;z-index:5}
+#difference .mask{background-image:url(../img/pattern-nav.png);z-index:auto}
 #difference .btn-square{position:absolute;right:10px;top:10px;z-index:4}
-#difference .view{font:0/0 a;height:100%;position:absolute;top:0}
-#difference .view img{cursor:pointer;margin:0 10px}
-#difference .timer{bottom:80px;position:absolute;right:40px}
-#difference .info{bottom:0;left:0;position:absolute;width:100%;z-index:3}
-#difference .info .browse{background:#fff;padding:10px 0;text-align:center;width:100%}
-#difference .info .browse p{display:inline-block;margin:0 4px;position:relative}
-#difference .info .browse img{display:block;height:100px}
-#difference .info .img-hover span{background:url(../img/spacer.gif);height:100%;left:0;position:absolute;top:0;width:100%}
-#difference .info .img-hover a{display:block;height:100%;width:100%}
-#difference .info .img-hover a:hover{background:url(../img/icon-image-hover.gif) no-repeat left top,url(../img/icon-image-hover.gif) no-repeat right top,url(../img/icon-image-hover.gif) no-repeat left bottom,url(../img/icon-image-hover.gif) no-repeat right bottom}
+#difference .view{font:0/0 a;height:100%;position:absolute;top:0;white-space:nowrap}
+#difference .view img{cursor:pointer;margin:0 6px}
+#difference .view .diff{background:url(../img/ol-tick.png) no-repeat;height:48px;position:absolute;width:48px}
+#difference .timer{border:solid 3px #fff;border-color:rgba(255,255,255,.53);border-radius:5px;bottom:60px;position:absolute;right:20px}
+#difference .timer .panel{background:#fff;padding:10px 8px;text-align:center;width:102px}
+#difference .timer span{color:#000;display:block;margin-bottom:6px;text-align:left}
+#difference .timer b{background:#000;color:#fff;display:inline-block;font:40px/48px lr-light,sans-serif;height:49px;width:49px}
+#difference .timer b:last-child{margin-left:2px}
+#difference .info{border-bottom:solid 2px #e05206;bottom:0;left:0;position:absolute;width:100%;z-index:3}
+#difference .info .circle{background:#464646;background:rgba(0,0,0,.66);border:solid 4px #fff;border-radius:46px;color:rgba(255,255,255,.6);font-size:12px;font-weight:bold;height:78px;line-height:28px;padding-top:4px;position:absolute;text-align:center;top:-154px;width:82px;left:700px}
+#difference .info .circle b{color:#fff;display:block;font-family:lr-bold,sans-serif;font-size:45px;line-height:40px}
 #difference .info .bar{background-color:rgba(255,255,255,.2);border-bottom:solid 2px #e05206;font:0/0 a;height:35px;text-align:center;width:100%}
 #difference .info .bar a{background:url(../img/icon-arrow.gif) no-repeat center center #000;display:inline-block;height:35px;width:32px}
 #difference .info .bar span{background:#e05206;color:#913300;cursor:pointer;display:inline-block;font:18px/25px lr-medium,sans-serif;height:30px;padding-top:5px;text-align:center;vertical-align:top;width:72px}
 #difference .info .bar span span{padding:0}
 #difference .info .bar span b{color:#fff;font-size:22px;font-weight:normal}
 #difference .info .bar a.next{-moz-transform:scaleX(-1);-webkit-transform:scaleX(-1);-o-transform:scaleX(-1);-ms-transform:scaleX(-1);transform:scaleX(-1)}
+#difference .hint{background:#fff;bottom:2px;box-shadow:0 -5px 0 rgba(255,255,255,.6);left:0;padding:20px 0 0;position:absolute;text-align:center;width:100%;z-index:3}
+#difference .hint p{color:#404040;font-size:14px;line-height:24px;margin:0}
+#difference .hint p b{color:#e05206;display:block;font-weight:normal}
+#difference .hint p a{border-top:solid 1px #a7a7a7;display:block;height:36px;line-height:36px;margin-top:20px}
 
 #head{bottom:30px;color:#fff;padding:5px;position:absolute;right:20px;text-align:right}
 #head span{background:#e05206;display:inline-block;font-size:22px;height:28px;line-height:26px;padding:0 3px 0 8px}
@@ -278,7 +289,7 @@ a{cursor:pointer}
 #nav div.separator i{background:#fff;bottom:0;height:4px;position:absolute;right:-11px;width:2px}
 #nav .btn{background:url(../img/ui-icon-nav.gif) no-repeat 6px center #e05206;color:#fff;display:inline;float:left;font-size:10px;height:20px;line-height:20px;margin-left:20px;text-align:center}
 #nav .contract{bottom:0;cursor:pointer;left:0;position:absolute;padding-top:10px;width:100%}
-#nav .contract p{background:url(../img/pattern-nav.png) repeat;float:left;font:0/0 a;height:20px;margin:0 0 0 20px}
+#nav .contract p{background:url(../img/pattern-nav.png) repeat;float:right;font:0/0 a;height:20px;margin:0}
 #nav .contract span{background:#bcbec0;display:inline-block;height:2px;margin:0 10px;vertical-align:top}
 #nav .contract span.first{margin-left:0}
 #nav .contract span.active{background:#e05206;height:4px}
@@ -293,7 +304,7 @@ a{cursor:pointer}
 #nav .expand p a i.separator{background:url(../img/ui-separator.gif) no-repeat center top;font:0/0 a;height:1px;left:-21px;position:absolute;top:-12px;width:20px}
 
 #user_action{left:0;position:absolute;top:0;width:100%;z-index:12}
-#user_action .mask,#welcome .mask{background-image:url(../img/pattern-nav.png);cursor:url(../img/cursor-close.cur) 26 26,pointer}
+/*#user_action .mask,#welcome .mask{background-image:url(../img/pattern-nav.png);cursor:url(../img/cursor-close.cur) 26 26,pointer}*/
 #user_action .bg{border-top:dashed 1px #5c6067;border-bottom:dashed 1px #5c6067;padding:5px 0;position:absolute;text-align:center;width:100%;z-index:8}
 #user_action .pattern{background-color:#E2E1E1;background-color:rgba(255,255,255,.7);padding:30px 0}
 #user_action .select{font-size:0}
@@ -321,7 +332,7 @@ a{cursor:pointer}
 #user_action p.desc{-webkit-text-size-adjust:none;color:#fff;font-size:10px;height:auto;margin:6px 0 0;text-align:right;text-shadow:0 0 3px rgba(0,0,0,0.2);width:300px}
 #user_action p.desc a{color:#e05206;text-decoration:underline}
 
-#welcome{left:0;position:absolute;top:0;width:100%;z-index:10}
+#welcome{left:0;position:absolute;top:0;visibility:hidden;width:100%;z-index:10}
 #welcome .frame{border-top:dashed 1px #e2e1e1;border-bottom:dashed 1px #e2e1e1;left:0;padding:10px 0;position:absolute;width:100%;z-index:8}
 #welcome .panel{background:#fff;height:145px;padding:25px 0}
 #welcome .content{margin:0 auto;position:relative;width:760px}
@@ -329,6 +340,7 @@ a{cursor:pointer}
 #welcome p.lead{font-size:20px}
 #welcome p.lead strong{color:#ff7800;display:block}
 #welcome p a{color:#656565;display:inline-block;line-height:28px;margin-right:10px;text-decoration:underline;vertical-align:text-top}
+#welcome p a.skip{color:#949494}
 #welcome p img{display:block}
 #welcome .prize{background:url(../img/prize-dual.jpg) no-repeat;color:#616161;left:398px;padding-top:111px;position:absolute;text-align:center;top:3px;width:430px}
 #welcome .prize b{color:#ff7800;font-weight:normal}
@@ -419,15 +431,19 @@ a{cursor:pointer}
 .overlay p .more,.overlay p .ignore{display:block;font-weight:normal;margin-top:1em}
 .overlay p span a{text-decoration:underline}
 .overlay p .ignore a{color:#b4b4b4 !important;text-decoration:underline}
+.overlay .btns a{border:solid 1px #e7e7e7;display:inline-block;font-size:12px;height:26px;line-height:26px;margin-bottom:15px;text-align:center;width:86px}
+.overlay .btns a.highlight{background:#e05206;border-color:#e05206;color:#fff}
 #alert p{font-size:14px;font-weight:bold;padding-top:32px;text-align:center}
 #alert p b,#auth p b{color:#e05206}
 #alert p i{font-family:lr-bold,sans-serif;font-size:20px;font-style:normal;margin:.4em}
-#auth .close{background:url(../img/icon-cross-white.png) no-repeat center center #e5e3e3;font:0/0 a;height:24px;position:absolute;right:0;top:0;width:24px}
-#auth .close:hover{background-color:#e05206}
+#auth .close,#dialog .close{background:url(../img/icon-cross-white.png) no-repeat center center #e5e3e3;font:0/0 a;height:24px;position:absolute;right:0;top:0;width:24px}
+#auth .close:hover,#dialog .close:hover{background-color:#e05206}
 #auth p{font-weight:bold;margin-left:40px;padding-top:14px;width:210px}
 #auth .btns{margin:25px 50px 0 0}
-#auth .btns a{border:solid 1px #e7e7e7;display:block;font-size:12px;height:26px;line-height:26px;margin-bottom:15px;text-align:center;width:86px}
-#auth .btns a.weibo{background:#e05206;border-color:#e05206;color:#fff}
+#auth .btns a{display:block}
 #chromeframe p{margin:0;padding:30px 30px 0}
 #chromeframe p span{margin-top:24px}
 #chromeframe p a{color:#e05206}
+#dialog p{margin:16px 30px}
+#dialog p.text{font-size:14px;height:40px}
+#dialog p.text b{color:#e05206}

@@ -24,19 +24,12 @@
 <body>
   <div id="main" class="screen">
     <div id="difference">
-      <div class="view">
-        <img src="files/0525/a7b6cfe211194482961f1e3b7818cc83_t.jpg" alt="" />
-        <img src="files/0525/a7b6cfe211194482961f1e3b7818cc83_t.jpg" alt="" />
-      </div>
-      <div class="mask" style="display:none"></div>
+      <div class="view"></div>
+      <div class="mask"></div>
       <a class="btn-simple btn-square close" title="关闭"><i class="icon icon-cross"></i></a>
       <div class="info">
-        <div class="browse" style="display:none">
-          <p class="img-hover"><img src="files/0525/2f64d254922942b5a006ef67c8c23425_t.jpg" /><span><a></a></span></p>
-          <p class="img-hover"><img src="files/0526/170fe9d9fcf0441b8dc3a6bda6a7afe8_t.jpg" /><span><a></a></span></p>
-          <p class="img-hover"><img src="files/0525/508a92f19fcd4184bd4437a0fd60cb07_t.jpg" /><span><a></a></span></p>
-        </div>
-        <div class="bar">
+        <div class="circle" style="display:none;">剩余<b>0</b></div>
+        <div class="bar" style="display:none;">
           <a class="prev"></a>
           <span>
             <span><b>1</b> / 3</span>
@@ -45,12 +38,15 @@
           <a class="next"></a>
         </div>
       </div>
-      <div class="timer">
-        <span>剩余时间</span>
-        <b>6</b><b>0</b>
+      <div class="timer" style="display:none;">
+        <div class="panel">
+          <span>剩余时间：</span>
+          <b>6</b><b>0</b>
+        </div>
       </div>
       <div class="hint" style="display:none;">
-        <div class="circle">点击查看每个<b>热点</b></div>
+        <p><b>在60秒的时间内</b>对比两张图片，找出其中的不同之处</p>
+        <p><a>开始发现</a></p>
       </div>
     </div>
     <div id="ui_board" class="col2">
@@ -126,8 +122,21 @@
       <div class="extend"></div>
     </div>
   </div>
+  <div id="alert" class="overlay" style="display:none;">
+    <p><b>分享成功！</b>恭喜您获得了<i>20</i>点积分。</p>
+  </div>
+  <div id="dialog" class="overlay" style="display:none;">
+    <p class="text">恭喜<br />你</p>
+    <p class="btns">
+      <a class="highlight">确定</a>
+      <a>取消</a>
+    </p>
+  </div>
   <script src="js/modernizr.custom.88639.js"></script>
   <script>document.write('<script src="js/jquery-'+(window.addEventListener||(document.documentMode>=9)?'2.0.0':'1.9.1')+'.min.js"><\/script>')</script>
+  <script src="js/plugins/CSSPlugin.min.js"></script>
+  <script src="js/easing/EasePack.min.js"></script>
+  <script src="js/TweenLite.min.js"></script>
   <script src="js/share.min.js"></script>
   <script src="js/action.js"></script>
 </body>

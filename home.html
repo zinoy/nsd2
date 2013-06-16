@@ -128,7 +128,7 @@
         <img src="files/0525/2f64d254922942b5a006ef67c8c23425_b.jpg" alt="" />
       </div>
       <div class="mask mask-alpha3" style="display:none"></div>
-      <a class="btn-simple btn-square close" title="关闭"><i class="icon icon-cross"></i></a>
+      <a class="btn-square close icon-cross" title="关闭"></a>
       <div class="info">
         <div class="circle">发现<b>16</b></div>
         <div class="browse" style="display:none"></div>
@@ -146,6 +146,32 @@
       </div>
       <div class="hint" style="display:none;">
         <div class="circle">点击查看每个<b>热点</b></div>
+      </div>
+    </div>
+    <div id="difference" style="display:none;">
+      <div class="view"></div>
+      <div class="mask"></div>
+      <a class="btn-square close icon-cross" title="关闭"></a>
+      <div class="info">
+        <div class="circle" style="display:none;">剩余<b>0</b></div>
+        <div class="bar" style="display:none;">
+          <a class="prev"></a>
+          <span>
+            <span><b>1</b> / 3</span>
+            <i class="icon icon-browse" style="display:none;"></i>
+          </span>
+          <a class="next"></a>
+        </div>
+      </div>
+      <div class="timer" style="display:none;">
+        <div class="panel">
+          <span>剩余时间：</span>
+          <b>6</b><b>0</b>
+        </div>
+      </div>
+      <div class="hint" style="display:none;">
+        <p><b>在60秒的时间内</b>对比两张图片，找出其中的不同之处</p>
+        <p><a>开始发现</a></p>
       </div>
     </div>
     <div id="ui_board" class="col2">
@@ -182,15 +208,15 @@
       <div class="separator"><i></i></div>
       <div id="ui_user" class="section">
         <p class="btns">
-          <a class="sina">微博登录<i class="icon"></i></a>
-          <a class="mail">邮箱登录<i class="icon"></i></a>
+          <a class="sina"><span>微博登录<i class="icon"></i></span></a>
+          <a class="mail"><span>邮箱登录<i class="icon"></i></span></a>
         </p>
         <p class="bar" style="display:none;">
-          <a class="exit">退出</a>
+          <a class="exit"><span>退出</span></a>
           <span>我的积分：<b>15</b></span>
         </p>
         <p class="btns btn-left" style="display:none;">
-          <a>我的发现</a>
+          <a><span>我的发现</span></a>
         </p>
       </div>
       <div class="separator"><i></i></div>
@@ -402,7 +428,7 @@
     </div>
   </div>
   <div id="user_action" style="display:none;">
-    <div class="mask"></div>
+    <div class="mask cursor-close"></div>
     <div class="bg">
       <a class="close" style="display:none;">关闭</a>
       <div class="pattern select">
@@ -458,13 +484,13 @@
     </div>
   </div>
   <div id="welcome">
-    <div class="mask"></div>
+    <div class="mask cursor-close"></div>
     <div class="frame">
       <div class="panel">
         <div class="content">
           <p class="lead">欢迎来到中国最美前线<strong>即刻登录！获得更多积分，赢取惊喜大礼！</strong></p>
-          <p><a class="weibo"><img src="img/btn-welcome.gif" alt="新浪微博快速登录" /></a> <a class="skip">跳过</a></p>
-          <p class="links"><a>积分细则</a><a>奖品设置</a></p>
+          <p><a class="weibo"><img src="img/btn-welcome.gif" alt="新浪微博快速登录" /></a></p>
+          <p class="links"><a>积分细则</a><a>奖品设置</a><a class="skip">跳过</a></p>
           <div class="prize"> (一等奖:<b>12名</b>  获享<a>路虎揽胜极光</a>或<a>神行者2代</a>使用权一个月)</div>
         </div>
       </div>
@@ -534,11 +560,19 @@
   <div id="alert" class="overlay" style="display:none;">
     <p><b>分享成功！</b>恭喜您获得了<i>20</i>点积分。</p>
   </div>
+  <div id="dialog" class="overlay" style="display:none;">
+    <a class="close" title="关闭">关闭</a>
+    <p class="text">恭喜<br />你</p>
+    <p class="btns">
+      <a class="highlight">确定</a>
+      <a>取消</a>
+    </p>
+  </div>
   <div id="auth" class="overlay" style="display:none;">
     <a class="close" title="关闭">关闭</a>
     <p class="float-left"><b>抱歉，您尚未登录。</b>用微博账号登录，获取更多积分赢路虎使用权。<span class="more"><a>了解详情</a></span></p>
     <div class="float-right btns">
-      <a class="weibo">微博登录</a>
+      <a class="highlight weibo">微博登录</a>
       <a class="mail">邮箱登录</a>
     </div>
   </div>
