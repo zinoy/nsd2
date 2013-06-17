@@ -114,7 +114,7 @@
                 label.push(1);
             } else if (( typeof arguments[i]) == 'function' && callback.length < label.length) {
                 var call = arguments[i];
-                $('#dialog .btns a').eq(callback.length).click(function() {
+                $('#dialog .btns a').eq(callback.length).off('click').click(function() {
                     call();
                     TweenLite.to('#dialog', .2, {
                         top : shared.screen.height * .1,
@@ -830,7 +830,6 @@
                 ids = idx;
             } else if (!$.isNumeric(idx)) {
                 idx = $('#gallery > .switch .next').data('index');
-                shared.gallery_id = idx;
             }
             //$('#gallery > .frame').eq(idx).css('left', width).addClass('visible');
             start = {
@@ -848,7 +847,6 @@
                 ids = idx;
             } else if (!$.isNumeric(idx)) {
                 idx = $('#gallery > .switch .prev').data('index');
-                shared.gallery_id = idx;
             }
             //$('#gallery > .frame').eq(idx).css('left', -width).addClass('visible');
             start = {
@@ -856,6 +854,7 @@
             };
             end = width;
         }
+        shared.gallery_id = idx;
         shared.animating = true;
         TweenLite.fromTo(frames.eq(ids).addClass('visible'), .8, start, {
             left : 0,
@@ -1278,7 +1277,15 @@
                     game : 1
                 }, function(data) {
                     if (generalErrorHandle(data)) {
-                        showAlert('恭喜你！通过互动游戏获得<i>' + data.amount + '</i>点积分。');
+                        showDialog("<b>恭喜！本站发现任务完成。</b><br />你获得了<i>" + data.amount + "</i>点积分。", "返回", function() {
+                            shared.mode.panorama = false;
+                            $('#panorama').hide();
+                            $('#ui_board,#nav').show();
+                            shared.game_spots[0].setIcon({
+                                url : 'img/my_1_on.png',
+                                anchor : new google.maps.Point(33, 66)
+                            });
+                        });
                         setUserPoints(data.points);
                     }
                 });
@@ -1368,49 +1375,70 @@
         });
     }
 
-    function showDiff(idx) {
-        var obj = nsd.data.diff.list[idx];
-        $('#difference .view').empty().append('<img src="' + obj.file[0] + '" />').append('<img src="' + obj.file[1] + '" />')
+    function showDiff() {
         var resize = function() {
-            var fh = $('#difference .view').height();
-            shared.diff.ratio = fh / obj.height;
-            var iw = obj.width * shared.diff.ratio;
-            $('#difference .view img').height(fh).width(iw).click(clickDiff);
-            $('#difference .view').css('left', (shared.screen.width - $('#difference .view').width()) / 2);
-            $('#difference .circle').css('left', (shared.screen.width - 90) / 2);
-            $('#difference .view .diff.major').each(function() {
-                var pos = $(this).data('pos');
-                var tx = pos.x * shared.diff.ratio + 6 - 24, ty = pos.y * shared.diff.ratio - 24;
-                var tick1 = $(this).css({
-                    left : tx,
-                    top : ty
-                });
-                var sub = $(this).data('sub');
-                sub.css({
-                    left : tx + iw + 12,
-                    top : ty
-                });
+            $('#difference .view').each(function() {
+                var img = $(this).children('img'), ratio;
+                var hrz = $(this).hasClass('horizon');
+                if (hrz) {
+                    var fw = shared.screen.width;
+                    ratio = fw / $(this).data('width');
+                    var ih = $(this).data('height') * ratio;
+                    if ((ih + 12) * 2 > shared.screen.height) {
+                        ih = (shared.screen.height - 12) / 2;
+                        ratio = ih / $(this).data('height');
+                        fw = $(this).data('width') * ratio;
+                    }
+                    img.height(ih).width(fw);
+                    $(this).width(fw).data('ratio', ratio).css({
+                        top : (shared.screen.height - $(this).height()) / 2,
+                        left : (shared.screen.width - $(this).width()) / 2
+                    });
+                } else {
+                    var fh = $(this).height();
+                    ratio = fh / $(this).data('height');
+                    var iw = $(this).data('width') * ratio;
+                    img.height(fh).width(iw);
+                    $(this).data('ratio', ratio).css('left', (shared.screen.width - $(this).width()) / 2);
+                }
+                if ($(this).hasClass('active')) {
+                    $(this).find('.diff.major').each(function() {
+                        var pos = $(this).data('pos');
+                        var tx = pos.x * ratio + 6 - 24, ty = pos.y * ratio - 24;
+                        var tick1 = $(this).css({
+                            left : tx,
+                            top : ty
+                        });
+                        var sub = $(this).data('sub');
+                        if (hrz) {
+                            sub.css({
+                                left : tx,
+                                top : ty + ih + 12
+                            });
+                        } else {
+                            sub.css({
+                                left : tx + iw + 12,
+                                top : ty
+                            });
+                        }
+                    });
+                }
             });
-        }, countdown = function() {
-            var digi = $('#difference .timer b');
-            var str = String(shared.diff.time);
-            digi.eq(1).text(str[str.length - 1]);
-            if (str.length > 1) {
-                digi.eq(0).text(str[0]);
-            } else {
-                digi.eq(0).text(0);
+            $('#difference .circle').css('left', (shared.screen.width - 90) / 2);
+        };
+        $('#difference .view').remove();
+        for (var i = nsd.data.diff.count - 1; i >= 0; i--) {
+            var obj = nsd.data.diff.list[i];
+            var view = $('<div class="view"/>').append('<img src="' + obj.file[0] + '" />').append('<img src="' + obj.file[1] + '" />').data({
+                height : obj.height,
+                width : obj.width
+            });
+            if (obj.orientation == "horizon") {
+                view.addClass('horizon');
+                view.find('img:first').addClass('top');
             }
-            if (shared.diff.time <= 0) {
-                showDialog("很遗憾，时间到！", "再玩一次", function() {
-                    showDiff(0);
-                });
-            } else {
-                shared.diff.timer = setTimeout(countdown, 1000);
-            }
-            shared.diff.time -= 1;
+            $('#difference').prepend(view);
         }
-        shared.diff.time = 60;
-        shared.diff.found = obj.items.length;
         $('#difference').show();
         $('#ui_board,#nav').hide();
         $('#difference .circle b').text(shared.diff.found);
@@ -1420,7 +1448,7 @@
                 bottom : -$('#difference .hint').height() - 30,
                 ease : Power2.easeOut,
                 onComplete : function() {
-                    countdown();
+                    startDiff();
                 }
             });
             effect.fadeOut('#difference .mask', .3);
@@ -1429,6 +1457,7 @@
         $('#difference .hint').css('visibility', 'hidden').show();
         resize();
         $(window).resize(resize);
+        $('#difference .view img').click(clickDiff);
         $('#difference .circle,#difference .timer').hide();
         effect.fadeIn('#difference .mask', .4);
         $('#difference .hint').css('visibility', '');
@@ -1438,25 +1467,83 @@
             bottom : 2,
             ease : Power2.easeOut
         });
+        shared.diff.bonus = [];
+        goDiff(0, true);
+    }
+
+    function startDiff() {
+        var digi = $('#difference .timer b');
+        var str = String(shared.diff.time);
+        digi.eq(1).text(str[str.length - 1]);
+        if (str.length > 1) {
+            digi.eq(0).text(str[0]);
+        } else {
+            digi.eq(0).text(0);
+        }
+        if (shared.diff.time <= 0) {
+            showDialog("很遗憾，时间到！", "再玩一次", function() {
+                shared.diff.bonus = [];
+                goDiff(0);
+            });
+        } else {
+            shared.diff.timer = setTimeout(startDiff, 1000);
+        }
+        shared.diff.time -= 1;
+    }
+
+    function goDiff(idx, first) {
+        var obj = nsd.data.diff.list[idx];
+        shared.diff.time = 60;
+        shared.diff.found = obj.items.length;
+        shared.diff.index = idx;
+        $('#difference .view .diff').remove();
+        $('#difference .circle b').text(shared.diff.found);
+        $('#difference .view.active').removeClass('active');
+        $('#difference .view').eq(idx).data('list', obj.items.slice(0)).addClass('visible active');
+        if (!first) {
+            var prev = $('#difference .view').eq(idx - 1);
+            var cur = $('#difference .view.active');
+            var start = (shared.screen.width - cur.width()) / 2;
+            var end = (shared.screen.width - prev.width()) / 2;
+            TweenLite.fromTo(cur, .8, {
+                left : start + shared.screen.width
+            }, {
+                left : start,
+                ease : Power2.easeOut
+            });
+            TweenLite.to(prev, .8, {
+                left : end - shared.screen.width,
+                ease : Power2.easeOut,
+                onComplete : function() {
+                    prev.removeClass('visible');
+                    startDiff();
+                }
+            });
+        }
     }
 
     function clickDiff(e) {
-        var list = $('#difference .view').data('list');
-        var x = e.offsetX / shared.diff.ratio, y = e.offsetY / shared.diff.ratio;
+        var list = $('#difference .view.active').data('list'), ratio = $('#difference .view.active').data('ratio');
+        var x = e.offsetX / ratio, y = e.offsetY / ratio;
         for (var i = 0; i < list.length; i++) {
             var rect = list[i].rect;
             if (x > rect[0] && x < rect[2] && y > rect[1] && y < rect[3]) {
                 list.splice(i, 1);
-                var pos = {}, iw = $('#difference .view img').width();
+                var hrz = $('#difference .view.active').hasClass('horizon');
+                var pos = {}, iw = $('#difference .view.active img').width();
                 pos.x = (rect[0] + rect[2]) / 2;
                 pos.y = (rect[1] + rect[3]) / 2;
-                var tx = pos.x * shared.diff.ratio + 6 - 24, ty = pos.y * shared.diff.ratio - 24;
+                var tx = pos.x * ratio + 6 - 24, ty = pos.y * ratio - 24;
                 var tick1 = $('<i class="diff major"/>').css({
                     left : tx,
                     top : ty
                 });
                 var tick2 = tick1.clone().removeClass('major');
-                tick2.css('left', tx + iw + 12);
+                if (hrz) {
+                    tick2.css('top', ty + $('#difference .view.active img').height() + 12);
+                } else {
+                    tick2.css('left', tx + iw + 12);
+                }
                 tick1.data({
                     pos : pos,
                     sub : tick2
@@ -1465,12 +1552,46 @@
                 $('#difference .circle b').text(shared.diff.found);
                 if (shared.diff.found == 0) {
                     clearTimeout(shared.diff.timer);
-                    showDialog("<b>恭喜，您已经找到全部的不同点！</b><br />还有更多等待你去发现，敬请期待。", "返回", function() {
-                        $('#difference').hide();
-                        $('#ui_board,#nav').show();
-                    });
+                    shared.diff.bonus.push(shared.diff.time + 1);
+                    if (shared.diff.index < nsd.data.diff.count - 1) {
+                        showDialog("<b>恭喜！发现任务完成。</b><br />还有更多关卡等你发现。", "下一关", function() {
+                            goDiff(shared.diff.index + 1);
+                        });
+                    } else {
+                        var sum = 0, bonus;
+                        for (var n = 0; n < shared.diff.bonus.length; n++) {
+                            sum += shared.diff.bonus[n];
+                        }
+                        bonus = Math.floor(sum / shared.diff.bonus.length);
+                        $.post(config.api_path, {
+                            ac : 'gamecomplete',
+                            ext : bonus,
+                            token : nsd.user.token,
+                            game : 2
+                        }, function(data) {
+                            if (generalErrorHandle(data)) {
+                                showDialog("<b>恭喜！本站发现任务完成。</b><br />你获得了<i>" + data.amount + "</i>点积分（含时间奖励<i>" + bonus + "</i>点积分）。", "返回", function() {
+                                    $('#dialog .close').click();
+                                    $('#difference').hide();
+                                    $('#ui_board,#nav').show();
+                                    shared.game_spots[1].setIcon({
+                                        url : 'img/my_2_on.png',
+                                        anchor : new google.maps.Point(33, 66)
+                                    });
+                                });
+                                setUserPoints(data.points);
+                            }
+                            if (data.code == 114) {
+                                showDialog("<b>恭喜！本站发现任务完成。</b>", "返回", function() {
+                                    $('#dialog .close').click();
+                                    $('#difference').hide();
+                                    $('#ui_board,#nav').show();
+                                });
+                            }
+                        });
+                    }
                 }
-                $('#difference .view').data('list', list).append(tick1, tick2);
+                $('#difference .view.active').data('list', list).append(tick1, tick2);
                 return;
             }
         }
