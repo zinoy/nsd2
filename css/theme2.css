@@ -110,9 +110,12 @@ a{cursor:pointer}
 #ui_user .btns a i{background:url(../img/icon-weibo.gif) no-repeat;display:inline-block;height:15px;margin:-3px 0 0 5px;vertical-align:middle;width:18px}
 #ui_user .btns a.mail i{background-image:url(../img/icon-mail-grey.gif);width:19px}
 #ui_user .bar{background:rgba(0,0,0,.8);border-radius:3px;color:#fff;font-size:14px;height:30px;line-height:30px;margin:0 auto 4px;width:260px}
-#ui_user .bar a.exit{border-left:solid 1px #323232;color:#808080;float:right;font-size:12px;height:20px;line-height:20px;margin-top:5px;padding:0 10px}
 #ui_user .bar span{cursor:pointer;margin-left:10px}
 #ui_user .bar span b{color:#e05206;font:16px lr-bold,sans-serif;margin-left:.5em}
+#ui_user .bar a.exit span{border-left:solid 1px #323232;color:#808080;float:right;font-size:12px;height:20px;line-height:20px;margin-top:5px;padding:0 10px}
+#ui_user .bar a.point span{color:#808080;float:right;font-size:12px;height:20px;line-height:20px;margin-top:5px;padding:0 10px}
+#ui_user .bar a span{margin:0}
+#ui_user .bar a:hover span{color:#efefef}
 #ui_user .btn-left{padding-left:10px;text-align:left}
 
 #ui_info{width:260px}
@@ -175,12 +178,13 @@ a{cursor:pointer}
 #content #points_history{height:532px;margin-bottom:20px;overflow:auto;overflow-y:scroll;padding:20px 0 0 150px;width:560px}
 #content #points_history .article{overflow:auto}
 #content .timeline h2{color:#000;font-size:18px;font-weight:bold;margin:20px 0 25px 15px}
-#content .timeline .block{border-left:dashed 1px #c8c8c8;margin-left:25px}
-#content .timeline .item{margin:10px 0 10px -25px;overflow:hidden}
+#content .timeline .block{border-left:dashed 1px #c8c8c8;margin-left:28px}
+#content .timeline .item{margin:10px 0 10px -28px;overflow:hidden}
 #content .timeline .item p{margin:0}
 #content .timeline .single-line{line-height:50px}
-#content .timeline .circle{background:#474747;border-radius:25px;color:#fff;float:left;font-size:12px;font-style:normal;font-weight:bold;height:50px;line-height:50px;margin-right:30px;text-align:center;width:50px}
-#content .timeline blockquote{background:#e8e8e8;font-size:12px;margin:5px 20px 0 80px}
+#content .timeline .circle{background:#e05206;background-clip:content-box;border:solid 3px rgba(165,165,165,.25);border-radius:28px;color:#fff;float:left;font-size:12px;font-style:normal;height:50px;line-height:50px;margin-right:30px;text-align:center;width:50px}
+#content .timeline b{color:#e05206}
+#content .timeline blockquote{background:#e8e8e8;font-size:12px;margin:5px 20px 0 86px}
 #content .timeline blockquote img{display:block;margin:0 auto}
 #content .timeline blockquote .comment{padding:10px}
 #content .timeline blockquote .comment h5{font-size:12px;margin:0 0 3px}
@@ -309,7 +313,7 @@ a{cursor:pointer}
 #user_action{left:0;position:absolute;top:0;width:100%;z-index:12}
 /*#user_action .mask,#welcome .mask{background-image:url(../img/pattern-nav.png);cursor:url(../img/cursor-close.cur) 26 26,pointer}*/
 #user_action .bg{border-top:dashed 1px #5c6067;border-bottom:dashed 1px #5c6067;padding:5px 0;position:absolute;text-align:center;width:100%;z-index:8}
-#user_action .pattern{background-color:#E2E1E1;background-color:rgba(255,255,255,.7);padding:30px 0}
+#user_action .pattern{background-color:#fff;padding:25px 0}
 #user_action .select{font-size:0}
 #user_action .select a{background:#e05206;color:#fff;display:inline-block;font-size:16px;font-weight:bold;height:40px;line-height:40px;padding:0 20px}
 #user_action .select a i{background:url(../img/icon-weibo.gif) no-repeat;display:inline-block;height:15px;margin:-3px 0 0 5px;vertical-align:middle;width:18px}
@@ -320,30 +324,32 @@ a{cursor:pointer}
 #user_action .select p a:hover{text-decoration:underline}
 /*#user_action .register,#user_action .login,#user_action .success{left:357px;position:absolute;top:64px;width:566px}*/
 #user_action .frame{display:inline-block;width:566px}
-#user_action .register .float-left h4,#user_action .login .float-left h4{color:#fff;font-size:16px;margin:3px 0;text-align:left;text-shadow:1px 1px 1px #000}
+#user_action .register .float-left h4,#user_action .login .float-left h4{font-size:48px;font-weight:normal;margin:0;text-align:left}
 #user_action .register .float-left p,#user_action .login .float-left p{color:#fff;margin:15px 0 0;text-align:left;text-shadow:1px 1px 1px #000}
-#user_action .register p,#user_action .login p{clear:left;height:39px;margin:0 0 1px;overflow:hidden}
+#user_action .register p,#user_action .login p{clear:left;height:48px;margin:0 0 1px;overflow:hidden}
 #user_action .success{top:10px}
 #user_action .success p.lead{color:#e05206;font-size:24px;margin:15px 0 25px;text-align:center}
 #user_action .success p.lead strong{display:block;font-size:36px;font-weight:normal;line-height:50px}
-#user_action .textbox{border:0;border-radius:0;color:#00173a;display:block;height:19px;font:12px/19px lr-medium,'Microsoft Yahei',sans-serif;padding:10px;outline:none;width:280px}
+#user_action .textbox{background:url(../img/pattern-textbox.gif);border:0;border-radius:0;color:#e05206;display:block;height:22px;font:14px/22px lr-medium,'Microsoft Yahei',sans-serif;padding:13px;outline:none;width:280px}
+#user_action .textbox:hover{background:#eee}
 #user_action input.placeholder{color:#c3c3c3}
-#user_action input.short{display:inline;float:left;margin-right:1px;width:121px}
+#user_action input.short{display:inline;float:left;margin-right:1px;width:115px}
 #user_action input.tiny{display:inline;float:left;margin-right:1px;width:107px}
 #user_action input.middle{display:inline;float:left;margin-right:1px;width:249px}
-#user_action button{background:url(../img/btn-arrow.gif) no-repeat center #e05206;border:0;color:#e05206;font:0/0 a;height:39px;width:30px}
-#user_action p.desc{-webkit-text-size-adjust:none;color:#fff;font-size:10px;height:auto;margin:6px 0 0;text-align:right;text-shadow:0 0 3px rgba(0,0,0,0.2);width:300px}
+#user_action button{background:url(../img/btn-arrow.gif) no-repeat center #e05206;border:0;color:#e05206;font:0/0 a;height:48px;width:30px}
+#user_action p.desc{color:#a4a4a4;height:auto;margin:6px 0 0;text-align:right;width:300px}
 #user_action p.desc a{color:#e05206;text-decoration:underline}
 
 #welcome{left:0;position:absolute;top:0;visibility:hidden;width:100%;z-index:10}
-#welcome .frame{border-top:dashed 1px #e2e1e1;border-bottom:dashed 1px #e2e1e1;left:0;padding:10px 0;position:absolute;width:100%;z-index:8}
-#welcome .panel{background:#fff;height:145px;padding:25px 0}
+#welcome .frame{border-top:dashed 1px #5c6067;border-bottom:dashed 1px #5c6067;left:0;padding:5px 0;position:absolute;width:100%;z-index:8}
+#welcome .panel{background:#fff;padding:25px 0}
 #welcome .content{margin:0 auto;position:relative;width:760px}
-#welcome p{margin:12px 0}
-#welcome p.lead{font-size:20px}
+#welcome p{margin:10px 0}
+#welcome p.lead{font-size:20px;margin:0}
 #welcome p.lead strong{color:#ff7800;display:block}
-#welcome p a{color:#656565;display:inline-block;line-height:28px;margin-right:10px;text-decoration:underline;vertical-align:text-top}
-#welcome p a.skip{color:#949494}
+#welcome p.links{margin:15px 0 0}
+#welcome p a{color:#656565;display:inline-block;margin-right:10px;text-decoration:underline;vertical-align:text-top}
+#welcome p a.skip{color:#949494;text-decoration:none}
 #welcome p img{display:block}
 #welcome .prize{background:url(../img/prize-dual.jpg) no-repeat;color:#616161;left:398px;padding-top:111px;position:absolute;text-align:center;top:3px;width:430px}
 #welcome .prize b{color:#ff7800;font-weight:normal}
@@ -421,6 +427,11 @@ a{cursor:pointer}
 
 #btn_rule{background:#fff;bottom:120px;color:#333;cursor:pointer;height:17px;line-height:14px;left:20px;padding-top:3px;position:absolute;text-align:center;width:120px}
 #btn_rule .icon-triangle-down{-moz-transform:rotateZ(-135deg);-webkit-transform:rotateZ(-135deg);transform:rotateZ(-135deg);background:url(../img/arrow-btn-tl.gif) no-repeat;height:7px;margin:2px 0 0 5px;vertical-align:text-top;width:7px}
+
+#bgm_control{bottom:30px;cursor:pointer;left:155px;position:absolute}
+#bgm_control i{background:url(../img/icon-bgm.gif) no-repeat;height:14px;vertical-align:text-top;width:15px}
+#bgm_control .bgm-off{background-position:0 -14px}
+#bgm_control span{color:#fff;font:11px lr-bold,sans-serif;margin-left:3px;text-transform:uppercase}
 
 /* map objects define*/
 #map_control{background:url(../img/control-map.jpg) no-repeat;border:solid 3px #fff;bottom:30px;cursor:pointer;height:74px;left:20px;position:absolute;width:114px}

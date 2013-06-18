@@ -43,6 +43,9 @@
       <i class="out"></i>
     </div>
     <div id="btn_rule">活动规则<i class="icon icon-triangle-down"></i></div>
+    <div id="bgm_control">
+      <i class="icon bgm-on"></i><span>on</span>
+    </div>
     <div id="content" class="cursor-close" style="display:none;">
       <div class="color alpha-quarter col1-full order1"></div>
       <div class="color alpha-half col1-full order2"></div>
@@ -213,6 +216,7 @@
         </p>
         <p class="bar" style="display:none;">
           <a class="exit"><span>退出</span></a>
+          <a class="point"><span>详情</span></a>
           <span>我的积分：<b>15</b></span>
         </p>
         <p class="btns btn-left" style="display:none;">
@@ -440,8 +444,7 @@
       <div class="pattern register" style="display:none;">
         <div class="frame">
           <div class="float-left">
-            <h4>注 册</h4>
-            <p>请填写右侧表格，<br />完成创建你的新帐户</p>
+            <h4>注册</h4>
           </div>
           <form class="float-right">
             <p>
@@ -452,7 +455,7 @@
               <input type="text" class="textbox password placeholder tiny" name="repass" value="再次输入密码" placeholder="再次输入密码" />
               <button type="button">提交</button>
             </p>
-            <p class="desc">通过点击此按钮，您同意隐私政策和使用条款</p>
+            <p class="desc">您同意<a>隐私政策</a>和<a>使用条款</a></p>
             <input type="hidden" name="ac" value="signup" />
           </form>
         </div>
@@ -460,8 +463,7 @@
       <div class="pattern login" style="display:none;">
         <div class="frame">
           <div class="float-left">
-            <h4>登 录</h4>
-            <p>请正确填写已注册信息</p>
+            <h4>登录</h4>
           </div>
           <form class="float-right">
             <p>
@@ -576,6 +578,10 @@
       <a class="mail">邮箱登录</a>
     </div>
   </div>
+  <audio id="bgm" loop>
+    <source src="bgm.mp3" type="audio/mpeg"></source>
+    <source src="bgm.ogg" type="audio/ogg"></source>
+  </audio>
   <script src="js/modernizr.custom.88639.js"></script>
   <script>document.write('<script src="js/jquery-'+(window.addEventListener||(document.documentMode>=9)?'2.0.0':'1.9.1')+'.min.js"><\/script>')</script>
   <script src="js/plugins/CSSPlugin.min.js"></script>

@@ -973,7 +973,10 @@
 
     function initMap() {
         config.allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(18.895114, 75.21579), new google.maps.LatLng(45.90816, 121.89743));
-        var _maker = ["img/ol-vehicle.png", "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
+        var _maker = [{
+            url : "img/ol-vehicle.png",
+            anchor : new google.maps.Point(17.5, 19.5)
+        }, "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
             url : "img/ol-stop.png",
             anchor : new google.maps.Point(11, 10.5)
         }, {
@@ -1822,7 +1825,7 @@
                     right : 0
                 }, {
                     right : -cw,
-                    delay : .4,
+                    delay : .3,
                     ease : Power2.easeOut
                 });
                 TweenLite.fromTo('#content .order1', .2, {
@@ -1935,7 +1938,7 @@
 
             effect.fadeOut('#main > .mask-alpha3,#main > .pattern-about', .2, .1);
         }
-        $('#points_history,.right-button .satellite').hide();
+        //$('#points_history,.right-button .satellite').hide();
     }
 
     //TODO my
@@ -2386,7 +2389,7 @@
             }
             //adjust();
         });
-        $('#ui_user .bar > span').click(showPointsHistory);
+        $('#ui_user .bar > span,#ui_user a.point').click(showPointsHistory);
         $('#ui_user a.exit').click(userSignOut);
         $('#ui_info .pic').click(showLatestPic);
         $('#user_action a.weibo').click(openWeiboAuth);
@@ -2543,6 +2546,19 @@
             var idx = $(this).index();
             showBottomPanel(0, idx + 1);
         });
+        $('#bgm_control').click(function() {
+            var bgm = $('#bgm')[0];
+            if ($(this).children('i').hasClass('bgm-on')) {
+                bgm.pause();
+                $(this).children('i').removeClass('bgm-on').addClass('bgm-off');
+                $(this).children('span').text('off');
+            } else {
+                bgm.play();
+                $(this).children('i').removeClass('bgm-off').addClass('bgm-on');
+                $(this).children('span').text('on');
+                bgm.volume = .25;
+            }
+        });
     }
 
     if (/Android|webOS|iPhone|iPod|IEMobile|BlackBerry/i.test(navigator.userAgent)) {
@@ -2560,6 +2576,7 @@
             });
             if (nsd.user.token == null) {
                 $('#welcome').addClass('visible');
+                effect.fadeIn('#welcome', .4, 1);
                 setTimeout(function() {
                     effect.fadeOut('#welcome', .4);
                 }, 10000);
@@ -2582,6 +2599,13 @@
             }
             delegateListener();
             adjust();
+            if ($('#bgm').length > 0) {
+                var bgm = $('#bgm')[0];
+                bgm.play();
+                setTimeout(function() {
+                    bgm.volume = .25;
+                }, 200);
+            }
         });
     }
 })(jQuery, window);
