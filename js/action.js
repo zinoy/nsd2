@@ -2122,12 +2122,12 @@
                 onComplete : function() {
                     $('#content').hide();
                     $('.gallery-list ul').empty();
+                    $('#points_history,.right-button .satellite').hide();
                 }
             });
             $('body').off('mousewheel');
-            $('#detail,.right-button a').show();
+            //$('#detail,.right-button a').show();
         }
-        $('#points_history,.right-button .satellite').hide();
         $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
         $('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
         $('#ui_info li').eq(1).children('span').html(nsd.geoinfo.date);
@@ -2574,13 +2574,6 @@
                 token : getCookie("auth_token"),
                 points : Number(getCookie("user_points"))
             });
-            if (nsd.user.token == null) {
-                $('#welcome').addClass('visible');
-                effect.fadeIn('#welcome', .4, 1);
-                setTimeout(function() {
-                    effect.fadeOut('#welcome', .4);
-                }, 10000);
-            }
             $(window).resize(adjust);
             if (window.google === undefined) {
                 var first = getCookie("first_visit");
@@ -2591,6 +2584,13 @@
                     setCookie("first_visit", "yes", 90);
                 }
             } else {
+                if (nsd.user.token == null) {
+                    $('#welcome').addClass('visible');
+                    effect.fadeIn('#welcome', .4, 1);
+                    setTimeout(function() {
+                        effect.fadeOut('#welcome', .4);
+                    }, 10000);
+                }
                 var ignore = getCookie("upgrade_ignore");
                 if ($('html').hasClass('lt-ie9') && (ignore == null || ignore == "")) {
                     setTimeout(showBrowserAlert, 1000);
