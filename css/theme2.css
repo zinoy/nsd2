@@ -152,7 +152,7 @@ a{cursor:pointer}
 #content h2{font-size:30px;font-weight:normal;margin:0;padding:0 10px}
 #content h2 span{display:block;font-size:18px;font-weight:bold;line-height:22px}
 #content h2 b{background:#000;display:block;font:0/0 a;height:5px;margin-top:20px;width:46px}
-#content .article{overflow:auto;overflow-y:scroll}
+#content .article{cursor:default;overflow:hidden}
 #content .article .content{clear:left;overflow:hidden;padding:0 10px 40px}
 #content .article p{font-size:14px;line-height:20px;margin:20px 0}
 #content .article p.float-left{margin:0 20px 0 0}
@@ -168,7 +168,7 @@ a{cursor:pointer}
 /*#content .blockquote-expand span b{background:#e05206}
 #content .blockquote-expand blockquote{display:block}*/
 #content .img-share{overflow:hidden;position:relative;text-align:center}
-#content .img-share span{background:url(../img/pattern-nav.png);bottom:-44px;cursor:default;display:block;padding:10px 0 10px;position:absolute;-webkit-transition:bottom .2s ease-out;transition:bottom .2s ease-out;width:100%}
+#content .img-share span{background:url(../img/pattern-nav.png);bottom:-44px;display:block;padding:10px 0 10px;position:absolute;-webkit-transition:bottom .2s ease-out;transition:bottom .2s ease-out;width:100%}
 #content .img-share span.hold{display:block !important}
 #content .img-share:hover span,#content .img-share span.hold{bottom:0}
 #content .img-share span input{background:#fff;border:0;font-size:12px;height:20px;margin-left:15px;padding:2px}
@@ -428,10 +428,11 @@ a{cursor:pointer}
 #btn_rule{background:#fff;bottom:120px;color:#333;cursor:pointer;height:17px;line-height:14px;left:20px;padding-top:3px;position:absolute;text-align:center;width:120px}
 #btn_rule .icon-triangle-down{-moz-transform:rotateZ(-135deg);-webkit-transform:rotateZ(-135deg);transform:rotateZ(-135deg);background:url(../img/arrow-btn-tl.gif) no-repeat;height:7px;margin:2px 0 0 5px;vertical-align:text-top;width:7px}
 
-#bgm_control{background:#000;background-color:rgba(0,0,0,.8);border-radius:3px;bottom:143px;cursor:pointer;height:17px;left:20px;padding-top:3px;position:absolute;width:120px}
-#bgm_control i{background:url(../img/icon-bgm.gif) no-repeat;height:14px;margin-left:23px;opacity:.7;vertical-align:text-top;width:14px}
-#bgm_control .bgm-off{background-position:0 -14px}
-#bgm_control span{border-left:solid 1px #333;color:#808080;float:right;font:12px/12px lr-light,sans-serif;margin-left:3px;margin-top:2px;text-align:center;text-transform:uppercase;width:59px}
+#bgm_control{background:#000;background-color:rgba(0,0,0,.8);border-radius:3px;bottom:150px;cursor:pointer;height:17px;left:20px;padding-top:5px;position:absolute;width:120px}
+#bgm_control i{background:url(../img/icon-bgm.gif) no-repeat;height:11px;margin-left:23px;opacity:.7;vertical-align:top;width:14px}
+#bgm_control .bgm-off{background-position:0 -11px}
+#bgm_control span{border-left:solid 1px #333;float:right;height:12px;margin-left:3px;text-align:center;width:59px}
+#bgm_control span b{background:#535353;background:rgba(83,83,83,.8);color:#fff;color:rgba(255,255,255,.8);display:inline-block;font:12px/12px lr-light,sans-serif;text-transform:uppercase;vertical-align:top;width:32px}
 
 /* map objects define*/
 #map_control{background:url(../img/control-map.jpg) no-repeat;border:solid 3px #fff;bottom:30px;cursor:pointer;height:74px;left:20px;position:absolute;width:114px}
@@ -461,3 +462,9 @@ a{cursor:pointer}
 #dialog p{margin:16px 30px}
 #dialog p.text{font-size:14px;height:40px}
 #dialog p.text b{color:#e05206}
+
+/* scroll bar reset */
+.jspVerticalBar{background:none;right:2px;width:6px}
+.jspTrack{background:none}
+.jspDrag{background:#ccc;border-radius:3px}
+.jspHorizontalBar{display:none}

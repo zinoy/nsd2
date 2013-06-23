@@ -5,6 +5,16 @@
     var effect = {};
     var markers = [];
     var spots;
+    var _maker = [{
+        url : "img/ol-vehicle.png",
+        anchor : new google.maps.Point(17.5, 19.5)
+    }, "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
+        url : "img/ol-stop.png",
+        anchor : new google.maps.Point(11, 10.5)
+    }, {
+        url : "img/ol-spot.png",
+        anchor : new google.maps.Point(9, 9)
+    }];
     window.nsd = nsd;
     window.setuser = setWeiboUser;
     var connecting = false;
@@ -261,12 +271,12 @@
         $('#content .gallery-list .frame').height(sh - 20);
         $('#content .order1').css('right', -iw * 2);
         $('#content .order2,.gallery-list').css('right', -iw);
-        $('#content .img > img').width($('#content .content').width());
         $('#content p.float-left > img,#content p.float-right > img').width($('#content .content').width() / 2);
         $('#content .gallery-list img').width($('#content .gallery-list ul').width()).removeAttr('height');
         $('#content .img-share span.ready').removeClass('ready');
-        $('#content .img-hover > span,#content .img-expand,#content .img-expand > span,#content .img-share,#kv_index').each(setImageSize);
-        $('#content .img-share input').width($('#content .img-share span').width() - 90 - 30);
+        $('#content .img > img,.article .img-hover>img,.img-expand>img,.img-expand>img,.img-share>img').width($('#detail').width() - 20);
+        $('#content .img-hover > span,#content .img-expand > span,#content .img-share,#kv_index').each(setImageSize);
+
         $('#content .img-share span').addClass('ready');
         $('#content #quiz').width($('#content .content').width() - 80 - 20);
         $('#gallery .frame').each(setImageSize);
@@ -323,14 +333,15 @@
             else
                 _content = true;
         }
-        if (img.height() == 0) {
+        if (img.height() < 30) {
             setTimeout(function() {
                 setImageSize(idx, obj);
             }, 200);
         } else {
             var sw = shared.screen.width, sh = shared.screen.height, iw = shared.screen.column;
             if (_content) {
-                $(obj).children('img').width($(obj).width());
+                //$(obj).children('img').width($(obj).width());
+                $('#content .img-share input').width($('#content .img-share span').width() - 90 - 30);
             } else if (frame) {
                 if (img.height() > img.width()) {
                     img.height(sh).css('left', (sw - img.width()) / 2);
@@ -350,11 +361,12 @@
                     top : (sh - ih) / 2
                 })
             } else {
+                var ph = img.height();
                 $(obj).css({
-                    height : img.height(),
+                    height : ph,
                     width : img.width()
                 }).children('a').css({
-                    height : img.height() - 6,
+                    height : ph - 6,
                     width : img.width() - 6
                 });
             }
@@ -378,9 +390,9 @@
             p = 0;
         }
 
-        var cx = 12;
-        var cy = 12;
-        var r = 12;
+        var cx = 16;
+        var cy = 16;
+        var r = 16;
         var deg = p * Math.PI * 2;
 
         var x, y;
@@ -475,6 +487,7 @@
             }
         }
         shared.mode.detail = true;
+        $('#content .article,.jspContainer,.jspPane').css('width', '');
         showLocation(loc, loc_data, dist);
     }
 
@@ -486,19 +499,23 @@
                 clickable : false,
                 map : nsd.map,
                 icon : {
-                    fillColor : '#e05206',
+                    fillColor : '#ffffff',
                     fillOpacity : 1,
                     strokeOpacity : 0,
                     path : getProgressSymbolPath(0),
-                    anchor : new google.maps.Point(12, 12)
+                    anchor : new google.maps.Point(16, 16)
                 },
                 optimized : false,
                 zIndex : 1
             });
         }
+        loc.obj.setIcon({
+            url : "img/ol-spot-on.png",
+            anchor : new google.maps.Point(9, 9)
+        });
         $('#content').data('progress', {
             p : 0,
-            origin : loc.obj,
+            origin : loc,
             obj : progress,
             location : loc_data
         });
@@ -534,7 +551,13 @@
                     });
                 }
                 initGallery(data, loc);
+                $('html,body').css("overflow", "hidden");
                 adjust();
+                $('#detail .article').jScrollPane({
+                    autoReinitialise : true,
+                    hideFocus : true,
+                    mouseWheelSpeed : 100
+                });
                 $('#content').addClass('visible');
                 $('#detail,.right-button .browse').show();
                 getQuiz(loc.id);
@@ -566,13 +589,10 @@
                     }
                 });
                 $(document).scrollTop(0);
-                $('body').on('mousewheel', function(e, delta, deltaX, deltaY) {
-                    return false;
-                });
-                $('#content .article').scrollTop(0)
+                $('#content .article').data('jsp').scrollToY(0)
                 if (loc.status == 2) {
                     nsd.map.setZoom(7);
-                    nsd.map.panTo($('#content').data('progress').origin.getPosition());
+                    nsd.map.panTo($('#content').data('progress').origin.obj.getPosition());
                     var by = nsd.size.height / 2 - (nsd.size.height - $('#ui_board').height() + 10) / 2 - 20;
                     var bx = nsd.size.width / 2 - nsd.size.column;
                     nsd.map.panBy(-bx, -by);
@@ -597,18 +617,18 @@
     function markerScrollHandle() {
         if (shared.location > 0) {
             var progress = $('#content').data('progress');
-            var tp = $(this).scrollTop();
-            var max = $('#detail .article .content').height() - $(this).height();
-            var p = tp / max;
+            var tp = $('#content .article').data('jsp').getPercentScrolledY();
+            //var max = $('#detail .article .content').height() - $(this).height();
+            //var p = tp / max;
 
             if (progress && progress.obj) {
-                if (p > progress.p) {
+                if (tp > progress.p) {
                     var icon = progress.obj.getIcon();
-                    icon.path = getProgressSymbolPath(p);
+                    icon.path = getProgressSymbolPath(tp);
                     progress.obj.setIcon(icon);
-                    progress.p = p;
+                    progress.p = tp;
                 }
-                if (p >= 1) {
+                if (tp >= 1) {
                     $('#content .article').off('scroll');
                     progress.p = 100;
                     //add point
@@ -631,7 +651,7 @@
                         gotoNextLocation(progress);
                     }
                 }
-            } else if (p >= 1) {
+            } else if (tp >= 1) {
                 $('#content .article').off('scroll');
                 gotoNextLocation(progress);
             }
@@ -745,9 +765,7 @@
             $('#ui_info,#nav').show();
         };
         //event register
-        $('#content .img-share').append('<span><input type="text" placeholder="发表您的观点能赢取更多积分" /><a class="btn"><b>分享至：</b><i class="icon-weibo"></i></a></span>').find('span').click(function(e) {
-            e.stopPropagation();
-        }).end().find('a').click(postStatus);
+        $('#content .img-share').append('<span><input type="text" placeholder="发表您的观点能赢取更多积分" /><a class="btn"><b>分享至：</b><i class="icon-weibo"></i></a></span>').find('a').click(postStatus);
         //hasLayout
         //$('#gallery').css('top', '100%').show();
         //$('.gallery-list').removeClass('visible');
@@ -973,16 +991,6 @@
 
     function initMap() {
         config.allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(18.895114, 75.21579), new google.maps.LatLng(45.90816, 121.89743));
-        var _maker = [{
-            url : "img/ol-vehicle.png",
-            anchor : new google.maps.Point(17.5, 19.5)
-        }, "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
-            url : "img/ol-stop.png",
-            anchor : new google.maps.Point(11, 10.5)
-        }, {
-            url : "img/ol-spot.png",
-            anchor : new google.maps.Point(8, 7.5)
-        }];
         spots = [new google.maps.LatLng(43.91719, 81.3241), new google.maps.LatLng(25.021529, 98.490264), new google.maps.LatLng(31.240985, 121.474113)];
         var wayPoints = [];
         var initPoint = new google.maps.LatLng(40.353216, 98.349609);
@@ -1062,8 +1070,10 @@
                             }
                         });
                         google.maps.event.addListener(marker, 'mouseout', function(e) {
-                            var obj = findMarkerFromList(this, markers);
-                            this.setIcon(_maker[obj.type]);
+                            if ($('#content').data('progress') == null) {
+                                var obj = findMarkerFromList(this, markers);
+                                this.setIcon(_maker[obj.type]);
+                            }
                         });
                         google.maps.event.addListener(marker, 'click', markerClickHandle);
                     }
@@ -2062,10 +2072,11 @@
     function gotoNextLocation(mk) {
         if (mk === undefined)
             return;
-        //google.maps.event.addListenerOnce(mk.origin, 'click', markerClickHandle);
-        //console.log('marker_click_next', mk.origin);
+        //google.maps.event.addListenerOnce(mk.origin.obj, 'click', markerClickHandle);
+        //console.log('marker_click_next', mk.origin.obj);
         if (mk.obj)
             mk.obj.setMap();
+        mk.origin.obj.setIcon(_maker[mk.origin.type]);
         var loc = mk.location;
         //var idx = $.inArray(loc, nsd.data.location) + 1;
         var i = 0;
@@ -2086,10 +2097,11 @@
     function backToHome(e) {
         var mk = $('#content').data('progress');
         if (mk) {
-            //google.maps.event.addListenerOnce(mk.origin, 'click', markerClickHandle);
+            //google.maps.event.addListenerOnce(mk.origin.obj, 'click', markerClickHandle);
             //console.log('marker_click_home', mk.origin);
             if (mk.obj)
                 mk.obj.setMap();
+            mk.origin.obj.setIcon(_maker[mk.origin.type]);
             nsd.map.setOptions({
                 draggable : true
             });
@@ -2125,7 +2137,8 @@
                     $('#points_history,.right-button .satellite').hide();
                 }
             });
-            $('body').off('mousewheel');
+            $('html,body').css("overflow", "");
+            adjust();
             //$('#detail,.right-button a').show();
         }
         $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
@@ -2267,17 +2280,8 @@
             }
         });
         //TODO mouse wheel
-        $('#detail .article').on('mousewheel', function(e, delta, deltaX, deltaY) {
+        $('#detail .article').click(function(e) {
             e.stopPropagation();
-            if (delta == -1) {
-                var tp = $(this).scrollTop();
-                var max = $('#detail .article .content').height() - $(this).height();
-                var p = tp / max;
-                if (p > 1) {
-                    $(document).scrollTop(0);
-                    return false;
-                }
-            }
         });
         $('#content .right-button a.browse').click(function(e) {
             e.stopPropagation();
@@ -2305,10 +2309,7 @@
             $('.gallery-list').removeClass('visible');
             $('#content .mask,#content .right-button.back').hide();
         });
-        $('#content .gallery-list').on('mousewheel', function(e) {
-            e.stopPropagation();
-        });
-        $('#content .gallery-list,#content #quiz').click(function(e) {
+        $('#content .gallery-list').click(function(e) {
             e.stopPropagation();
         });
         $('#content .mask-white').click(function(e) {
@@ -2551,11 +2552,11 @@
             if ($(this).children('i').hasClass('bgm-on')) {
                 bgm.pause();
                 $(this).children('i').removeClass('bgm-on').addClass('bgm-off');
-                $(this).children('span').text('off');
+                $(this).find('span b').text('off');
             } else {
                 bgm.play();
                 $(this).children('i').removeClass('bgm-off').addClass('bgm-on');
-                $(this).children('span').text('on');
+                $(this).find('span b').text('on');
                 bgm.volume = .25;
             }
         });
