@@ -5,16 +5,7 @@
     var effect = {};
     var markers = [];
     var spots;
-    var _maker = [{
-        url : "img/ol-vehicle.png",
-        anchor : new google.maps.Point(17.5, 19.5)
-    }, "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
-        url : "img/ol-stop.png",
-        anchor : new google.maps.Point(11, 10.5)
-    }, {
-        url : "img/ol-spot.png",
-        anchor : new google.maps.Point(9, 9)
-    }];
+    var _maker;
     window.nsd = nsd;
     window.setuser = setWeiboUser;
     var connecting = false;
@@ -2585,6 +2576,16 @@
                     setCookie("first_visit", "yes", 90);
                 }
             } else {
+                _maker = [{
+                    url : "img/ol-vehicle.png",
+                    anchor : new google.maps.Point(17.5, 19.5)
+                }, "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
+                    url : "img/ol-stop.png",
+                    anchor : new google.maps.Point(11, 10.5)
+                }, {
+                    url : "img/ol-spot.png",
+                    anchor : new google.maps.Point(9, 9)
+                }];
                 if (nsd.user.token == null) {
                     $('#welcome').addClass('visible');
                     effect.fadeIn('#welcome', .4, 1);
