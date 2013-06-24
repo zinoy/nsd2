@@ -204,9 +204,11 @@ a{cursor:pointer}
 #gallery{height:100%;left:0;position:absolute;top:0;width:100%;z-index:2}
 #gallery .frame{background:url(../img/img-loader.gif) no-repeat center center #e2e1e1;cursor:url(../img/cursor-close.cur) 26 26,pointer;height:100%;overflow:hidden;position:absolute;visibility:hidden;width:100%}
 #gallery .frame img,#gallery .switch img{left:0;position:absolute}
-#gallery .switch a{background:url(../img/img-loader.gif) no-repeat center center #e2e1e1;border:solid 3px #fff;box-shadow:0 3px 5px rgba(0,0,0,.34);;position:absolute;width:96px;z-index:6}
-#gallery .switch a.next{right:10px;visibility:visible}
-#gallery .switch a.prev{left:10px;visibility:visible}
+#gallery .switch a{background:url(../img/img-loader.gif) no-repeat center center #e2e1e1;border:solid 3px #fff;box-shadow:0 3px 5px rgba(0,0,0,.34);position:absolute;width:96px;z-index:6}
+#gallery .switch a.next{visibility:visible;-webkit-transition:right .2s ease-out;transition:right .2s ease-out}
+#gallery .switch a.next-on{right:10px !important}
+#gallery .switch a.prev{visibility:visible;-webkit-transition:left .2s ease-out;transition:left .2s ease-out}
+#gallery .switch a.prev-on{left:10px !important}
 #gallery .switch img{width:100%}
 #gallery .share{bottom:94px;height:0;left:0;position:absolute;text-align:center;width:100%;z-index:8}
 #gallery .share textarea,#gallery .share .btn-cancel{display:none}

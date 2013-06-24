@@ -10,6 +10,7 @@
     window.setuser = setWeiboUser;
     var connecting = false;
     config.api_path = "api/action.aspx";
+    config.duration_second = 1.5;
     shared.animation = {};
     shared.screen = {};
     shared.animation.flash = function(obj) {
@@ -54,7 +55,32 @@
             }
         });
     };
-    effect.spin = function() {
+    effect.spin = function(obj, dest) {
+        var timer = 0;
+        var init = Number($(obj).text().replace(',', ''));
+        if (!$.isNumeric(init)) {
+            return;
+        }
+        var span = dest - init;
+        var times = Math.floor(config.duration_second * 10);
+        var step = Math.floor(span / times);
+        if (Math.abs(step) < 1) {
+            times = Math.abs(span);
+            step = span < 0 ? -1 : 1;
+        }
+        var action = function() {
+            timer++;
+            var p = timer / times;
+            var st = span - span * Math.cos(Math.PI / 2 * p);
+            var result = init + Math.ceil(st);
+            if (timer >= times) {
+                $(obj).text(formatNumber(dest));
+                return;
+            }
+            $(obj).text(formatNumber(result));
+            setTimeout(action, 100);
+        }
+        action();
     };
 
     function rand(min, max) {
@@ -271,7 +297,9 @@
         $('#content .img-share span').addClass('ready');
         $('#content #quiz').width($('#content .content').width() - 80 - 20);
         $('#gallery .frame').each(setImageSize);
-        $('#gallery .switch a').each(setImageSize);
+        $('#gallery .switch a').width(iw * .6).each(setImageSize);
+        $('#gallery .switch a.next').css('right', -iw * .6 - 10);
+        $('#gallery .switch a.prev').css('left', -iw * .6 - 10);
         $('#nav').width(sw);
         $('#nav .contract > p').css('width', sw > 1280 ? sw - (iw + 20) : sw - (iw + 20) - 1);
         $('#nav .expand .home').css({
@@ -345,7 +373,6 @@
                     checkImageSize(img);
                 }
             } else if (_switch) {
-                $(obj).width(iw * .6);
                 var ih = img.height();
                 $(obj).css({
                     height : ih,
@@ -513,11 +540,14 @@
 
         $('#ui_info li').eq(0).children('span').html(loc_data.Location);
         var currTime = new Date(loc_data.CurrentTime + "+0800");
-        $('#ui_info li').eq(1).children('b').html(dayPass(currTime));
+        effect.spin($('#ui_info li').eq(1).children('b'), dayPass(currTime));
+        //$('#ui_info li').eq(1).children('b').html(dayPass(currTime));
         $('#ui_info li').eq(1).children('span').html(dateFormat(currTime));
-        $('#ui_info li').eq(2).children('b').html(formatNumber(dist));
+        effect.spin($('#ui_info li').eq(2).children('b'), dist);
+        //$('#ui_info li').eq(2).children('b').html(formatNumber(dist));
         $('#ui_info li').eq(3).children('span').html(formatFloat(loc_data.Latitude) + ', ' + formatFloat(loc_data.Longitude));
-        $('#ui_info li').eq(4).children('b').html(loc_data.PhotoCount);
+        effect.spin($('#ui_info li').eq(4).children('b'), loc_data.PhotoCount);
+        //$('#ui_info li').eq(4).children('b').html(loc_data.PhotoCount);
 
         shared.location = loc.id;
         $.post(config.api_path, {
@@ -772,7 +802,7 @@
         }
     }
 
-    function setSwitch() {
+    function setSwitch(dir) {
         var list = nsd.data.gallery.list;
         var next_id = shared.gallery_id + 1, prev_id = shared.gallery_id - 1;
         if (next_id >= list.length)
@@ -783,7 +813,8 @@
             prev_id += 2;
         var ids = [prev_id, next_id];
         $('#gallery > .frame').not('.active').remove();
-        $('#gallery > .switch').empty();
+        //$('#gallery > .switch').empty();
+        var css = ["prev", "next"];
         for (var i = 0; i < 2; i++) {
             var item = list[ids[i]];
             var frame = $('<div class="frame"/>').appendTo('#gallery');
@@ -792,21 +823,39 @@
                 alt : ''
             }).appendTo(frame);
             frame.data('id', item.ID);
-            $('#gallery > .switch').append('<a data-index="' + ids[i] + '"><img src="' + item.FileName + 't.jpg' + '" /></a>');
+            $('#gallery > .switch a.' + css[i]).data('index', ids[i]).children().attr('src', item.FileName + 't.jpg');
         }
         if (list.length == 2) {
-            $('#gallery > .switch').append('<a data-index="0"><img src="' + list[0].FileName + 't.jpg' + '" /></a>');
-            $('#gallery > .switch').append('<a data-index="1"><img src="' + list[1].FileName + 't.jpg' + '" /></a>');
+            $('#gallery > .switch a.prev').data('index', 0).children().attr('src=', list[0].FileName + 't.jpg');
+            $('#gallery > .switch a.next').data('index', 1).children().attr('src=', list[1].FileName + 't.jpg');
         }
-        $('#gallery > .switch a').eq(1).addClass('next').end().eq(0).addClass('prev');
-        $('#gallery > .switch .next,#gallery > .switch .prev').click(goFrame);
-        $('#gallery > .frame').click(hideGallery);
+        //$('#gallery > .switch a').eq(1).addClass('next').end().eq(0).addClass('prev');
+        //$('#gallery > .switch .next,#gallery > .switch .prev').click(goFrame);
+        $('#gallery > .frame').click(hideGallery)
         adjust();
+        $('#gallery').on('mousemove', function(e) {
+            var x = e.pageX;
+            if (x > shared.screen.width / 4 * 3) {
+                $('#gallery>.switch .next').addClass('next-on');
+            } else if (x < shared.screen.width / 4) {
+                $('#gallery>.switch .prev').addClass('prev-on');
+            } else {
+                $('#gallery>.switch .next').removeClass('next-on');
+                $('#gallery>.switch .prev').removeClass('prev-on');
+            }
+        });
+        if (dir !== undefined) {
+            if (dir > 0) {
+                $('#gallery>.switch .next').addClass('next-on');
+            } else {
+                $('#gallery>.switch .prev').addClass('prev-on');
+            }
+        }
     }
 
     function hideGallery() {
         $('#gallery').css('top', '100%').hide();
-        $('#ui_info,#nav').show();
+        $('#ui_board,#nav').show();
     }
 
     function goFrame() {
@@ -827,6 +876,9 @@
             frames = $('#panorama > .view');
             active = $('#panorama > .view.active');
         }
+        $('#gallery').off('mousemove');
+        $('#gallery>.switch .next').removeClass('next-on');
+        $('#gallery>.switch .prev').removeClass('prev-on');
 
         if ($(this).hasClass('next') || dir > 0) {
             ids = 1;
@@ -865,6 +917,11 @@
         }
         shared.gallery_id = idx;
         shared.animating = true;
+        if ($(this).parent().hasClass('switch')) {
+            dir = $(this).hasClass('next') ? 1 : -1;
+        } else {
+            dir = undefined;
+        }
         TweenLite.fromTo(frames.eq(ids).addClass('visible'), .8, start, {
             left : 0,
             ease : Power2.easeOut
@@ -882,7 +939,7 @@
                     $('#panorama > .info .browse a').eq(idx).addClass('active');
                     $('#panorama > .info .bar span > b').text(idx + 1);
                 } else {
-                    setSwitch();
+                    setSwitch(dir);
                     $('#gallery > .pager span > b').text(idx + 1);
                 }
             }
@@ -927,7 +984,7 @@
         //$('#gallery > .pager a').removeClass('active').eq(shared.gallery_id).addClass('active');
         $('#gallery > .pager span > b').text(idx + 1);
         $('#gallery').css('top', 0).show();
-        $('#ui_info,#nav').hide();
+        $('#ui_board,#nav').hide();
         adjust();
     }
 
@@ -1109,11 +1166,14 @@
                 nsd.geoinfo.pics = pic_count;
 
                 $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
-                $('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
+                effect.spin($('#ui_info li').eq(1).children('b'), nsd.geoinfo.past);
+                //$('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
                 $('#ui_info li').eq(1).children('span').html(nsd.geoinfo.date);
-                $('#ui_info li').eq(2).children('b').html(formatNumber(nsd.geoinfo.distance));
+                effect.spin($('#ui_info li').eq(2).children('b'), nsd.geoinfo.distance);
+                //$('#ui_info li').eq(2).children('b').html(formatNumber(nsd.geoinfo.distance));
                 $('#ui_info li').eq(3).children('span').html(nsd.geoinfo.latlng);
-                $('#ui_info li').eq(4).children('b').html(formatNumber(nsd.geoinfo.pics));
+                effect.spin($('#ui_info li').eq(4).children('b'), nsd.geoinfo.pics);
+                //$('#ui_info li').eq(4).children('b').html(formatNumber(nsd.geoinfo.pics));
                 $('#intro .stat li').eq(0).children('span').text(formatNumber(nsd.geoinfo.distance));
                 $('#intro .stat li').eq(1).children('span').text(data.list.length);
                 $('#intro .stat li').eq(2).children('span').text(formatNumber(nsd.geoinfo.pics));
@@ -2133,11 +2193,14 @@
             //$('#detail,.right-button a').show();
         }
         $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
-        $('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
+        effect.spin($('#ui_info li').eq(1).children('b'), nsd.geoinfo.past);
+        //$('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
         $('#ui_info li').eq(1).children('span').html(nsd.geoinfo.date);
-        $('#ui_info li').eq(2).children('b').html(formatNumber(nsd.geoinfo.distance));
+        effect.spin($('#ui_info li').eq(2).children('b'), nsd.geoinfo.distance);
+        //$('#ui_info li').eq(2).children('b').html(formatNumber(nsd.geoinfo.distance));
         $('#ui_info li').eq(3).children('span').html(nsd.geoinfo.latlng);
-        $('#ui_info li').eq(4).children('b').html(nsd.geoinfo.pics);
+        effect.spin($('#ui_info li').eq(4).children('b'), nsd.geoinfo.pics);
+        //$('#ui_info li').eq(4).children('b').html(nsd.geoinfo.pics);
     }
 
     function findLocation(loc, list) {
@@ -2306,6 +2369,7 @@
         $('#content .mask-white').click(function(e) {
             e.stopPropagation();
         });
+        $('#gallery>.switch a').click(goFrame);
         $('#gallery .share a.btn').hover(function() {
             $(this).children('span').width(50);
         }, function() {
@@ -2544,11 +2608,13 @@
                 bgm.pause();
                 $(this).children('i').removeClass('bgm-on').addClass('bgm-off');
                 $(this).find('span b').text('off');
+                setCookie("bgm_mute", "yes", 90);
             } else {
                 bgm.play();
                 $(this).children('i').removeClass('bgm-off').addClass('bgm-on');
                 $(this).find('span b').text('on');
                 bgm.volume = .25;
+                setCookie("bgm_mute", null, 0);
             }
         });
     }
@@ -2601,12 +2667,18 @@
             }
             delegateListener();
             adjust();
+            var bgm_mute = getCookie("bgm_mute");
             if ($('#bgm').length > 0) {
-                var bgm = $('#bgm')[0];
-                bgm.play();
-                setTimeout(function() {
-                    bgm.volume = .25;
-                }, 200);
+                if (bgm_mute != 'yes') {
+                    var bgm = $('#bgm')[0];
+                    bgm.play();
+                    setTimeout(function() {
+                        bgm.volume = .25;
+                    }, 200);
+                } else {
+                    $('#bgm_control i').removeClass('bgm-on').addClass('bgm-off');
+                    $('#bgm_control span b').text('off');
+                }
             }
         });
     }
