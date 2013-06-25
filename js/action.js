@@ -9,8 +9,9 @@
     window.nsd = nsd;
     window.setuser = setWeiboUser;
     var connecting = false;
+    var spin_timer = [];
     config.api_path = "api/action.aspx";
-    config.duration_second = 1.5;
+    config.duration_second = 1;
     shared.animation = {};
     shared.screen = {};
     shared.animation.flash = function(obj) {
@@ -55,13 +56,18 @@
             }
         });
     };
-    effect.spin = function(obj, dest) {
+    effect.spin = function(obj, dest, idx) {
+        if (spin_timer.length > idx)
+            clearTimeout(spin_timer[idx]);
         var timer = 0;
         var init = Number($(obj).text().replace(',', ''));
         if (!$.isNumeric(init)) {
             return;
         }
         var span = dest - init;
+        if (span == 0) {
+            return;
+        }
         var times = Math.floor(config.duration_second * 10);
         var step = Math.floor(span / times);
         if (Math.abs(step) < 1) {
@@ -78,7 +84,7 @@
                 return;
             }
             $(obj).text(formatNumber(result));
-            setTimeout(action, 100);
+            spin_timer[idx] = setTimeout(action, 100);
         }
         action();
     };
@@ -274,6 +280,22 @@
             width : sw
         };
         shared.screen.column = iw;
+        var wr = sw / sh;
+        var vr = 1280 / 720;
+        if (wr > vr) {
+            $("#video_index").css({
+                width : sw,
+                height : sw / vr,
+                top : (sh - sw / vr) / 2
+            });
+        } else {
+            $("#video_index").css({
+                width : sh * vr,
+                height : sh,
+                left : (sw - sh * vr) / 2,
+                top : 0
+            });
+        }
         $('#google_map .pattern i').not(':first').css('margin-left', iw - 20);
         $('#ui_board').css('left', iw * 7);
         $('#main .copy').css('left', iw + 10);
@@ -540,13 +562,13 @@
 
         $('#ui_info li').eq(0).children('span').html(loc_data.Location);
         var currTime = new Date(loc_data.CurrentTime + "+0800");
-        effect.spin($('#ui_info li').eq(1).children('b'), dayPass(currTime));
+        effect.spin($('#ui_info li').eq(1).children('b'), dayPass(currTime), 0);
         //$('#ui_info li').eq(1).children('b').html(dayPass(currTime));
         $('#ui_info li').eq(1).children('span').html(dateFormat(currTime));
-        effect.spin($('#ui_info li').eq(2).children('b'), dist);
+        effect.spin($('#ui_info li').eq(2).children('b'), dist, 1);
         //$('#ui_info li').eq(2).children('b').html(formatNumber(dist));
         $('#ui_info li').eq(3).children('span').html(formatFloat(loc_data.Latitude) + ', ' + formatFloat(loc_data.Longitude));
-        effect.spin($('#ui_info li').eq(4).children('b'), loc_data.PhotoCount);
+        effect.spin($('#ui_info li').eq(4).children('b'), loc_data.PhotoCount, 2);
         //$('#ui_info li').eq(4).children('b').html(loc_data.PhotoCount);
 
         shared.location = loc.id;
@@ -1115,12 +1137,39 @@
                                     url : 'img/ol-hover.png',
                                     anchor : new google.maps.Point(70, 44)
                                 });
+                                var loc_data;
+                                var dist = 0;
+                                for (var i = 0; i < markers.length; i++) {
+                                    dist += markers[i].distance;
+                                    if (this === markers[i].obj) {
+                                        loc_data = nsd.data.location[i];
+                                        break;
+                                    }
+                                }
+                                if (loc_data != undefined) {
+                                    $('#ui_info li').eq(0).children('span').html(loc_data.Location);
+                                    var currTime = new Date(loc_data.CurrentTime + "+0800");
+                                    effect.spin($('#ui_info li').eq(1).children('b'), dayPass(currTime), 0);
+                                    $('#ui_info li').eq(1).children('span').html(dateFormat(currTime));
+                                    effect.spin($('#ui_info li').eq(2).children('b'), dist, 1);
+                                    $('#ui_info li').eq(3).children('span').html(formatFloat(loc_data.Latitude) + ', ' + formatFloat(loc_data.Longitude));
+                                    effect.spin($('#ui_info li').eq(4).children('b'), loc_data.PhotoCount, 2);
+                                }
                             }
                         });
                         google.maps.event.addListener(marker, 'mouseout', function(e) {
                             if ($('#content').data('progress') == null) {
                                 var obj = findMarkerFromList(this, markers);
                                 this.setIcon(_maker[obj.type]);
+                                $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
+                                effect.spin($('#ui_info li').eq(1).children('b'), nsd.geoinfo.past, 0);
+                                $('#ui_info li').eq(1).children('span').html(nsd.geoinfo.date);
+                                effect.spin($('#ui_info li').eq(2).children('b'), nsd.geoinfo.distance, 1);
+                                $('#ui_info li').eq(3).children('span').html(nsd.geoinfo.latlng);
+                                effect.spin($('#ui_info li').eq(4).children('b'), nsd.geoinfo.pics, 2);
+                                $('#intro .stat li').eq(0).children('span').text(formatNumber(nsd.geoinfo.distance));
+                                $('#intro .stat li').eq(1).children('span').text(data.list.length);
+                                $('#intro .stat li').eq(2).children('span').text(formatNumber(nsd.geoinfo.pics));
                             }
                         });
                         google.maps.event.addListener(marker, 'click', markerClickHandle);
@@ -1166,13 +1215,13 @@
                 nsd.geoinfo.pics = pic_count;
 
                 $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
-                effect.spin($('#ui_info li').eq(1).children('b'), nsd.geoinfo.past);
+                effect.spin($('#ui_info li').eq(1).children('b'), nsd.geoinfo.past, 0);
                 //$('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
                 $('#ui_info li').eq(1).children('span').html(nsd.geoinfo.date);
-                effect.spin($('#ui_info li').eq(2).children('b'), nsd.geoinfo.distance);
+                effect.spin($('#ui_info li').eq(2).children('b'), nsd.geoinfo.distance, 1);
                 //$('#ui_info li').eq(2).children('b').html(formatNumber(nsd.geoinfo.distance));
                 $('#ui_info li').eq(3).children('span').html(nsd.geoinfo.latlng);
-                effect.spin($('#ui_info li').eq(4).children('b'), nsd.geoinfo.pics);
+                effect.spin($('#ui_info li').eq(4).children('b'), nsd.geoinfo.pics, 2);
                 //$('#ui_info li').eq(4).children('b').html(formatNumber(nsd.geoinfo.pics));
                 $('#intro .stat li').eq(0).children('span').text(formatNumber(nsd.geoinfo.distance));
                 $('#intro .stat li').eq(1).children('span').text(data.list.length);
@@ -2193,13 +2242,13 @@
             //$('#detail,.right-button a').show();
         }
         $('#ui_info li').eq(0).children('span').html(nsd.geoinfo.location);
-        effect.spin($('#ui_info li').eq(1).children('b'), nsd.geoinfo.past);
+        effect.spin($('#ui_info li').eq(1).children('b'), nsd.geoinfo.past, 0);
         //$('#ui_info li').eq(1).children('b').html(nsd.geoinfo.past);
         $('#ui_info li').eq(1).children('span').html(nsd.geoinfo.date);
-        effect.spin($('#ui_info li').eq(2).children('b'), nsd.geoinfo.distance);
+        effect.spin($('#ui_info li').eq(2).children('b'), nsd.geoinfo.distance, 1);
         //$('#ui_info li').eq(2).children('b').html(formatNumber(nsd.geoinfo.distance));
         $('#ui_info li').eq(3).children('span').html(nsd.geoinfo.latlng);
-        effect.spin($('#ui_info li').eq(4).children('b'), nsd.geoinfo.pics);
+        effect.spin($('#ui_info li').eq(4).children('b'), nsd.geoinfo.pics, 2);
         //$('#ui_info li').eq(4).children('b').html(nsd.geoinfo.pics);
     }
 
@@ -2640,6 +2689,14 @@
                     return;
                 } else {
                     setCookie("first_visit", "yes", 90);
+                    if ($('#video_index').length > 0 && $('html').hasClass('video')) {
+                        $('#video_index').one('loadeddata', function() {
+                            effect.fadeOut('#kv_index', .1);
+                            var player = $('#video_index')[0];
+                            player.volume = .5;
+                            player.play();
+                        });
+                    }
                 }
             } else {
                 _maker = [{

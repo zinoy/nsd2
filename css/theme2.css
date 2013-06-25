@@ -75,7 +75,7 @@ a{cursor:pointer}
 #main{background:#555;height:768px;overflow:hidden;position:relative}
 
 #kv_index{height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%}
-#kv_index img{left:0;position:absolute}
+#kv_index img,#video_index{left:0;position:absolute}
 
 #main .copy{left:150px;position:absolute;top:0;z-index:1}
 #main .copy .head{background:url(../img/head-line.png) no-repeat;color:#000;font:0/0 a;height:99px;position:absolute;top:158px;width:368px}

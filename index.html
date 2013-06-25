@@ -19,7 +19,14 @@
 <body>
   <div id="main" class="screen">
     <div id="kv_index" class="frame">
-      <img src="img/kv.jpg" />
+      <img src="img/horizon.jpg" />
+    </div>
+    <div id="kv_video" class="frame">
+      <video id="video_index" loop>
+        <source src="video/horizon_webm.webm"></source>
+        <source src="video/horizon_mp4.mp4"></source>
+        <source src="video/horizon_ogv.ogv"></source>
+      </video>
     </div>
     <div id="google_map">
       <div class="pattern">
@@ -102,6 +109,9 @@
   </div>
   <script src="js/modernizr.custom.88639.js"></script>
   <script>document.write('<script src="js/jquery-'+(window.addEventListener||(document.documentMode>=9)?'2.0.0':'1.9.1')+'.min.js"><\/script>')</script>
+  <script src="js/plugins/CSSPlugin.min.js"></script>
+  <script src="js/easing/EasePack.min.js"></script>
+  <script src="js/TweenLite.min.js"></script>
   <script src="js/share.min.js"></script>
   <script src="js/action.js"></script>
 </body>
