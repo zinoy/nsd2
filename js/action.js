@@ -8,6 +8,7 @@
     var _maker;
     window.nsd = nsd;
     window.setuser = setWeiboUser;
+    window.move = movePattern;
     var connecting = false;
     var spin_timer = [];
     config.api_path = "api/action.aspx";
@@ -322,6 +323,10 @@
         $('#gallery .switch a').width(iw * .6).each(setImageSize);
         $('#gallery .switch a.next').css('right', -iw * .6 - 10);
         $('#gallery .switch a.prev').css('left', -iw * .6 - 10);
+        $('#my div').css({
+            left : iw + 10,
+            top : sh / 4 < 136 ? 136 : sh / 4
+        });
         $('#nav').width(sw);
         $('#nav .contract > p').css('width', sw > 1280 ? sw - (iw + 20) : sw - (iw + 20) - 1);
         $('#nav .expand .home').css({
@@ -1010,7 +1015,7 @@
         adjust();
     }
 
-    function movePattern() {
+    function movePattern(e) {
         var trans = $('#google_map .pattern').parent().css('transform');
         var m = /matrix\(([\d\s-,]+)\)/.exec(trans);
         if (m) {
@@ -1029,6 +1034,7 @@
                 top : top
             });
         }
+        console.log(e);
     }
 
     function checkBounds() {
@@ -1076,9 +1082,9 @@
         };
         nsd.map = new google.maps.Map(document.getElementById("google_map"), mapOptions);
         google.maps.event.addListener(nsd.map, 'bounds_changed', movePattern);
-        google.maps.event.addListener(nsd.map, 'zoom_changed', movePattern);
+        //google.maps.event.addListener(nsd.map, 'zoom_changed', movePattern);
         google.maps.event.addListener(nsd.map, 'center_changed', checkBounds);
-        //google.maps.event.addListener(nsd.map, 'idle', movePattern);
+        google.maps.event.addListener(nsd.map, 'idle', movePattern);
         google.maps.event.addListenerOnce(nsd.map, 'idle', function() {
             var pt = $('#google_map .pattern').remove();
             $('#google_map:first-child > :first > :first > :first').prepend(pt);
@@ -1887,8 +1893,9 @@
             seed : Math.random()
         }, function(data) {
             if (generalErrorHandle(data)) {
-                var container = $('#points_history .article').empty();
+                var container = $('#points_history .article .content').empty();
                 var date;
+                $('#points_history .article,.jspContainer,.jspPane').css('width', '');
                 for (var i = 0; i < data.list.length; i++) {
                     var obj = data.list[i];
                     var curDate = dateFormat(new Date(obj.AddTime));
@@ -1923,6 +1930,11 @@
                 $('#content').addClass('visible');
                 $('#detail,.right-button .browse,#content .mask-white').hide();
                 $('#content,#points_history,.right-button .satellite').show();
+                $('#points_history .article').jScrollPane({
+                    autoReinitialise : true,
+                    hideFocus : true,
+                    mouseWheelSpeed : 100
+                });
                 adjust();
                 TweenLite.fromTo('#content', .4, {
                     left : -$('#content').width()
@@ -2124,7 +2136,12 @@
             generalErrorHandle(data);
         }
         var anchors = [new google.maps.Point(52, 106), new google.maps.Point(33, 66)];
-        var game_spots = [];
+        var game_spots = [], go = function(idx) {
+            if (idx == 0)
+                getPanorama(0);
+            else if (idx == 1)
+                getDiff(0);
+        };
         for (var i = 0; i < spots.length; i++) {
             if (shared.game_spots !== undefined) {
                 shared.game_spots[i].setMap(nsd.map);
@@ -2157,14 +2174,35 @@
             game_spots.push(marker);
             google.maps.event.addListener(marker, 'click', function(e) {
                 var idx = $.inArray(this, game_spots);
-                if (idx == 0)
-                    getPanorama(0);
-                else if ( idx = 1)
-                    getDiff(0);
+                go(idx);
+            });
+            google.maps.event.addListener(marker, 'mouseover', function(e) {
+                var idx = $.inArray(this, game_spots) + 1;
+                var old = $('#my div');
+                if (old.hasClass('intro' + idx))
+                    return;
+                var cur = old.clone().removeClass().addClass('intro' + idx).appendTo('#my');
+                if (idx == 3)
+                    cur.children().hide();
+                else
+                    cur.children().show();
+                $('#my p>a').click(function() {
+                    var idx = Number($(this).parents('div').attr('class').substr(5, 1)) - 1;
+                    go(idx);
+                })
+                effect.fadeOut(old, .4, 0, function() {
+                    old.remove();
+                });
+                effect.fadeIn(cur, .4);
             });
         }
         $('#ui_user .btn-left a').addClass('back').children().text('返回').addClass('back');
+        $('#my p>a').click(function() {
+            var idx = Number($(this).parents('div').attr('class').substr(5, 1)) - 1;
+            go(idx);
+        })
         $('#ui_info').hide();
+        effect.fadeIn('#my,#google_map .pattern .mask', .4, .2);
         if (shared.game_spots === undefined)
             shared.game_spots = game_spots;
     }
@@ -2250,6 +2288,9 @@
         $('#ui_info li').eq(3).children('span').html(nsd.geoinfo.latlng);
         effect.spin($('#ui_info li').eq(4).children('b'), nsd.geoinfo.pics, 2);
         //$('#ui_info li').eq(4).children('b').html(nsd.geoinfo.pics);
+
+        $('#ui_user .btn-left a').removeClass('back').children().text("我的发现");
+        effect.fadeOut('#my,#google_map .pattern .mask', .2);
     }
 
     function findLocation(loc, list) {
@@ -2308,6 +2349,7 @@
                         if (shared.mode.my_journey) {
                             resetRoute();
                         }
+                        switchMenu(0);
                         break;
                     case 2:
                         //showPointsHistory();
@@ -2467,7 +2509,6 @@
                     resetScreen();
                     backToHome();
                     resetRoute();
-                    $(this).removeClass('back').children().text("我的发现");
                     switchMenu(0);
                 } else {
                     goMyDiscovery();

@@ -175,9 +175,9 @@ a{cursor:pointer}
 #content .img-share span a{background:#e05206;color:#fff;display:inline-block;height:20px;line-height:16px;margin-right:15px;padding:4px 5px 0;vertical-align:middle;white-space:nowrap}
 #content .img-share span a b{display:inline-block;font-weight:normal;vertical-align:text-top}
 #content .img-share span a i.icon-weibo{background:url(../img/icon-weibo.gif) no-repeat;display:inline-block;height:15px;vertical-align:text-top;width:19px}
-#content #points_history{height:532px;margin-bottom:20px;overflow:auto;overflow-y:scroll;padding:20px 0 0 150px;width:560px}
-#content #points_history .article{overflow:auto}
-#content .timeline h2{color:#000;font-size:18px;font-weight:bold;margin:20px 0 25px 15px}
+#content #points_history{height:532px;margin-bottom:20px;padding:20px 0 0 150px;width:560px}
+#content #points_history .article{height:100%;overflow:hidden}
+#content .timeline h2{color:#000;font:22px lr-bold,sans-serif;margin:20px 0 25px 15px}
 #content .timeline .block{border-left:dashed 1px #c8c8c8;margin-left:28px}
 #content .timeline .item{margin:10px 0 10px -28px;overflow:hidden}
 #content .timeline .item p{margin:0}
@@ -227,6 +227,13 @@ a{cursor:pointer}
 #gallery .pager span{background:#e05206;color:#913300;display:inline-block;font:18px/25px lr-medium,sans-serif;height:30px;padding:5px 20px;text-align:center;vertical-align:top}
 #gallery .pager span b{color:#fff;font-size:22px;font-weight:normal}
 #gallery .pager a.next,#panorama .info .bar a.next{-moz-transform:scaleX(-1);-webkit-transform:scaleX(-1);-o-transform:scaleX(-1);-ms-transform:scaleX(-1);transform:scaleX(-1)}
+
+#my{left:0;position:absolute;top:0}
+#my div{position:absolute;top:148px;width:411px}
+#my div p{margin-top:15px}
+#my .intro1{background:url(../img/intro1.png) no-repeat;padding-top:217px}
+#my .intro2{background:url(../img/intro2.png) no-repeat;padding-top:200px}
+#my .intro3{background:url(../img/intro3.png) no-repeat;padding-top:200px}
 
 #panorama{height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%;z-index:6}
 #panorama .mask{background-image:url(../img/pattern-nav.png);z-index:auto}
