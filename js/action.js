@@ -1034,7 +1034,6 @@
                 top : top
             });
         }
-        console.log(e);
     }
 
     function checkBounds() {
@@ -1063,6 +1062,7 @@
 
             nsd.map.setCenter(new google.maps.LatLng(Y, X));
         }
+        //movePattern();
     }
 
     function initMap() {
@@ -1233,12 +1233,7 @@
                 $('#intro .stat li').eq(1).children('span').text(data.list.length);
                 $('#intro .stat li').eq(2).children('span').text(formatNumber(nsd.geoinfo.pics));
 
-                var diststr = String(distance);
-                var digioff = 6 - diststr.length;
-                $('#ui_counter .digit b').text('0');
-                for (var j = 0; j < diststr.length; j++) {
-                    $('#ui_counter .digit').eq(j + digioff).children('b').text(diststr[j]);
-                }
+                setDistance(distance);
             }
         });
 
@@ -1261,7 +1256,34 @@
             //preserveViewport : true,
             suppressMarkers : true
         });
+        google.maps.event.addListener(directionsDisplay, 'directions_changed', movePattern);
         shared.route = directionsDisplay;
+    }
+
+    function setDistance(num) {
+        var setNumber = function(d) {
+            var diststr = String(d);
+            var digioff = 6 - diststr.length;
+            $('#ui_counter .digit b').text('0');
+            for (var j = 0; j < diststr.length; j++) {
+                $('#ui_counter .digit').eq(j + digioff).children('b').text(diststr[j]);
+            }
+        };
+        var dist = 0, time = 0, offset = 1;
+        var tm = setInterval(function() {
+            time++;
+            if (dist < num) {
+                if (time % 54 == 0) {
+                    var p = dist / num;
+                    offset += 54 - Math.cos(Math.PI / 2 * p) * 54;
+                }
+                dist += offset;
+                setNumber(Math.floor(dist));
+            } else {
+                setNumber(num);
+                clearInterval(tm);
+            }
+        }, 20);
     }
 
     //TODO panorama
