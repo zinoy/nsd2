@@ -1273,9 +1273,9 @@
         var tm = setInterval(function() {
             time++;
             if (dist < num) {
-                if (time % 54 == 0) {
-                    var p = dist / num;
-                    offset += 54 - Math.cos(Math.PI / 2 * p) * 54;
+                if (time % 24 == 0) {
+                    var p = dist / num * 2;
+                    offset += 72 - Math.cos(Math.PI / 2 * p) * 72;
                 }
                 dist += offset;
                 setNumber(Math.floor(dist));
