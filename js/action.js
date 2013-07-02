@@ -1269,13 +1269,13 @@
                 $('#ui_counter .digit').eq(j + digioff).children('b').text(diststr[j]);
             }
         };
-        var dist = 0, time = 0, offset = 1;
+        var dist = 8000, time = 0, offset = 1;
         var tm = setInterval(function() {
             time++;
             if (dist < num) {
                 if (time % 24 == 0) {
                     var p = dist / num * 2;
-                    offset += 72 - Math.cos(Math.PI / 2 * p) * 72;
+                    offset += 5 - Math.cos(Math.PI / 2 * p) * 5;
                 }
                 dist += offset;
                 setNumber(Math.floor(dist));
