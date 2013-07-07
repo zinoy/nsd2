@@ -1,8 +1,13 @@
 <!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
 <html lang="zh-cn">
+<!--<![endif]-->
 <head>
   <meta charset="utf-8" />
-  <title>发现无止境 中国最美前线</title>
+  <title>发现无止境 中国最美前线 - 路虎中国</title>
   <link rel="stylesheet" type="text/css" href="css/normalize.css" />
   <link rel="stylesheet" type="text/css" href="css/theme2.css" />
   <script type="text/javascript">
@@ -18,44 +23,56 @@
 </head>
 <body>
   <div id="main" class="screen">
-    <div id="kv_index" class="frame">
-      <img src="img/horizon.jpg" />
-    </div>
-    <div id="kv_video" class="frame">
-      <video id="video_index" loop>
-        <source src="video/horizon_webm.webm"></source>
-        <source src="video/horizon_mp4.mp4"></source>
-        <source src="video/horizon_ogv.ogv"></source>
-      </video>
-    </div>
-    <div id="google_map">
-      <div class="pattern">
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
-        <i></i>
+    <div id="guess">
+      <div class="view">
+        <img src="img/guess_1.jpg" alt="" />
+      </div>
+      <div class="mask mask-alpha3"></div>
+      <a class="btn-square close icon-cross" title="关闭"></a>
+      <div class="info"></div>
+      <div class="player animate" style="display:none;">
+        <div class="glow"></div>
+        <div class="effect effect-1"></div>
+        <div class="effect effect-2"></div>
+        <div class="effect effect-3"></div>
+        <div class="effect effect-4"></div>
+        <a class="btn"></a>
+      </div>
+      <div class="question" style="display:none;">
+        <p class="lead">音乐中出现过的事物？</p>
+        <p class="option">
+          <a class="active"><i><b></b></i><label>汽车</label></a>
+          <a><i><b></b></i><label>竹林</label></a>
+          <a><i><b></b></i><label>风声</label></a>
+        </p>
+        <p class="btn"><a>确 认</a></p>
+      </div>
+      <div class="hint">
+        <div class="circle">辨认选出音乐中出现的事物</div>
       </div>
     </div>
-    <div class="copy">
-      <div class="head"><h1>发现无止境 中国最美前线</h1></div>
-      <div class="desc">自1947年问世以来，世界豪华SUV的至臻之选，从来就只有路虎。在六十五年的传奇旅程中，我们无所谓时代、环境如何变迁，始终坚持以举世无双的全地形反馈适应系统、独具标识性的外形设计和至为精湛的造车工艺，将深厚的SUV专业造诣溶于每一辆路虎的血液之中，为世人带来无所不至、无可比拟的专业豪华SUV－这是我们从过去到未来不变的坚持，也正因如此，我们让路虎精神，一脉相承。</div>
-      <p><a href="home.html" class="btn-simple btn-orange">立即进入<i class="icon icon-triangle icon-triangle-white"></i></a></p>
+    <div id="ui_board" class="col2">
+      <div class="separator"><i></i></div>
+      <div id="ui_user" class="section">
+        <p class="bar">
+          <a class="exit">退出</a>
+          <span>我的积分：<b>15</b></span>
+        </p>
+        <p class="btns btn-left" style="display:none;">
+          <a>我的发现</a>
+        </p>
+      </div>
+      <div class="separator"><i></i></div>
     </div>
   </div>
-  <a href="http://www.landrover.com/cn/zh/lr/?utm_campaign=NSD_Minisite&utm_source=NSD&utm_medium=banner" target="_blank" class="logo"><img src="img/logo.gif" alt="lr logo" /></a>
+  <a href="" target="_blank" class="logo"><img src="img/logo.gif" alt="lr logo" /></a>
   <div id="intro">
     <div class="column">
       <img src="img/intro-map.gif" alt="map" />
       <ul class="stat">
-        <li><i class="icon icon-distance"></i>11,520<sup>公里</sup></li>
-        <li><i class="icon icon-stops"></i>42<sup>站</sup></li>
-        <li><i class="icon icon-pic"></i>507<sup>图像</sup></li>
+        <li><i class="icon icon-distance"></i>0<sup>公里</sup></li>
+        <li><i class="icon icon-stops"></i>1<sup>站</sup></li>
+        <li><i class="icon icon-pic"></i>31<sup>图像</sup></li>
       </ul>
     </div>
     <div class="column">
@@ -63,20 +80,20 @@
       <b class="line"></b>
       <p>自1947年问世以来，世界豪华SUV的至臻之选，从来就只有路虎。</p>
       <p>在六十五年的传奇旅程中，我们无所谓时代、环境如何变迁，始终坚持以举世无双的全地形反馈适应系统、独具标识性的外形设计和至为精湛的造车工艺...</p>
-      <p style="display:none;"><a class="btn-simple">了解更多<i class="icon icon-triangle icon-orange"></i></a></p>
+      <p><a class="btn-simple">了解更多<i class="icon icon-triangle icon-orange"></i></a></p>
     </div>
     <div class="column">
       <h2>发现精神</h2>
       <b class="line"></b>
       <p><img src="img/intro-img.jpg" class="spirit" /></p>
       <p>秉承60余年对发现精神的专注和探索，路虎一直鼓舞人们发现传奇、勇于探索。纵横四段探索旅程，从容应对复杂路况，驰骋间释放激情，引领路虎瞩目荣耀，尽显高端越野非凡品质，发现无止境！</p>
-      <p style="display:none;"><a class="btn-simple">了解更多<i class="icon icon-triangle icon-orange"></i></a></p>
+      <p><a class="btn-simple">了解更多<i class="icon icon-triangle icon-orange"></i></a></p>
     </div>
     <div class="column quick-link">
       <b class="line"></b>
       <ul class="form">
-        <li><a href="http://www.landroverchina.com.cn/Tanchuss.aspx?utm_campaign=NSD_Minisite&utm_source=NSD&utm_medium=banner" target="_blank" class="btn-pattern"><span>保持联系</span></a></li>
-        <li><a href="http://www.landroverchina.com.cn/shijia.aspx?utm_campaign=FL2&utm_source=Tencent&utm_medium=banner" target="_blank" class="btn-pattern"><span>申请试驾</span></a></li>
+        <li><a href="http://www.landroverchina.com.cn/Tanchuss.aspx" target="_blank" class="btn-pattern"><span>保持联系</span></a></li>
+        <li><a href="http://www.landroverchina.com.cn/shijia.aspx" target="_blank" class="btn-pattern"><span>申请试驾</span></a></li>
       </ul>
     </div>
   </div>
@@ -91,7 +108,7 @@
         <a href="http://www.landrover.com/cn/zh/lr/privacy-policy/privacy-policy/" target="_blank">隐私权政策</a>
       </div>
       <div class="float-right">
-        <a href="http://www.landrover.com/cn/zh/lr/?utm_campaign=NSD_Minisite&utm_source=NSD&utm_medium=banner" target="_blank">路虎官方网站</a>
+        <a href="http://www.landrover.com/cn/zh/lr/" target="_blank">路虎官方网站</a>
         <i></i>
         <a href="http://e.weibo.com/landroverchina" target="_blank">路虎官方微博</a>
         <i></i>
@@ -109,9 +126,6 @@
   </div>
   <script src="js/modernizr.custom.88639.js"></script>
   <script>document.write('<script src="js/jquery-'+(window.addEventListener||(document.documentMode>=9)?'2.0.0':'1.9.1')+'.min.js"><\/script>')</script>
-  <script src="js/plugins/CSSPlugin.min.js"></script>
-  <script src="js/easing/EasePack.min.js"></script>
-  <script src="js/TweenLite.min.js"></script>
   <script src="js/share.min.js"></script>
   <script src="js/action.js"></script>
 </body>

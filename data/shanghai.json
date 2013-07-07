@@ -1,0 +1,18 @@
+{
+    "count": 2,
+    "list": [
+        {
+            "id": 1,
+            "file": "img/guess_1.jpg",
+            "sound":"data/1.mp3",
+            "opt": ["汽车", "竹林", "风声"],
+            "a": 1
+        }, {
+            "id": 2,
+            "file": "files/0630/97f1b3aa52b34b8f82be9d2dcbd9ed6f_b.jpg",
+            "sound":"data/2.mp3",
+            "opt": ["掌声", "笑声", "海浪"],
+            "a": 2
+        }
+    ]
+}

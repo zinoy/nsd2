@@ -31,6 +31,7 @@
     shared.mode.detail = false;
     shared.mode.my_journey = false;
     shared.mode.quiz = false;
+    shared.mode.guess = true;
 
     effect.fadeIn = function(obj, duration, delay, callback) {
         TweenLite.delayedCall(delay, function() {
@@ -51,7 +52,7 @@
             delay : delay === undefined ? 0 : delay,
             ease : Power2.easeOut,
             onComplete : function() {
-                $(obj).hide();
+                $(obj).css('opacity', '').hide();
                 if (callback !== undefined)
                     callback();
             }
@@ -360,6 +361,20 @@
             });
             $('#panorama .hint .circle').css('margin-top', (shared.screen.height - $('#panorama .hint .circle').height()) / 2);
         }
+        if (shared.mode.guess) {
+            var ow = $('#guess .view').data('width'), oh = $('#guess .view').data('height'), pimg = $('#guess .view img');
+            pimg.css({
+                height : '',
+                left : 0
+            });
+            pimg.width(sw).css('top', (sh - pimg.height()) / 2);
+            checkImageSize(pimg);
+            $('#guess .player').css({
+                top : (sh - $('#guess .player').height()) / 2,
+                left : (sw - $('#guess .player').width()) / 2
+            })
+            $('#guess .hint .circle').css('margin-top', (shared.screen.height - $('#guess .hint .circle').height()) / 2);
+        }
         $('.overlay').each(function() {
             $(this).css({
                 left : (shared.screen.width - $(this).width()) / 2 - 10,
@@ -596,6 +611,10 @@
                     $('#detail .diff a').click(function(e) {
                         e.stopPropagation();
                         getDiff(0);
+                    });
+                    $('#detail .guess a').click(function(e) {
+                        e.stopPropagation();
+                        bindGuess();
                     });
                 }
                 initGallery(data, loc);
@@ -1738,6 +1757,167 @@
         }
     }
 
+    //TODO: guess
+    function bindGuess() {
+        shared.mode.guess = true;
+        shared.guess = {};
+        $.getJSON('data/shanghai.json', function(data) {
+            nsd.data.guess = data.list;
+            shared.guess.index = 0;
+            $('#guess .view').remove();
+            for (var i = data.count - 1; i >= 0; i--) {
+                var view = $('<div class="view"/>').append('<img src="' + data.list[i].file + '"/>');
+                $('#guess').prepend(view);
+            }
+
+            $('#guess .view').eq(0).addClass('visible');
+            $('#guess .animate').removeClass('animate');
+            $('#guess .question,#guess .player').hide();
+            $('#guess').show();
+            $('#nav,#ui_board').hide();
+            $('#guess .hint').show();
+            effect.fadeOut('#guess .hint', .2, 3);
+            adjust();
+            if ($('#bgm_control i').hasClass('bgm-on')) {
+                $('#bgm').get(0).pause();
+                shared.guess.muted = false;
+            } else {
+                shared.guess.muted = true;
+            }
+            setTimeout(function() {
+                showGuess(shared.guess.index);
+                effect.fadeIn('#guess .player', .2);
+                adjust();
+            }, 3000);
+        });
+    }
+
+    function closeGuess() {
+        if (!shared.guess.muted) {
+            $('#bgm').get(0).play();
+        }
+    }
+
+    function showGuess(idx) {
+        var obj = nsd.data.guess[idx];
+        var prev = $('#guess .visible');
+        $('#guess .view').eq(idx).addClass('visible');
+        if (prev.get(0) != $('#guess .view').eq(idx).get(0)) {
+            effect.fadeIn($('#guess .view').eq(idx), .2, 0, function() {
+                prev.removeClass('visible');
+            });
+        }
+        $('#guess_audio').attr('src', obj.sound).get(0).load();
+        TweenLite.fromTo('#guess .question', .2, {
+            bottom : 2
+        }, {
+            bottom : -$('#guess .question').height() + 5,
+            ease : Power2.easeOut,
+            onComplete : function() {
+                $('#guess .question').hide();
+            }
+        });
+        $('#guess .question .option').empty();
+        for (var i = 0; i < obj.opt.length; i++) {
+            var option = $('<a><i><b></b></i><label>' + obj.opt[i] + '</label></a>');
+            $('#guess .question .option').append(option);
+        }
+        $('#guess .option a').click(function() {
+            if ($(this).hasClass('active'))
+                return;
+            $('#guess .option a.active').removeClass('active');
+            $(this).addClass('active');
+        });
+    }
+
+    function playGuess() {
+        var tl = 1, ef = function() {
+            if (tl > 4)
+                tl = 1;
+            $('#guess .animate').removeClass('animate');
+            $('#guess .effect-' + tl).addClass('animate');
+            tl++;
+            shared.guess.timer = setTimeout(ef, 1000);
+        };
+        $('#guess_audio').get(0).play();
+        $('#guess .glow').show();
+        $('#guess .player a.btn').removeClass('btn-play');
+        clearTimeout(shared.guess.timer);
+        ef();
+    }
+
+    function stopGuess() {
+        $('#guess .glow').hide();
+        $('#guess .animate').removeClass('animate');
+        $('#guess .player a.btn').addClass('btn-play');
+        clearTimeout(shared.guess.timer);
+        if ($('#guess .question:visible').length == 0) {
+            startGuess();
+        }
+    }
+
+    function startGuess() {
+        $('#guess .question').show();
+        adjust();
+        TweenLite.fromTo('#guess .question', .2, {
+            bottom : -$('#guess .question').height() + 5
+        }, {
+            bottom : 2,
+            ease : Power2.easeOut
+        })
+    }
+
+    function submitGuess() {
+        if ($('#guess .option a.active').length == 0) {
+            return false;
+        }
+        $('#guess_audio').get(0).pause();
+        var idx = $('#guess .option a.active').index();
+        var obj = nsd.data.guess[shared.guess.index];
+        if (idx == obj.a) {
+            if (shared.guess.index == nsd.data.guess.length - 1) {
+                $.post(config.api_path, {
+                    ac : 'gamecomplete',
+                    token : nsd.user.token,
+                    game : 3
+                }, function(data) {
+                    if (generalErrorHandle(data)) {
+                        showDialog("<b>恭喜！本站发现任务完成。</b><br />你获得了<i>" + data.amount + "</i>点积分。", "返回", function() {
+                            $('#dialog .close').click();
+                            $('#guess').hide();
+                            $('#ui_board,#nav').show();
+                            shared.game_spots[2].setIcon({
+                                url : 'img/my_3_on.png',
+                                anchor : new google.maps.Point(33, 66)
+                            });
+                            if (!shared.guess.muted) {
+                                $('#bgm').get(0).play();
+                            }
+                        });
+                        setUserPoints(data.points);
+                    }
+                    if (data.code == 114) {
+                        showDialog("<b>恭喜！本站发现任务完成。</b>", "返回", function() {
+                            $('#dialog .close').click();
+                            $('#guess').hide();
+                            $('#ui_board,#nav').show();
+                            if (!shared.guess.muted) {
+                                $('#bgm').get(0).play();
+                            }
+                        });
+                    }
+                });
+            } else {
+                showDialog("<b>恭喜！回答正确。</b>", "继续发现", function() {
+                    shared.guess.index++;
+                    showGuess(shared.guess.index);
+                });
+            }
+        } else {
+            showAlert("答错了！");
+        }
+    }
+
     function submitUser(e) {
         if (connecting)
             return false;
@@ -2163,6 +2343,8 @@
                 getPanorama(0);
             else if (idx == 1)
                 getDiff(0);
+            else
+                bindGuess();
         };
         for (var i = 0; i < spots.length; i++) {
             if (shared.game_spots !== undefined) {
@@ -2170,22 +2352,15 @@
                 continue;
             }
             var icon;
-            if (i > 1) {
-                icon = {
-                    url : 'img/my_' + i + '_off.png',
-                    anchor : anchors[1]
-                };
-            } else {
-                icon = {
-                    url : 'img/my_' + i + '.png',
-                    anchor : anchors[0]
-                };
-                if (data !== undefined) {
-                    var sp = findLocation(i + 1, data.list);
-                    if (sp) {
-                        icon.url = 'img/my_' + i + '_on.png';
-                        icon.anchor = anchors[1];
-                    }
+            icon = {
+                url : 'img/my_' + i + '.png',
+                anchor : anchors[0]
+            };
+            if (data !== undefined) {
+                var sp = findLocation(i + 1, data.list);
+                if (sp) {
+                    icon.url = 'img/my_' + i + '_on.png';
+                    icon.anchor = anchors[1];
                 }
             }
             var marker = new google.maps.Marker({
@@ -2204,10 +2379,6 @@
                 if (old.hasClass('intro' + idx))
                     return;
                 var cur = old.clone().removeClass().addClass('intro' + idx).appendTo('#my');
-                if (idx == 3)
-                    cur.children().hide();
-                else
-                    cur.children().show();
                 $('#my p>a').click(function() {
                     var idx = Number($(this).parents('div').attr('class').substr(5, 1)) - 1;
                     go(idx);
@@ -2728,6 +2899,19 @@
                 bgm.volume = .25;
                 setCookie("bgm_mute", null, 0);
             }
+        });
+        $('#guess_audio').on('loadeddata', playGuess).on('ended', stopGuess).on('pause', stopGuess);
+        $('#guess .player .btn').click(function() {
+            if ($(this).hasClass('btn-play')) {
+                playGuess();
+            }
+        });
+        $('#guess .question .btn a').click(submitGuess);
+        $('#guess .close').click(function() {
+            $('#guess').hide();
+            $('#nav,#ui_board').show();
+            clearTimeout(shared.guess.timer);
+            $('#guess_audio').get(0).pause();
         });
     }
 

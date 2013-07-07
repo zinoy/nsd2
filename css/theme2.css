@@ -160,6 +160,7 @@ a{cursor:pointer}
 #content .mask-white{cursor:default}
 #content .panorama span{background:url(../img/icon-panorama.png) no-repeat center center}
 #content .diff span{background:url(../img/icon-diff.png) no-repeat center center}
+#content .guess span{background:url(../img/icon-guess.png) no-repeat center center}
 #content .img-expand{position:relative}
 #content .img-expand img{display:block}
 #content .img-expand span{background:url(../img/spacer.gif);left:0;position:absolute;top:0}
@@ -221,12 +222,12 @@ a{cursor:pointer}
 #gallery .share a.btn{background:#ff5900;color:#fff;display:inline-block;height:18px;line-height:18px;padding:3px 4px;vertical-align:middle}
 #gallery .share a.btn span{display:inline-block;overflow:hidden;vertical-align:text-top;white-space:nowrap;-webkit-transition:width .2s ease-out;transition:width .2s ease-out}
 #gallery .share a.btn i{background:url(../img/icon-weibo.gif) no-repeat center center;display:inline-block;height:15px;line-height:15px;margin-top:1px;vertical-align:text-top;width:19px}
-#gallery .pager,#panorama .info .bar{background-color:rgba(255,255,255,.2);bottom:0;font:0/0 a;height:35px;position:absolute;text-align:center;width:100%;z-index:6}
-#gallery .pager a,#panorama .info .bar a{background:url(../img/icon-arrow.gif) no-repeat center top #000;display:inline-block;height:35px;width:32px;-webkit-transition:background-position .2s ease-out;transition:background-position .2s ease-out}
-#gallery .pager a:hover,#panorama .info .bar a:hover{background-position:center -35px}
+#gallery .pager,#panorama .info .bar,#guess .info .bar{background-color:rgba(255,255,255,.2);bottom:0;font:0/0 a;height:35px;position:absolute;text-align:center;width:100%;z-index:6}
+#gallery .pager a,#panorama .info .bar a,#guess .info .bar a{background:url(../img/icon-arrow.gif) no-repeat center top #000;display:inline-block;height:35px;width:32px;-webkit-transition:background-position .2s ease-out;transition:background-position .2s ease-out}
+#gallery .pager a:hover,#panorama .info .bar a:hover,#guess .info .bar a:hover{background-position:center -35px}
 #gallery .pager span{background:#e05206;color:#913300;display:inline-block;font:18px/25px lr-medium,sans-serif;height:30px;padding:5px 20px;text-align:center;vertical-align:top}
 #gallery .pager span b{color:#fff;font-size:22px;font-weight:normal}
-#gallery .pager a.next,#panorama .info .bar a.next{-moz-transform:scaleX(-1);-webkit-transform:scaleX(-1);-o-transform:scaleX(-1);-ms-transform:scaleX(-1);transform:scaleX(-1)}
+#gallery .pager a.next,#panorama .info .bar a.next,#guess .info .bar a.next{-moz-transform:scaleX(-1);-webkit-transform:scaleX(-1);-o-transform:scaleX(-1);-ms-transform:scaleX(-1);transform:scaleX(-1)}
 
 #my{left:0;position:absolute;top:0}
 #my div{position:absolute;top:148px;width:411px}
@@ -294,6 +295,45 @@ a{cursor:pointer}
 #difference .hint p{color:#404040;font-size:14px;line-height:24px;margin:0}
 #difference .hint p b{color:#e05206;display:block;font-weight:normal}
 #difference .hint p a{border-top:solid 1px #a7a7a7;display:block;height:36px;line-height:36px;margin-top:20px}
+
+@-webkit-keyframes player-glow{
+    0%{opacity:0}
+    50%{opacity:1}
+    100%{opacity:0}
+}
+@keyframes player-glow{
+    0%{opacity:0}
+    50%{opacity:1}
+    100%{opacity:0}
+}
+
+#guess{height:100%;left:0;overflow:hidden;position:absolute;top:0;width:100%;z-index:6}
+#guess .mask{background:url(../img/pattern-nav.png);z-index:auto}
+#guess .btn-square{position:absolute;right:10px;top:10px;z-index:4}
+#guess .view{height:100%;position:absolute;top:0;visibility:hidden}
+#guess .view img{position:absolute}
+#guess .info{border-bottom:2px solid #e05206;bottom:0;left:0;position:absolute;width:100%;z-index:3}
+#guess .player{background:url(../img/guess-circle.png) no-repeat center center;height:108px;position:absolute;width:106px}
+#guess .player .glow{background:url(../img/guess-glow2.png) no-repeat 14px 12px;height:100%;position:absolute;width:100%}
+#guess .player .effect{background:url(../img/guess-glow.png) no-repeat;height:100%;opacity:0;position:absolute;width:100%}
+#guess .player .effect-2{-webkit-transform:rotateZ(90deg);-ms-transform:rotateZ(90deg);transform:rotateZ(90deg)}
+#guess .player .effect-3{-webkit-transform:rotateZ(180deg);-ms-transform:rotateZ(180deg);transform:rotateZ(180deg)}
+#guess .player .effect-4{-webkit-transform:rotateZ(270deg);-ms-transform:rotateZ(270deg);transform:rotateZ(270deg)}
+#guess .player .effect.animate{-webkit-animation:player-glow 1s ease-in-out;animation:player-glow 1s ease-in-out}
+#guess .player a.btn{background:url(../img/guess-pause.gif) no-repeat center;height:100%;position:absolute;width:100%}
+#guess .player a.btn-play{background-image:url(../img/guess-play.gif)}
+#guess .question{background:#fff;bottom:2px;box-shadow:0 -5px 0 rgba(255,255,255,.6);left:0;padding:20px 0 0;position:absolute;text-align:center;width:100%;z-index:3}
+#guess .question p{color:#404040;font-size:14px;line-height:24px;margin:0}
+#guess .question p b{color:#e05206;display:block;font-weight:normal}
+#guess .question p.option{margin:20px 0 0;overflow:hidden;text-align:center}
+#guess .question p.option a{cursor:pointer;margin:0 20px;white-space:nowrap}
+#guess .question p.option a i{border:solid 1px #7c7c7c;display:inline-block;height:8px;margin-right:.4em;padding:2px;vertical-align:text-top;width:8px}
+#guess .question p.option a label{cursor:pointer;display:inline-block;line-height:12px;vertical-align:text-top}
+#guess .question p.option a.active b{background:#e05206;display:block;height:100%;width:100%}
+#guess .question .btn a{border-top:solid 1px #a7a7a7;color:#000;display:block;height:36px;line-height:36px;margin-top:20px}
+#guess .hint{background-color:rgba(0,0,0,.3);height:100%;position:absolute;top:0;width:100%;z-index:5}
+#guess .hint .circle{background:url(../img/icon-guess.png) no-repeat center top;color:#fff;font-size:14px;font-weight:bold;margin:0 auto;padding-top:110px;text-align:center;white-space:nowrap;width:180px}
+#guess .hint .circle b{color:#e05206}
 
 #head{bottom:30px;color:#fff;padding:5px;position:absolute;right:20px;text-align:right}
 #head span{background:#e05206;display:inline-block;font-size:22px;height:28px;line-height:26px;padding:0 3px 0 8px}
