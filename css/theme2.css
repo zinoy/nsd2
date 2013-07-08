@@ -478,8 +478,8 @@ a{cursor:pointer}
 #btn_rule .icon-triangle-down{-moz-transform:rotateZ(-135deg);-webkit-transform:rotateZ(-135deg);transform:rotateZ(-135deg);background:url(../img/arrow-btn-tl.gif) no-repeat;height:7px;margin:2px 0 0 5px;vertical-align:text-top;width:7px}
 
 #bgm_control{background:#000;background-color:rgba(0,0,0,.8);border-radius:3px;bottom:150px;cursor:pointer;height:17px;left:20px;padding-top:5px;position:absolute;width:120px}
-#bgm_control i{background:url(../img/icon-bgm.gif) no-repeat;height:11px;margin-left:23px;opacity:.7;vertical-align:top;width:14px}
-#bgm_control .bgm-off{background-position:0 -11px}
+#bgm_control i{background:url(../img/icon-bgm-on.gif) no-repeat;height:11px;margin-left:23px;opacity:.7;vertical-align:top;width:14px}
+#bgm_control .bgm-off{background-image:url(../img/icon-bgm.gif)}
 #bgm_control span{border-left:solid 1px #333;float:right;height:12px;margin-left:3px;text-align:center;width:59px}
 #bgm_control span b{background:#535353;background:rgba(83,83,83,.8);color:#fff;color:rgba(255,255,255,.8);display:inline-block;font:12px/12px lr-light,sans-serif;text-transform:uppercase;vertical-align:top;width:32px}
 

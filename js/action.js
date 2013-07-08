@@ -485,7 +485,7 @@
     }
 
     function dayPass(date) {
-        var start = new Date(2013, 4, 24);
+        var start = new Date(2013, 4, 22);
         var span = date.getTime() - start.getTime();
         return Math.ceil(span / 1000 / 3600 / 24);
     }
@@ -1231,7 +1231,7 @@
 
                 //TODO set default geo info
                 var place = data.list[data.list.length - 1];
-                var now = new Date();
+                var now = new Date(2013, 6, 4);
                 nsd.geoinfo.location = place.Location;
                 nsd.geoinfo.past = dayPass(now);
                 nsd.geoinfo.date = dateFormat(now);
@@ -2273,54 +2273,7 @@
             if (markers[i].obj !== undefined)
                 markers[i].obj.setMap(null);
         }
-        var wayPoints = [];
-        wayPoints.push({
-            location : spots[1]
-        });
-        wayPoints.push({
-            location : new google.maps.LatLng(21.345505, 110.287258)
-        });
-        wayPoints.push({
-            location : new google.maps.LatLng(24.595675, 118.010818)
-        });
-        var dashed = {
-            path : 'M 0,0 0,1',
-            strokeColor : "#ffffff",
-            strokeOpacity : 1,
-            scale : 2
-        };
-        var directionsDisplay = new google.maps.DirectionsRenderer({
-            polylineOptions : {
-                clickable : false,
-                strokeOpacity : 0,
-                icons : [{
-                    icon : dashed,
-                    offset : '0',
-                    repeat : '6px'
-                }]
-            },
-            suppressMarkers : true
-        });
         //shared.my_route = directionsDisplay;
-
-        if (shared.my_route === undefined) {
-            var directionsService = new google.maps.DirectionsService();
-            directionsDisplay.setMap(nsd.map);
-            var request = {
-                origin : spots[0],
-                destination : spots[2],
-                travelMode : google.maps.DirectionsTravelMode.DRIVING,
-                waypoints : wayPoints
-            };
-            directionsService.route(request, function(response, status) {
-                if (status == google.maps.DirectionsStatus.OK) {
-                    shared.my_route = response;
-                    shared.route.setDirections(response);
-                }
-            });
-        } else {
-            shared.route.setDirections(shared.my_route);
-        }
 
         if (nsd.user.token) {
             $.post(config.api_path, {
@@ -2329,7 +2282,7 @@
                 seed : Math.random()
             }, showMyDiscovery);
         } else {
-            showMyDiscovery();
+            showUserAlert();
         }
     }
 
