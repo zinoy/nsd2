@@ -2909,13 +2909,13 @@
                     url : "img/ol-spot.png",
                     anchor : new google.maps.Point(9, 9)
                 }];
-                if (nsd.user.token == null) {
-                    $('#welcome').addClass('visible');
-                    effect.fadeIn('#welcome', .4, 1);
-                    setTimeout(function() {
-                        effect.fadeOut('#welcome', .4);
-                    }, 10000);
-                }
+                /*if (nsd.user.token == null) {
+                 $('#welcome').addClass('visible');
+                 effect.fadeIn('#welcome', .4, 1);
+                 setTimeout(function() {
+                 effect.fadeOut('#welcome', .4);
+                 }, 10000);
+                 }*/
                 var ignore = getCookie("upgrade_ignore");
                 if ($('html').hasClass('lt-ie9') && (ignore == null || ignore == "")) {
                     setTimeout(showBrowserAlert, 1000);
