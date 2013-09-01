@@ -46,7 +46,7 @@
     </div>
     <div id="btn_rule">活动规则<i class="icon icon-triangle-down"></i></div>
     <div id="bgm_control">
-      <i class="icon bgm-on"></i><span><b>on</b></span>
+      <i class="icon bgm-off"></i><span><b>off</b></span>
     </div>
     <div id="content" class="cursor-close" style="display:none;">
       <div class="color alpha-quarter col1-full order1"></div>
@@ -290,6 +290,28 @@
         </ul>
       </div>
     </div>
+    <div id="timeline" style="display:none;">
+      <div class="mask cursor-close"></div>
+      <div class="frame">
+        <h2>我们的轨迹<b></b></h2>
+        <div class="list">
+          <div><h3>中国最美24小时</h3></div>
+          <div class="expand">
+            <h3>中国最美前线<b></b></h3>
+            <img src="img/timeline_2.jpg" />
+            <ul class="share">
+              <li class="weibo"></li>
+              <li class="renren"></li>
+              <li class="kaixin"></li>
+              <li class="douban"></li>
+            </ul>
+            <p><a href="http://topic.autohome.com.cn/2013/5/freelander/" target="_blank" class="btn-simple">点击进入<i class="icon icon-triangle icon-orange"></i></a></p>
+          </div>
+          <div><h3>中国最美纬度<b></b></h3></div>
+          <div><h3>中国最美地平线<b></b></h3></div>
+        </div>
+      </div>
+    </div>
     <div class="mask mask-alpha3 cursor-close" style="display:none;"></div>
     <div class="pattern-about" style="display:none;"></div>
   </div>
@@ -330,22 +352,35 @@
       </div>
       <div class="tab-item" style="display:none;">
         <div class="box">
-          <div class="article article-wide">
+          <div class="article">
+            <p class="highlight">恭喜以下用户获得“发现无止境 中国最美前线活动”奖品，请获奖用户留意主办方的电话通知，后续将会安排奖品的发放。</p>
+            <p class="notice">一等奖12名：获享路虎揽胜极光或神行者2代使用权一个月</p>
             <table>
-              <tr class="highlight">
-                <td style="width:188px">&middot; 一等奖 12名</td>
-                <td>获享路虎揽胜极光或神行者2代使用权一个月。</td>
-              </tr>
               <tr>
-                <td>&middot; 二等奖 50名</td>
-                <td>获享路虎中国专属莱卡礼盒一份。</td>
-              </tr>
+                <th>白先生</th><td>186XXXX5081</td>
+                <th>周先生</th><td>130XXXX1543</td>
+              </tr>   
               <tr>
-                <td>&middot; 幸运奖 500名</td>
-                <td>获享路虎中国限量版精美礼品一份。</td>
+                <th>应小姐</th><td>186XXXX8789</td>
+                <th>赵先生</th><td>138XXXX0855</td>
+              </tr>   
+              <tr>
+                <th>杨先生</th><td>139XXXX1250</td>
+                <th>杨先生</th><td>159XXXX6850</td>
+              </tr>   
+              <tr>
+                <th>王先生</th><td>139XXXX4750</td>
+                <th>陆先生</th><td>180XXXX8083</td>
+              </tr>   
+              <tr>
+                <th>段先生</th><td>133XXXX9799</td>
+                <th>陈先生</th><td>137XXXX2957</td>
+              </tr>   
+              <tr>
+                <th>张先生</th><td>186XXXX5258</td>
+                <th>王先生</th><td>187XXXX7309</td>
               </tr>
             </table>
-            <p class="notice">* 以上奖品依据活动积分排名为准<br />* 最终获奖名单将于2013年7月25日公布于活动官方网站<br />* 本活动最终解释权归路虎中国所有</p>
           </div>
           <div class="prize">（奖品以实物为准）</div>
         </div>
@@ -527,16 +562,17 @@
     </div>
   </div>
   <div id="welcome">
-    <div class="mask cursor-close"></div>
-    <div class="frame">
-      <div class="panel">
-        <div class="content">
-          <p class="lead">欢迎来到中国最美前线<strong>即刻登录！获得更多积分，赢取惊喜大礼！</strong></p>
-          <p><a class="weibo"><img src="img/btn-welcome.gif" alt="新浪微博快速登录" /></a></p>
-          <p class="links"><a>积分细则</a><a>奖品设置</a><a class="skip">跳过</a></p>
-          <div class="prize"> (一等奖:<b>12名</b>  获享<a>路虎揽胜极光</a>或<a>神行者2代</a>使用权一个月)</div>
-        </div>
-      </div>
+    <div class="mask"></div>
+    <div class="content">
+      <video id="video_final" preload>
+        <source src="video/finaleparty.webm"></source>
+        <source src="video/finaleparty.mp4"></source>
+        <source src="video/finaleparty.ogv"></source>
+      </video>
+      <p>
+        <a class="winner">获奖名单</a>
+        <a class="skip">跳过</a>
+      </p>
     </div>
   </div>
   <div id="intro">
@@ -548,19 +584,20 @@
         <li><i class="icon icon-pic"></i><span>0</span><sup>图像</sup></li>
       </ul>
     </div>
-    <div class="column">
+    <div class="column column-wide">
       <h2>我们的轨迹</h2>
       <b class="line"></b>
+      <img src="img/intro-route.jpg" />
       <p>自1947年问世以来，世界豪华SUV的至臻之选，从来就只有路虎。</p>
       <p>在六十五年的传奇旅程中，我们无所谓时代、环境如何变迁，始终坚持以举世无双的全地形反馈适应系统、独具标识性的外形设计和至为精湛的造车工艺...</p>
-      <p style="display:none;"><a class="btn-simple">了解更多<i class="icon icon-triangle icon-orange"></i></a></p>
+      <p><a class="btn-simple route">查看详情<i class="icon icon-triangle icon-orange"></i></a></p>
     </div>
-    <div class="column">
+    <div class="column column-wide">
       <h2>发现精神</h2>
       <b class="line"></b>
-      <p><img src="img/intro-img.jpg" class="spirit" /></p>
+      <p><img src="img/intro-spirit.jpg" /></p>
       <p>秉承60余年对发现精神的专注和探索，路虎一直鼓舞人们发现传奇、勇于探索。纵横四段探索旅程，从容应对复杂路况，驰骋间释放激情，引领路虎瞩目荣耀，尽显高端越野非凡品质，发现无止境！</p>
-      <p style="display:none;"><a class="btn-simple">了解更多<i class="icon icon-triangle icon-orange"></i></a></p>
+      <p><a href="http://www.landrover.com/cn/zh/lr/about-land-rover/lr-brand/lr-brand/" target="_blank" class="btn-simple">了解更多<i class="icon icon-triangle icon-orange"></i></a></p>
     </div>
     <div class="column quick-link">
       <b class="line"></b>
@@ -625,6 +662,7 @@
   </audio>
   <script src="js/modernizr.custom.88639.js"></script>
   <script>document.write('<script src="js/jquery-'+(window.addEventListener||(document.documentMode>=9)?'2.0.0':'1.9.1')+'.min.js"><\/script>')</script>
+  <script src="js/swfobject.js"></script>
   <script src="js/plugins/CSSPlugin.min.js"></script>
   <script src="js/easing/EasePack.min.js"></script>
   <script src="js/TweenLite.min.js"></script>
