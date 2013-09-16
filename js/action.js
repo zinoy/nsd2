@@ -2857,6 +2857,7 @@
         } else {
             var flashvars = {};
             var params = {};
+            params.wmode = "transparent";
             params.allowscriptaccess = "sameDomain";
             var attributes = {};
             attributes.id = "swfplayer";
@@ -3016,23 +3017,7 @@
                 points : Number(getCookie("user_points"))
             });
             $(window).resize(adjust);
-            if (window.google === undefined) {
-                var first = getCookie("first_visit");
-                if (first !== null && first != "") {
-                    window.location.href = "home.html";
-                    return;
-                } else {
-                    setCookie("first_visit", "yes", 90);
-                    if ($('#video_index').length > 0 && $('html').hasClass('video')) {
-                        $('#video_index').one('loadeddata', function() {
-                            effect.fadeOut('#kv_index', .1);
-                            var player = $('#video_index')[0];
-                            player.volume = .5;
-                            player.play();
-                        });
-                    }
-                }
-            } else {
+            if (window.google !== undefined) {
                 _maker = [{
                     url : "img/ol-vehicle.png",
                     anchor : new google.maps.Point(17.5, 19.5)
@@ -3045,7 +3030,9 @@
                 }];
                 $('#welcome').addClass('visible');
                 effect.fadeIn('#welcome', .4, 1, function() {
-                    $('#video_final').get(0).play();
+                    if (!$('html').hasClass('lt-ie9')) {
+                        $('#video_final').get(0).play();
+                    }
                 });
                 var ignore = getCookie("upgrade_ignore");
                 if ($('html').hasClass('lt-ie9') && (ignore == null || ignore == "")) {
