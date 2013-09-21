@@ -4,18 +4,18 @@ a{cursor:pointer}
 /* fonts setup */
 @font-face {
     font-family: 'lr-light';
-    src: url('../landroverlgtl-webfont.eot');
-    src: url('../landroverlgtl-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../landroverlgtl-webfont.woff') format('woff'),
+    src: url('/landroverlgtl-webfont.eot');
+    src: url('/landroverlgtl-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/landroverlgtl-webfont.woff') format('woff'),
          url('http://www.landrover.com/c/script/landroverlgtl-webfont.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
     font-family: 'lr-medium';
-    src: url('../landrovermedl-webfont.eot');
-    src: url('../landrovermedl-webfont.eot?#iefix') format('embedded-opentype'),
-         url('../landrovermedl-webfont.woff') format('woff'),
+    src: url('/landrovermedl-webfont.eot');
+    src: url('/landrovermedl-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/landrovermedl-webfont.woff') format('woff'),
          url('http://www.landrover.com/c/script/landrovermedl-webfont.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
@@ -149,6 +149,7 @@ a{cursor:pointer}
 #content .img-hover a{display:block;margin:0 auto}
 #content .img-hover a:hover{background:url(../img/icon-image-hover.gif) no-repeat left top,url(../img/icon-image-hover.gif) no-repeat right top,url(../img/icon-image-hover.gif) no-repeat left bottom,url(../img/icon-image-hover.gif) no-repeat right bottom;border:solid 3px #fff}
 #content .right-button{position:absolute;right:40px;top:20px;z-index:7}
+#content .right-button a{display:block;margin-bottom:10px}
 #content h2{font-size:30px;font-weight:normal;margin:0;padding:0 10px}
 #content h2 span{display:block;font-size:18px;font-weight:bold;line-height:22px}
 #content h2 b{background:#000;display:block;font:0/0 a;height:5px;margin-top:20px;width:46px}

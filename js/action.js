@@ -617,7 +617,7 @@
                     mouseWheelSpeed : 100
                 });
                 $('#content').addClass('visible');
-                $('#detail,.right-button .browse').show();
+                $('#detail,.right-button .browse,.right-button .intro-video').show();
                 getQuiz(loc.id);
 
                 TweenLite.fromTo('#content', .4, {
@@ -2121,7 +2121,7 @@
                     block.append(item);
                 }
                 $('#content').addClass('visible');
-                $('#detail,.right-button .browse,#content .mask-white').hide();
+                $('#detail,.right-button .browse,.right-button .intro-video,#content .mask-white').hide();
                 $('#content,#points_history,.right-button .satellite').show();
                 $('#points_history .article').jScrollPane({
                     autoReinitialise : true,
@@ -2585,6 +2585,10 @@
             effect.fadeIn('#content .gallery-list', .4);
             $('#content .mask,#content .right-button.back').show();
         });
+        $('#content .right-button a.intro-video').click(function(e) {
+            e.stopPropagation();
+            homeVideo();
+        })
         $('#content').click(backToHome);
         $('#content .right-button.back a').click(function(e) {
             e.stopPropagation();
@@ -2852,24 +2856,6 @@
             clearTimeout(shared.guess.timer);
             $('#guess_audio').get(0).pause();
         });
-        if ($('html').hasClass('video')) {
-            $('#video_final').on('ended', homeVideoEnded);
-        } else {
-            var flashvars = {};
-            var params = {};
-            params.wmode = "transparent";
-            params.allowscriptaccess = "sameDomain";
-            var attributes = {};
-            attributes.id = "swfplayer";
-            swfobject.embedSWF("player.swf", "video_final", "100%", "100%", "10.3.0", false, flashvars, params, attributes);
-        }
-        $('#welcome .winner').click(function(e) {
-            e.stopPropagation();
-            homeVideoEnded();
-            showBottomPanel(0, 2);
-            switchMenu(2);
-            return false;
-        });
         $('#intro a.route').click(function() {
             resetScreen();
             backToHome();
@@ -2983,6 +2969,35 @@
         });
     }
 
+    function homeVideo() {
+        $('#welcome').html('<div class="mask "></div><div class="content"><video id="video_final" preload><source src="video/finaleparty.webm"></source><source src="video/finaleparty.mp4"></source><source src="video/finaleparty.ogv"></source></video><p><a class="winner">获奖名单</a></p></div>');
+        if ($('html').hasClass('video')) {
+            $('#video_final').on('ended', homeVideoEnded);
+        } else {
+            var flashvars = {};
+            var params = {};
+            params.wmode = "transparent";
+            params.allowscriptaccess = "sameDomain";
+            var attributes = {};
+            attributes.id = "swfplayer";
+            swfobject.embedSWF("player.swf", "video_final", "100%", "100%", "10.3.0", false, flashvars, params, attributes);
+        }
+        $('#welcome .winner').click(function(e) {
+            e.stopPropagation();
+            homeVideoEnded();
+            showBottomPanel(0, 2);
+            switchMenu(2);
+            return false;
+        });
+        $('#welcome').addClass('visible');
+        effect.fadeIn('#welcome', .4, 1, function() {
+            if (!$('html').hasClass('lt-ie9')) {
+                $('#video_final').get(0).play();
+            }
+        });
+        adjust();
+    }
+
     function homeVideoEnded() {
         effect.fadeOut('#welcome', .4, 0, function() {
             $('#welcome').empty();
@@ -3017,29 +3032,24 @@
                 points : Number(getCookie("user_points"))
             });
             $(window).resize(adjust);
-            if (window.google !== undefined) {
-                _maker = [{
-                    url : "img/ol-vehicle.png",
-                    anchor : new google.maps.Point(17.5, 19.5)
-                }, "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
-                    url : "img/ol-stop.png",
-                    anchor : new google.maps.Point(11, 10.5)
-                }, {
-                    url : "img/ol-spot.png",
-                    anchor : new google.maps.Point(9, 9)
-                }];
-                $('#welcome').addClass('visible');
-                effect.fadeIn('#welcome', .4, 1, function() {
-                    if (!$('html').hasClass('lt-ie9')) {
-                        $('#video_final').get(0).play();
-                    }
-                });
-                var ignore = getCookie("upgrade_ignore");
-                if ($('html').hasClass('lt-ie9') && (ignore == null || ignore == "")) {
-                    setTimeout(showBrowserAlert, 1000);
-                }
-                initMap();
+            _maker = [{
+                url : "img/ol-vehicle.png",
+                anchor : new google.maps.Point(17.5, 19.5)
+            }, "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
+                url : "img/ol-stop.png",
+                anchor : new google.maps.Point(11, 10.5)
+            }, {
+                url : "img/ol-spot.png",
+                anchor : new google.maps.Point(9, 9)
+            }];
+
+            homeVideo();
+
+            var ignore = getCookie("upgrade_ignore");
+            if ($('html').hasClass('lt-ie9') && (ignore == null || ignore == "")) {
+                setTimeout(showBrowserAlert, 1000);
             }
+            initMap();
             delegateListener();
             adjust();
         });

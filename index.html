@@ -1,1 +1,744 @@
-<script>window.location="home.html";</script>
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="zh-cn">
+<!--<![endif]-->
+<head>
+  <meta charset="utf-8" />
+  <title>发现无止境 中国最美前线 - 路虎中国</title>
+  <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+  <link rel="stylesheet" type="text/css" href="css/jquery.jscrollpane.css" />
+  <link rel="stylesheet" type="text/css" href="css/theme2.css" />
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40620298-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyC-ihPviz1F-CTuNKiRHlPz2Ra_6bltIVU&sensor=true"></script>
+</head>
+<body>
+  <div id="main" class="screen">
+    <div id="google_map">
+      <div class="pattern">
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <i></i>
+        <div class="mask" style="display:none;"></div>
+      </div>
+    </div>
+    <div id="map_control">
+      <i class="in"></i>
+      <i class="out"></i>
+    </div>
+    <div id="btn_rule">活动规则<i class="icon icon-triangle-down"></i></div>
+    <div id="bgm_control">
+      <i class="icon bgm-off"></i><span><b>off</b></span>
+    </div>
+    <div id="content" class="cursor-close" style="display:none;">
+      <div class="color alpha-quarter col1-full order1"></div>
+      <div class="color alpha-half col1-full order2"></div>
+      <div class="gallery-list col1-full">
+        <div class="frame">
+          <ul></ul>
+        </div>
+      </div>
+      <div id="detail">
+        <h2></h2>
+        <div class="article">
+          <div id="quiz" style="display:none;">
+            <div class="submit">
+              <div class="spacer"></div>
+              <a>提交</a>
+            </div>
+            <p class="lead">问答题：请问以下哪个古城是世界上最大最古老、保存最完好的生土建筑城市？</p>
+            <p class="option">
+              <a class="active"><i><b></b></i><label>交河故城</label></a>
+              <a><i><b></b></i><label>楼兰古城</label></a>
+              <a><i><b></b></i><label>尼雅古城</label></a>
+            </p>
+          </div>
+          <div class="content"></div>
+        </div>
+      </div>
+      <div id="points_history" class="timeline">
+        <div class="article">
+          <div class="content">
+            <h2>2013.6.13</h2>
+            <div class="block">
+              <div class="item">
+                <i class="circle">+1</i>
+                <p class="single-line">行进<b>10</b>公里</p>
+              </div>
+              <div class="item">
+                <i class="circle">+5</i>
+                <blockquote>
+                  <img src="img/temp/t_pic_03.jpg" />
+                  <div class="comment">
+                    <h5>我的评论</h5>
+                    <p>路虎中国#发现无止境 中国最美前线#探享之旅，直驱边陲人迹罕至之境，挑战史无前例的全天候全地形路况，纵情尽揽伊犁的天地交融之千色</p>
+                  </div>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mask mask-white" style="display:none;"></div>
+      <div class="right-button">
+        <a class="btn-simple browse">浏览当天图像<i class="icon icon-triangle icon-orange"></i></a>
+        <a class="btn-simple close satellite" style="display:none;">查看卫星图<i class="icon icon-triangle icon-orange"></i></a>
+        <a class="btn-simple close intro-video">播放视频</a>
+      </div>
+      <div class="right-button back" style="display:none;"><a class="btn-simple">返回</a></div>
+    </div>
+    <div id="head">
+      <span>发现无止境</span>
+      <h2>中国最美前线</h2>
+    </div>
+    <div id="gallery" style="display:none;">
+      <div class="switch">
+        <a class="prev"><img /></a>
+        <a class="next"><img /></a>
+      </div>
+      <div class="mask" style="display:none;"></div>
+      <div class="share">
+        <form method="post">
+          <div class="pattern">
+            <textarea name="status" placeholder="发表您的观点能赢取更多积分"></textarea>
+            <input type="hidden" name="ac" value="galleryshare" />
+            <input type="hidden" name="token" />
+            <input type="hidden" name="pic" />
+            <input type="hidden" name="url" />
+            <input type="hidden" name="gid" />
+          </div>
+        </form>
+        <p><a class="btn"><span style="width:0">分享至：</span><i class="icon-weibo"></i></a></p>
+      </div>
+      <div class="pager">
+        <a class="prev"></a>
+        <span><b>1</b> / 3</span>
+        <a class="next"></a>
+      </div>
+    </div>
+    <div id="my" style="display:none;">
+      <div class="intro3">
+        <p><a class="btn-simple btn-orange">立即体验<i class="icon icon-triangle icon-triangle-white"></i></a></p>
+      </div>
+    </div>
+    <div id="panorama" style="display:none;">
+      <div class="view">
+        <img src="files/0525/2f64d254922942b5a006ef67c8c23425_b.jpg" alt="" />
+      </div>
+      <div class="mask mask-alpha3" style="display:none"></div>
+      <a class="btn-square close icon-cross" title="关闭"></a>
+      <div class="info">
+        <div class="circle">发现<b>16</b></div>
+        <div class="browse" style="display:none"></div>
+        <div class="bar">
+          <a class="prev"></a>
+          <span>
+            <span><b>1</b> / 3</span>
+            <i class="icon icon-browse" style="display:none;"></i>
+          </span>
+          <a class="next"></a>
+        </div>
+      </div>
+      <div class="panel col1-full" style="display:none">
+        <p>赛里木湖位于新疆维吾尔自治区西部伊宁市西面，丝绸之路的北道，博乐市西南90余公里天山西段的高山盆地中，乌鲁木齐--伊犁公路沿湖南岸穿过。赛里木湖以神奇秀丽的自然风光享誉古今中外。赛里木湖像一颗璀璨的蓝宝石高悬于西天山之间的断陷盆地中，湖中群山环绕，天水相映。</p>
+      </div>
+      <div class="hint" style="display:none;">
+        <div class="circle">点击查看每个<b>热点</b></div>
+      </div>
+    </div>
+    <div id="difference" style="display:none;">
+      <div class="view"></div>
+      <div class="mask"></div>
+      <a class="btn-square close icon-cross" title="关闭"></a>
+      <div class="info">
+        <div class="circle" style="display:none;">剩余<b>0</b></div>
+        <div class="bar" style="display:none;">
+          <a class="prev"></a>
+          <span>
+            <span><b>1</b> / 3</span>
+            <i class="icon icon-browse" style="display:none;"></i>
+          </span>
+          <a class="next"></a>
+        </div>
+      </div>
+      <div class="timer" style="display:none;">
+        <div class="panel">
+          <span>剩余时间：</span>
+          <b>6</b><b>0</b>
+        </div>
+      </div>
+      <div class="hint" style="display:none;">
+        <p><b>在60秒的时间内</b>对比两张图片，找出其中的不同之处</p>
+        <p><a>开始发现</a></p>
+      </div>
+    </div>
+    <div id="guess" style="display:none;">
+      <audio id="guess_audio"></audio>
+      <div class="view">
+        <img src="img/guess_1.jpg" alt="" />
+      </div>
+      <div class="mask mask-alpha3"></div>
+      <a class="btn-square close icon-cross" title="关闭"></a>
+      <div class="info"></div>
+      <div class="player" style="display:none;">
+        <div class="glow" style="display:none;"></div>
+        <div class="effect effect-1"></div>
+        <div class="effect effect-2"></div>
+        <div class="effect effect-3"></div>
+        <div class="effect effect-4"></div>
+        <a class="btn"></a>
+      </div>
+      <div class="question" style="display:none;">
+        <p class="lead">音乐中出现过的事物？</p>
+        <p class="option">
+          <a class="active"><i><b></b></i><label>汽车2</label></a>
+          <a><i><b></b></i><label>竹林</label></a>
+          <a><i><b></b></i><label>风声</label></a>
+        </p>
+        <p class="btn"><a>确 认</a></p>
+      </div>
+      <div class="hint">
+        <div class="circle">辨认选出音乐中出现的事物</div>
+      </div>
+    </div>
+    <div id="ui_board" class="col2">
+      <div class="separator"><i></i></div>
+      <div id="ui_counter" class="section">
+        <div class="distance">
+          <span class="digit">
+            <b>0</b>
+            <i></i>
+          </span>
+          <span class="digit">
+            <b>0</b>
+            <i></i>
+          </span>
+          <span class="digit">
+            <b>8</b>
+            <i></i>
+          </span>
+          <span class="digit">
+            <b>0</b>
+            <i></i>
+          </span>
+          <span class="digit">
+            <b>0</b>
+            <i></i>
+          </span>
+          <span class="digit">
+            <b>0</b>
+            <i></i>
+          </span>
+        </div>
+        <p><span>公里</span>目前车队行走的里程</p>
+      </div>
+      <div class="separator"><i></i></div>
+      <div id="ui_user" class="section">
+        <p class="btns">
+          <a class="sina"><span>微博登录<i class="icon"></i></span></a>
+          <a class="mail"><span>邮箱登录<i class="icon"></i></span></a>
+        </p>
+        <p class="bar" style="display:none;">
+          <a class="exit"><span>退出</span></a>
+          <a class="point"><span>详情</span></a>
+          <span>我的积分：<b>15</b></span>
+        </p>
+        <p class="btns btn-left" style="display:none;">
+          <a><span>我的发现</span></a>
+        </p>
+      </div>
+      <div class="separator"><i></i></div>
+      <div id="ui_info" class="section">
+        <ul>
+          <li>
+            <i class="icon icon-location"></i>
+            <span class="text-bold">伊犁</span>
+          </li>
+          <li>
+            <i class="icon icon-duration"></i>
+            <sup>第</sup><b>1</b><sup>天</sup> <span>2013.5.27</span>
+          </li>
+          <li>
+            <i class="icon icon-distance"></i>
+            <b>0</b><sup>公里</sup>
+          </li>
+          <li>
+            <i class="icon icon-latlng"></i>
+            <span>0,0</span>
+          </li>
+          <li class="pic">
+            <i class="icon icon-pic"></i>
+            <b>0</b><sup>图像</sup>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id="timeline" style="display:none;">
+      <div class="mask cursor-close"></div>
+      <div class="frame">
+        <h2>我们的轨迹</h2>
+        <div class="list">
+          <div>
+            <h3>中国最美24小时<b></b></h3>
+            <img src="img/timeline_1.jpg" alt="中国最美24小时" />
+            <div class="intro">
+              <p>秉承60余年对发现精神的专注和探索，路虎一直鼓舞人们发现传奇、勇于探索。纵横四段探索旅程，从容应对复杂路况，驰骋间释放激情，引领路虎瞩目荣耀，尽显高端越野非凡品质，发现无止境！</p>
+              <p class="link"><a href="/24hours" target="_blank">进入</a></p>
+            </div>
+          </div>
+          <div class="expand">
+            <h3>中国最美前线<b></b></h3>
+            <img src="img/timeline_2.jpg" alt="中国最美前线" />
+            <div class="intro">
+              <p>边陲前沿之处，永远是交流融合之地。</p>
+              <p>交汇不同元素，碰撞来自各方，每分每秒，都在孕育新生命灵感，带动世界，创新丰盛。<br />让引领风潮的全地形专家路虎，带你亲临中国的边陲前沿，以从未试过的方式，发现因融合而生的美。<br />腾冲、伊犁、上海， 在地理上， 正是位处中国的边陲前沿，另一方面，它们也是带动文化、自然与时尚进步融合的前线。</p>
+              <p class="link"><a class="close">进入</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="switch">发现精神<span>&raquo;</span></a>
+    </div>
+    <div id="spirit" style="display:none;">
+      <div class="mask cursor-close"></div>
+      <div class="frame">
+        <div class="list">
+          <h2>发现精神</h2>
+          <div class="active"><h3>介绍</h3></div>
+          <div><h3>发现车队</h3></div>
+          <div><h3>路虎体验</h3></div>
+        </div>
+        <div class="content" id="spirit_0" style="display:none;">
+          <div class="article">
+            <p><img src="img/spirit-intro.jpg" alt="介绍" /></p>
+            <p>选择路虎，又或是六十五年无从选择<br />自1947年问世以来，世界豪华SUV的至臻之选，从来就只有路虎。</p>
+            <p>在六十五年的传奇旅程中，我们无所谓时代、环境如何变迁，始终坚持以举世无双的全地形反馈适应系统:emoji:、独具标识性的外形设计和至为精湛的造车工艺，将深厚的SUV专业造诣溶于每一辆路虎的血液之中，为世人带来无所不至、无可比拟的专业豪华SUV－这是我们从过去到未来不变的坚持，也正因如此，我们让路虎精神，一脉相承。</p>
+          </div>
+        </div>
+        <div class="content" id="spirit_1" style="display:none;">
+          <ul class="vehicle">
+            <li>
+              <a href="http://www.landrover.com/cn/zh/lr/freelander-2/" target="_blank" class="img"><img src="img/spirit-fl2.jpg" alt="路虎 &middot; 神行者2代" /><b></b></a>
+              <h3>路虎&middot;神行者2代</h3>
+              <p>纯粹无拘 — 紧凑型豪华SUV的全新标准</p>
+              <p class="link"><a href="http://www.landrover.com/cn/zh/lr/freelander-2/" target="_blank">更多 &raquo;</a></p>
+            </li>
+            <li>
+              <a href="http://www.landrover.com/cn/zh/lr/range-rover-evoque/" target="_blank" class="img"><img src="img/spirit-evoque.jpg" alt="路虎 &middot; 揽胜极光" /><b></b></a>
+              <h3>路虎&middot;揽胜极光</h3>
+              <p>极致夺目 — 时尚新锐豪华SUV的魅力之选</p>
+              <p class="link"><a href="http://www.landrover.com/cn/zh/lr/range-rover-evoque/" target="_blank">更多 &raquo;</a></p>
+            </li>
+            <li>
+              <a href="http://www.landrover.com/cn/zh/lr/discovery4/" target="_blank" class="img"><img src="img/spirit-d4.jpg" alt="路虎 &middot; 第四代发现" /><b></b></a>
+              <h3>路虎&middot;第四代发现</h3>
+              <p>全能超凡 — 多用途豪华SUV的至高水平</p>
+              <p class="link"><a href="http://www.landrover.com/cn/zh/lr/discovery4/" target="_blank">更多 &raquo;</a></p>
+            </li>
+            <li>
+              <a href="http://www.landrover.com/cn/zh/lr/range-rover-sport/" target="_blank" class="img"><img src="img/spirit-rr-sport.jpg" alt="路虎 &middot; 全新一代揽胜运动版" /><b></b></a>
+              <h3>路虎&middot;全新一代揽胜运动版</h3>
+              <p>越界动能 — 全方位运动型奢华SUV的全新典范</p>
+              <p class="link"><a href="http://www.landrover.com/cn/zh/lr/range-rover-sport/" target="_blank">更多 &raquo;</a></p>
+            </li>
+            <li>
+              <a href="http://www.landrover.com/cn/zh/lr/all-new-range-rover/" target="_blank" class="img"><img src="img/spirit-rr.jpg" alt="路虎 &middot; 全新一代揽胜" /><b></b></a>
+              <h3>路虎&middot;全新一代揽胜</h3>
+              <p>傲世登场 — 树立世界顶级豪华全能型SUV新标杆</p>
+              <p class="link"><a href="http://www.landrover.com/cn/zh/lr/all-new-range-rover/" target="_blank">更多 &raquo;</a></p>
+            </li>
+          </ul>
+        </div>
+        <div class="content" id="spirit_2" style="display:none;">
+          <div class="article">
+            <p><img src="img/spirit-exp.jpg" alt="路虎体验" /></p>
+            <p>作为目前亚洲最具规模的路虎体验中心，您不仅可在此享受世界级的越野培训，在专业教官的指导下挑战所有复杂地形；更能耳濡目染路虎的文化和环保理念。欲征服全世界，就从这起步！</p>
+            <p class="link"><a href="http://www.landrover.com/cn/zh/lr/experience-lr/land-rover-off-road-vehicles/" target="_blank">路虎体验中心</a></p>
+          </div>
+        </div>
+        <div class="quick-link">
+          <ul class="form">
+            <li><a href="http://www.landroverchina.com.cn/Tanchuss.aspx?utm_campaign=NSD_Minisite&utm_source=NSD&utm_medium=banner" target="_blank" class="btn-pattern"><span>保持联系</span></a></li>
+            <li><a href="http://www.landroverchina.com.cn/shijia.aspx?utm_campaign=NSD_Minisite&utm_source=NSD&utm_medium=banner" target="_blank" class="btn-pattern"><span>申请试驾</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <a class="switch">我们的轨迹<span>&raquo;</span></a>
+    </div>
+    <div class="mask mask-alpha3 cursor-close" style="display:none;"></div>
+    <div class="pattern-about" style="display:none;"></div>
+  </div>
+  <div id="about" style="display:none;">
+    <div class="frame">
+      <div class="tabs">
+        <div class="box">
+          <div class="head">发现无止境 中国最美前线</div>
+          <ul>
+            <li class="active">活动介绍</li>
+            <li>积分规则</li>
+            <li>奖项设置</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tab-item">
+        <div class="box">
+          <div class="article">
+            <p>2013年，路虎启程“发现无止境 中国最美前线”探享之旅，自西向东横越10467公里中国版图，直驱边陲人迹罕至之境，挑战史无前例的全天候全地形路况，纵情尽揽伊犁的天地交融之千色，深入触涉腾冲的时光交汇之古香，探索上海的灵感碰撞之新尚，发现中国最前线的融合之美。</p>
+            <p>5月24日至7月5日，路虎与您，发现中国最美前线。</p>
+            <p class="btn"><a class="btn-simple">卫星路线图<i class="icon icon-triangle icon-orange"></i></a></p>
+          </div>
+          <div class="map"></div>
+        </div>
+      </div>
+      <div class="tab-item" style="display:none;">
+        <div class="box">
+          <div class="article article-wide">
+            <p>活动时间：2013年5月27日至7月5日。</p>
+            <p>参与方式：</p>
+            <p>1、登录活动官方网站，注册会员并登录；<br />
+            2、参与虚拟行程，点击沿途43个站点的图标关注探享之旅，自西向东横越10467公里中国版图，每行进1公里，可获得<span>＋1</span>分 活动积分；其中正确回答随机出现的小问题，可获得额外<span>＋10</span>分 活动积分；<br />
+            3、分享活动照片到微博，可获得<span>＋20</span>分 活动积分；<br />
+            4、完成最美自然前线“伊犁”，最美文化前线“腾冲”及最美时尚前线“上海”3个大站的互动活动，分別可获得<span>＋100</span>分 活动积分；<br />
+            5、依据以上活动的积分排名，获享路虎中国限量好礼。</p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-item" style="display:none;">
+        <div class="box">
+          <div class="article">
+            <p class="highlight">恭喜以下用户获得“发现无止境 中国最美前线活动”奖品，请获奖用户留意主办方的电话通知，后续将会安排奖品的发放。</p>
+            <p class="notice">一等奖12名：获享路虎揽胜极光或神行者2代使用权一个月</p>
+            <table>
+              <tr>
+                <th>白先生</th><td>186XXXX5081</td>
+                <th>周先生</th><td>130XXXX1543</td>
+              </tr>   
+              <tr>
+                <th>应小姐</th><td>186XXXX8789</td>
+                <th>赵先生</th><td>138XXXX0855</td>
+              </tr>   
+              <tr>
+                <th>杨先生</th><td>139XXXX1250</td>
+                <th>杨先生</th><td>159XXXX6850</td>
+              </tr>   
+              <tr>
+                <th>王先生</th><td>139XXXX4750</td>
+                <th>陆先生</th><td>180XXXX8083</td>
+              </tr>   
+              <tr>
+                <th>段先生</th><td>133XXXX9799</td>
+                <th>陈先生</th><td>137XXXX2957</td>
+              </tr>   
+              <tr>
+                <th>张先生</th><td>186XXXX5258</td>
+                <th>王先生</th><td>187XXXX7309</td>
+              </tr>
+            </table>
+          </div>
+          <div class="prize">（奖品以实物为准）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="vehicle" style="display:none;">
+    <div class="frame">
+      <div class="tabs">
+        <div class="box">
+          <div class="head">车型介绍</div>
+          <ul>
+            <li class="first active">揽胜极光</li>
+            <li class="active">神行者2代</li>
+          </ul>
+        </div>
+      </div>
+      <div class="box">
+        <div class="article float-left">
+          <p>采撷来源于世界上最伟大城市的先锋设计灵感，以无可比拟的革新勇气，让未来现在到来。2013年款揽胜极光，屡获殊荣的现代设计，非同凡响的精湛工艺，全球领先的创新智能技术，更装备久负盛名的全地形反馈适应系统&reg;及陡坡缓降控制系统，全地形全天候任意驰骋，耀目魅力无可抗拒。</p>
+        </div>
+        <div class="article float-right">
+          <p>无所谓风雨，不畏惧崎岖，只要内蕴强大，自能从容向前。2013年款路虎神行者2代，内饰焕新升级，以现代设计重新诠释中控布局，尽显豪华精湛与人性便捷；全新配备Meridian&trade;音响系统，以媲美音乐厅的殿堂级音响效果，带来更甄舒适的奢享体验。久负盛名的全地形反馈适应系统&reg;，全天候全地形无所不至。更有全新LED晶钻前大灯，放眼开阔前路，自在一往无前。</p>
+        </div>
+        <div class="vehicle-evoque"></div>
+        <div class="evoque-links">
+          <p class="btn"><a href="pdf/evoque_brochure.pdf" target="_blank" class="btn-simple">下载电子手册<i class="icon icon-triangle icon-orange"></i></a></p>
+          <p class="btn"><a href="pdf/evoque_spec.pdf" target="_blank" class="btn-simple">下载官方售价<i class="icon icon-triangle icon-orange"></i></a></p>
+        </div>
+        <div class="vehicle-fl2"></div>
+        <div class="fl2-links">
+          <p class="btn"><a href="pdf/fl2_brochure.pdf" target="_blank" class="btn-simple">下载电子手册<i class="icon icon-triangle icon-orange"></i></a></p>
+          <p class="btn"><a href="pdf/fl2_spec.pdf" target="_blank" class="btn-simple">下载官方售价<i class="icon icon-triangle icon-orange"></i></a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="media" style="display:none;">
+    <div class="frame">
+      <div class="tabs">
+        <div class="box">
+          <div class="head">媒体活动小站</div>
+          <ul>
+            <li class="first active site1">豆瓣</li>
+            <li class="active site2">POCO摄影社区</li>
+            <li class="active site3">汽车之家</li>
+          </ul>
+        </div>
+      </div>
+      <div class="box">
+        <div class="article site1">
+          <p><a href="http://www.douban.com/campaign/LandRover_NSD/" target="_blank"><img src="img/media_01.jpg" alt="豆瓣" /></a></p>
+          <p><a href="http://www.douban.com/campaign/LandRover_NSD/" target="_blank" class="btn-simple">点击进入<i class="icon icon-triangle icon-orange"></i></a></p>
+        </div>
+        <div class="article site2">
+          <p><a href="http://www1.poco.cn/topic/landrover2013/" target="_blank"><img src="img/media_02.jpg" alt="POCO摄影社区" /></a></p>
+          <p><a href="http://www1.poco.cn/topic/landrover2013/" target="_blank" class="btn-simple">点击进入<i class="icon icon-triangle icon-orange"></i></a></p>
+        </div>
+        <div class="article site3">
+          <p><a href="http://topic.autohome.com.cn/2013/5/freelander/" target="_blank"><img src="img/media_03.jpg" alt="汽车之家" /></a></p>
+          <p><a href="http://topic.autohome.com.cn/2013/5/freelander/" target="_blank" class="btn-simple">点击进入<i class="icon icon-triangle icon-orange"></i></a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a href="http://www.landrover.com/cn/zh/lr/?utm_campaign=NSD_Minisite&utm_source=NSD&utm_medium=banner" target="_blank" class="logo"><img src="img/logo.gif" alt="lr logo" /></a>
+  <div id="nav">
+    <div class="separator">
+      <span class="col1"></span>
+      <span class="col1"><i></i></span>
+      <span class="col1"><i></i></span>
+      <span class="col1"><i></i></span>
+      <span class="col1"><i></i></span>
+    </div>
+    <div class="contract">
+      <a class="col1 col-margin btn">导航</a>
+      <p>
+        <span class="col1 col-margin first active"></span>
+        <span class="col1 col-margin"></span>
+        <span class="col1 col-margin"></span>
+        <span class="col1 col-margin"></span>
+        <span class="col1 col-margin"></span>
+      </p>
+    </div>
+    <div class="expand" style="display:none;">
+      <div class="blocks">
+        <p class="home col-square">
+          <a>
+            <i class="separator"></i>
+            <span>首页</span>
+          </a>
+        </p>
+        <p class="col1 col-square active">
+          <a>
+            <i class="separator"></i>
+            <span>发现最美前线</span>
+            <b></b>
+          </a>
+        </p>
+        <p class="col1 col-square">
+          <a>
+            <span>我的发现</span>
+            <b></b>
+          </a>
+        </p>
+        <p class="col1 col-square">
+          <a>
+            <span>活动介绍</span>
+            <b></b>
+          </a>
+        </p>
+        <p class="col1 col-square">
+          <a>
+            <span>车型介绍</span>
+            <b></b>
+          </a>
+        </p>
+        <p class="col1 col-square">
+          <a>
+            <span>媒体活动小站</span>
+            <b></b>
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div id="user_action" style="display:none;">
+    <div class="mask cursor-close"></div>
+    <div class="bg">
+      <a class="close" style="display:none;">关闭</a>
+      <div class="pattern select">
+        <a class="weibo">社交帐号登录<i></i></a>
+        <b></b>
+        <a class="email">网站注册登录<i></i></a>
+        <p><a class="exist">注册新账户</a></p>
+      </div>
+      <div class="pattern register" style="display:none;">
+        <div class="frame">
+          <div class="float-left">
+            <h4>注册</h4>
+          </div>
+          <form class="float-right">
+            <p>
+              <input type="email" class="textbox placeholder" name="email" maxlength="50" value="邮箱" placeholder="邮箱" />
+            </p>
+            <p>
+              <input type="text" class="textbox password placeholder short" name="pass" value="密码" placeholder="密码" />
+              <input type="text" class="textbox password placeholder tiny" name="repass" value="再次输入密码" placeholder="再次输入密码" />
+              <button type="button">提交</button>
+            </p>
+            <p class="desc">您同意<a>隐私政策</a>和<a>使用条款</a></p>
+            <input type="hidden" name="ac" value="signup" />
+          </form>
+        </div>
+      </div>
+      <div class="pattern login" style="display:none;">
+        <div class="frame">
+          <div class="float-left">
+            <h4>登录</h4>
+          </div>
+          <form class="float-right">
+            <p>
+              <input type="email" class="textbox placeholder" name="email" value="邮箱" placeholder="邮箱" />
+            </p>
+            <p>
+              <input type="text" class="textbox password placeholder middle" name="pass" value="密码" placeholder="密码" />
+              <button type="button">提交</button>
+            </p>
+            <p class="desc">未注册用户请点击<a>这里注册</a></p>
+            <input type="hidden" name="ac" value="signin" />
+          </form>
+        </div>
+      </div>
+      <div class="success" style="display:none;">
+        <p class="lead"><strong>恭喜您</strong>登录成功，路虎期待与您一路发现。</p>
+        <p><a href="index.html" class="btn"><span>返回首页</span><i class="arrow"></i></a></p>
+        <p><a href="#" class="btn"><span>以往活动</span><i class="arrow"></i></a></p>
+      </div>
+    </div>
+  </div>
+  <div id="welcome" class="cursor-close">
+    <div class="mask "></div>
+    <div class="content">
+      <video id="video_final" preload>
+        <source src="video/finaleparty.webm"></source>
+        <source src="video/finaleparty.mp4"></source>
+        <source src="video/finaleparty.ogv"></source>
+      </video>
+      <p>
+        <a class="winner">获奖名单</a>
+      </p>
+    </div>
+  </div>
+  <div id="intro">
+    <div class="column">
+      <img src="img/intro-map.gif" alt="map" />
+      <ul class="stat">
+        <li><i class="icon icon-distance"></i><span>0</span><sup>公里</sup></li>
+        <li><i class="icon icon-stops"></i><span>0</span><sup>站</sup></li>
+        <li><i class="icon icon-pic"></i><span>0</span><sup>图像</sup></li>
+      </ul>
+    </div>
+    <div class="column column-wide">
+      <h2>我们的轨迹</h2>
+      <b class="line"></b>
+      <img src="img/intro-route.jpg" />
+      <p>自1947年问世以来，世界豪华SUV的至臻之选，从来就只有路虎。</p>
+      <p>在六十五年的传奇旅程中，我们无所谓时代、环境如何变迁，始终坚持以举世无双的全地形反馈适应系统、独具标识性的外形设计和至为精湛的造车工艺...</p>
+      <p><a class="btn-simple route">查看详情<i class="icon icon-triangle icon-orange"></i></a></p>
+    </div>
+    <div class="column column-wide">
+      <h2>发现精神</h2>
+      <b class="line"></b>
+      <p><img src="img/intro-spirit.jpg" /></p>
+      <p>秉承60余年对发现精神的专注和探索，路虎一直鼓舞人们发现传奇、勇于探索。纵横四段探索旅程，从容应对复杂路况，驰骋间释放激情，引领路虎瞩目荣耀，尽显高端越野非凡品质，发现无止境！</p>
+      <p><a class="btn-simple spirit">了解更多<i class="icon icon-triangle icon-orange"></i></a></p>
+    </div>
+    <div class="column quick-link">
+      <b class="line"></b>
+      <ul class="form">
+        <li><a href="http://www.landroverchina.com.cn/Tanchuss.aspx?utm_campaign=NSD_Minisite&utm_source=NSD&utm_medium=banner" target="_blank" class="btn-pattern"><span>保持联系</span></a></li>
+        <li><a href="http://www.landroverchina.com.cn/shijia.aspx?utm_campaign=NSD_Minisite&utm_source=NSD&utm_medium=banner" target="_blank" class="btn-pattern"><span>申请试驾</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div id="footer">
+    <div class="footer-shadow">
+      <div class="float-left">
+        <span>捷豹路虎汽车贸易(上海)有限公司</span>
+        <span>沪ICP备11001621号</span>
+        <i></i>
+        <a href="http://www.landrover.com/cn/zh/lr/terms-and-conditions/terms-and-conditions/" target="_blank">条款和条件</a>
+        <i></i>
+        <a href="http://www.landrover.com/cn/zh/lr/privacy-policy/privacy-policy/" target="_blank">隐私权政策</a>
+      </div>
+      <div class="float-right">
+        <a href="http://www.landrover.com/cn/zh/lr/?utm_campaign=NSD_Minisite&utm_source=NSD&utm_medium=banner" target="_blank">路虎官方网站</a>
+        <i></i> 
+        <a href="http://e.weibo.com/landroverchina" target="_blank">路虎官方微博</a>
+        <i></i>
+        <a href="http://u.youku.com/user_show/uid_Landrover" target="_blank">路虎优酷频道</a>
+        <i></i>
+        <span>分享</span>
+        <ul class="share">
+          <li class="weibo"></li>
+          <li class="renren"></li>
+          <li class="douban"></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="chromeframe" class="overlay" style="display:none;">
+    <p>为了获得最佳的浏览体验，我们建议您 <a href="http://browsehappy.com/" target="_blank"><strong>立即升级您的浏览器</strong></a> 。<span class="ignore"><a>忽略</a></span></p>
+  </div>
+  <div id="alert" class="overlay" style="display:none;">
+    <p><b>分享成功！</b>恭喜您获得了<i>20</i>点积分。</p>
+  </div>
+  <div id="dialog" class="overlay" style="display:none;">
+    <a class="close" title="关闭">关闭</a>
+    <p class="text">恭喜<br />你</p>
+    <p class="btns">
+      <a class="highlight">确定</a>
+      <a>取消</a>
+    </p>
+  </div>
+  <div id="auth" class="overlay" style="display:none;">
+    <a class="close" title="关闭">关闭</a>
+    <p class="float-left"><b>抱歉，您尚未登录。</b>用微博账号登录，获取更多积分赢路虎使用权。<span class="more"><a>了解详情</a></span></p>
+    <div class="float-right btns">
+      <a class="highlight weibo">微博登录</a>
+      <a class="mail">邮箱登录</a>
+    </div>
+  </div>
+  <audio id="bgm" loop>
+    <source src="bgm.mp3" type="audio/mpeg"></source>
+    <source src="bgm.ogg" type="audio/ogg"></source>
+  </audio>
+  <script src="js/modernizr.custom.88639.js"></script>
+  <script>document.write('<script src="js/jquery-'+(window.addEventListener||(document.documentMode>=9)?'2.0.0':'1.9.1')+'.min.js"><\/script>')</script>
+  <script src="js/swfobject.js"></script>
+  <script src="js/plugins/CSSPlugin.min.js"></script>
+  <script src="js/easing/EasePack.min.js"></script>
+  <script src="js/TweenLite.min.js"></script>
+  <script src="js/jquery.mousewheel.js"></script>
+  <script src="js/mwheelIntent.js"></script>
+  <script src="js/jquery.jscrollpane.min.js"></script>
+  <script src="js/share.min.js"></script>
+  <script src="js/action.js"></script>
+</body>
+</html>
