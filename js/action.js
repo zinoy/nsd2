@@ -2989,6 +2989,10 @@
             switchMenu(2);
             return false;
         });
+        if ($('#bgm').length > 0) {
+            var bgm = $('#bgm')[0];
+            bgm.pause();
+        }
         $('#welcome').addClass('visible');
         effect.fadeIn('#welcome', .4, 1, function() {
             if (!$('html').hasClass('lt-ie9')) {
