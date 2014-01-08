@@ -9,6 +9,7 @@
     window.nsd = nsd;
     window.setuser = setWeiboUser;
     window.move = movePattern;
+    window.ended = homeVideoEnded;
     var connecting = false;
     var spin_timer = [];
     config.api_path = "api/action.aspx";
@@ -267,7 +268,7 @@
     function adjust() {
         $('body').css('overflow-y', 'scroll');
         $('body').css('overflow-x', 'hidden');
-        var wh = $(window).height(), ww = $(window).width(), sw = ww < 1280 ? 1280 : ww, sh = wh < 480 ? 480 : wh;
+        var wh = $(window).height(), ww = $(window).width(), sw = ww < 1414 ? 1414 : ww, sh = wh < 480 ? 480 : wh;
         $('body').css('overflow', '');
         shared.screen.height = sh;
         shared.screen.width = sw;
@@ -282,22 +283,6 @@
             width : sw
         };
         shared.screen.column = iw;
-        var wr = sw / sh;
-        var vr = 1280 / 720;
-        if (wr > vr) {
-            $("#video_index").css({
-                width : sw,
-                height : sw / vr,
-                top : (sh - sw / vr) / 2
-            });
-        } else {
-            $("#video_index").css({
-                width : sh * vr,
-                height : sh,
-                left : (sw - sh * vr) / 2,
-                top : 0
-            });
-        }
         $('#google_map .pattern i').not(':first').css('margin-left', iw - 20);
         $('#ui_board').css('left', iw * 7);
         $('#main .copy').css('left', iw + 10);
@@ -338,7 +323,12 @@
             $('#user_action .bg').css('top', (sh - $('#user_action .bg').height() - 10) / 2);
             $('#user_action .select p').css('left', $('#user_action .select a.email').position().left + $('#user_action .select a.email').width() - $('#user_action .select p').width() + 40);
         }
-        $('#welcome .frame').css('top', (sh - $('#welcome .frame').height() - 20) / 2);
+        var vr = Math.min(sw / 1244, sh / 700);
+        $('#welcome .content').css({
+            height : vr * 700,
+            width : vr * 1244,
+            'margin-top' : (sh - vr * 700) / 2
+        });
         $('#points_history blockquote > img').width($('#points_history blockquote').width());
         $('.col-square').each(function() {
             $(this).css('height', $(this).width());
@@ -381,6 +371,7 @@
                 top : shared.screen.height * .2
             })
         });
+        $('#spirit .content:visible').css('height', shared.screen.height - 200);
     }
 
     function setImageSize(idx, obj) {
@@ -626,7 +617,7 @@
                     mouseWheelSpeed : 100
                 });
                 $('#content').addClass('visible');
-                $('#detail,.right-button .browse').show();
+                $('#detail,.right-button .browse,.right-button .intro-video').show();
                 getQuiz(loc.id);
 
                 TweenLite.fromTo('#content', .4, {
@@ -2130,7 +2121,7 @@
                     block.append(item);
                 }
                 $('#content').addClass('visible');
-                $('#detail,.right-button .browse,#content .mask-white').hide();
+                $('#detail,.right-button .browse,.right-button .intro-video,#content .mask-white').hide();
                 $('#content,#points_history,.right-button .satellite').show();
                 $('#points_history .article').jScrollPane({
                     autoReinitialise : true,
@@ -2594,6 +2585,10 @@
             effect.fadeIn('#content .gallery-list', .4);
             $('#content .mask,#content .right-button.back').show();
         });
+        $('#content .right-button a.intro-video').click(function(e) {
+            e.stopPropagation();
+            homeVideo();
+        })
         $('#content').click(backToHome);
         $('#content .right-button.back a').click(function(e) {
             e.stopPropagation();
@@ -2827,32 +2822,27 @@
             });
         });
         $('#quiz .submit').click(submitQuiz);
-        $('#welcome .weibo').click(openWeiboAuth);
-        $('#welcome .skip,#welcome .mask').click(function() {
-            effect.fadeOut('#welcome', .4);
-        });
-        $('#welcome .links a').click(function() {
-            if ($(this).hasClass('skip'))
-                return;
-            effect.fadeOut('#welcome', .2);
-            var idx = $(this).index();
-            showBottomPanel(0, idx + 1);
-        });
-        $('#bgm_control').click(function() {
-            var bgm = $('#bgm')[0];
-            if ($(this).children('i').hasClass('bgm-on')) {
-                bgm.pause();
-                $(this).children('i').removeClass('bgm-on').addClass('bgm-off');
-                $(this).find('span b').text('off');
-                setCookie("bgm_mute", "yes", 90);
-            } else {
-                bgm.play();
-                $(this).children('i').removeClass('bgm-off').addClass('bgm-on');
-                $(this).find('span b').text('on');
-                bgm.volume = .25;
-                setCookie("bgm_mute", null, 0);
-            }
-        });
+        $('#welcome').click(homeVideoEnded);
+        if ($('html').hasClass('audio')) {
+            $('#bgm_control').click(function() {
+                var bgm = $('#bgm')[0];
+                if ($(this).children('i').hasClass('bgm-on')) {
+                    bgm.pause();
+                    $(this).children('i').removeClass('bgm-on').addClass('bgm-off');
+                    $(this).find('span b').text('off');
+                    setCookie("bgm_mute", "yes", 90);
+                } else {
+                    bgm.play();
+                    $(this).children('i').removeClass('bgm-off').addClass('bgm-on');
+                    $(this).find('span b').text('on');
+                    bgm.volume = .25;
+                    setCookie("bgm_mute", null, 0);
+                }
+            });
+        } else {
+            $('#bgm_control').hide();
+            setCookie("bgm_mute", "yes", 90);
+        }
         $('#guess_audio').on('loadeddata', playGuess).on('ended', stopGuess).on('pause', stopGuess);
         $('#guess .player .btn').click(function() {
             if ($(this).hasClass('btn-play')) {
@@ -2866,6 +2856,170 @@
             clearTimeout(shared.guess.timer);
             $('#guess_audio').get(0).pause();
         });
+        $('#intro a.route').click(function() {
+            resetScreen();
+            backToHome();
+            $('#timeline').show();
+            $(document).scrollTop(0);
+            effect.fadeIn('#timeline .mask', .2);
+            effect.fadeOut('#nav', .2);
+            effect.fadeIn('#timeline .switch', .2);
+            TweenLite.fromTo('#timeline .frame', .4, {
+                left : -$('#timeline').width()
+            }, {
+                left : 0,
+                ease : Power2.easeOut
+            });
+        });
+        $('#timeline .mask,#timeline .close,#spirit .mask').click(hideLRPanel);
+        $('#timeline .switch,#spirit .switch').click(function() {
+            var p = $(this).parent();
+            hideLRPanel(p.find('.mask'));
+            if (p.attr('id') == 'timeline') {
+                setTimeout(function() {
+                    $('#intro a.spirit').trigger('click');
+                }, 400);
+            } else {
+                setTimeout(function() {
+                    $('#intro a.route').trigger('click');
+                }, 400);
+            }
+        });
+        $('#timeline .list>div').click(function() {
+            if ($(this).hasClass('expand')) {
+                return false;
+            }
+            $('#timeline .list>div.expand').removeClass('expand');
+            $(this).addClass('expand');
+            var idx = $(this).index();
+            if (idx >= $('#timeline .list>div').length - 1) {
+                $('#timeline .list').addClass('no-border');
+            } else {
+                $('#timeline .list').removeClass('no-border');
+            }
+        });
+        $('#timeline .list>div a').click(function(e) {
+            e.stopPropagation();
+        })
+        $('#intro a.spirit').click(function() {
+            resetScreen();
+            backToHome();
+            $('#spirit,#spirit_0').show();
+            adjust();
+            $('#spirit .content:visible').jScrollPane({
+                autoReinitialise : true,
+                hideFocus : true,
+                mouseWheelSpeed : 100
+            });
+            $('#spirit .list>div.active').removeClass('active');
+            $('#spirit .list>div:first').addClass('active');
+            $(document).scrollTop(0);
+            effect.fadeIn('#spirit .mask', .2);
+            effect.fadeOut('#nav', .2);
+            effect.fadeIn('#spirit .switch', .2);
+            TweenLite.fromTo('#spirit .frame', .4, {
+                left : -$('#spirit').width()
+            }, {
+                left : 0,
+                ease : Power2.easeOut
+            });
+        });
+        $('#spirit .list>div').click(function() {
+            if ($(this).hasClass('active')) {
+                return false;
+            }
+            var idx = $(this).index() - 1;
+            if (idx >= $('#spirit .list>div').length - 1) {
+                $('#spirit .list').addClass('no-border');
+            } else {
+                $('#spirit .list').removeClass('no-border');
+            }
+            $('#spirit .list>div.active').removeClass('active');
+            $('#spirit .content').hide();
+            $('#spirit_' + idx).show();
+            adjust();
+            $('#spirit .content:visible').jScrollPane({
+                autoReinitialise : true,
+                hideFocus : true,
+                mouseWheelSpeed : 100
+            });
+            $(this).addClass('active');
+        });
+    }
+
+    function hideLRPanel() {
+        var obj;
+        if ($(this).hasClass('close')) {
+            obj = $(this).parents('.frame').prev('.mask');
+        } else if ($(this).hasClass('mask')) {
+            obj = this;
+        } else {
+            obj = arguments[0];
+        }
+        effect.fadeOut(obj, .2);
+        effect.fadeIn('#nav', .2);
+        var p = $(obj).parent();
+        effect.fadeOut(p.find('.switch'), .2);
+        TweenLite.to(p.find('.frame'), .4, {
+            left : -p.width(),
+            ease : Power2.easeOut,
+            onComplete : function() {
+                p.hide();
+            }
+        });
+    }
+
+    function homeVideo() {
+        $('#welcome').html('<div class="mask "></div><div class="content"><video id="video_final" preload><source src="video/finaleparty.webm"></source><source src="video/finaleparty.mp4"></source><source src="video/finaleparty.ogv"></source></video><p><a class="winner">获奖名单</a></p></div>');
+        if ($('html').hasClass('video')) {
+            $('#video_final').on('ended', homeVideoEnded);
+        } else {
+            var flashvars = {};
+            var params = {};
+            params.wmode = "transparent";
+            params.allowscriptaccess = "sameDomain";
+            var attributes = {};
+            attributes.id = "swfplayer";
+            swfobject.embedSWF("player.swf", "video_final", "100%", "100%", "10.3.0", false, flashvars, params, attributes);
+        }
+        $('#welcome .winner').click(function(e) {
+            e.stopPropagation();
+            homeVideoEnded();
+            showBottomPanel(0, 2);
+            switchMenu(2);
+            return false;
+        });
+        if ($('#bgm').length > 0) {
+            var bgm = $('#bgm')[0];
+            bgm.pause();
+        }
+        $('#welcome').addClass('visible');
+        effect.fadeIn('#welcome', .4, 1, function() {
+            if (!$('html').hasClass('lt-ie9')) {
+                $('#video_final').get(0).play();
+            }
+        });
+        adjust();
+    }
+
+    function homeVideoEnded() {
+        effect.fadeOut('#welcome', .4, 0, function() {
+            $('#welcome').empty();
+        });
+        var bgm_mute = getCookie("bgm_mute");
+        if ($('#bgm').length > 0) {
+            if (bgm_mute != 'yes') {
+                var bgm = $('#bgm')[0];
+                bgm.volume = .25;
+                bgm.play();
+                setTimeout(function() {
+                    bgm.volume = .25;
+                }, 200);
+                $('#bgm_control i').removeClass('bgm-off').addClass('bgm-on');
+                $('#bgm_control span b').text('on');
+            } else {
+            }
+        }
     }
 
     if (/Android|webOS|iPhone|iPod|IEMobile|BlackBerry/i.test(navigator.userAgent)) {
@@ -2882,61 +3036,26 @@
                 points : Number(getCookie("user_points"))
             });
             $(window).resize(adjust);
-            if (window.google === undefined) {
-                var first = getCookie("first_visit");
-                if (first !== null && first != "") {
-                    window.location.href = "home.html";
-                    return;
-                } else {
-                    setCookie("first_visit", "yes", 90);
-                    if ($('#video_index').length > 0 && $('html').hasClass('video')) {
-                        $('#video_index').one('loadeddata', function() {
-                            effect.fadeOut('#kv_index', .1);
-                            var player = $('#video_index')[0];
-                            player.volume = .5;
-                            player.play();
-                        });
-                    }
-                }
-            } else {
-                _maker = [{
-                    url : "img/ol-vehicle.png",
-                    anchor : new google.maps.Point(17.5, 19.5)
-                }, "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
-                    url : "img/ol-stop.png",
-                    anchor : new google.maps.Point(11, 10.5)
-                }, {
-                    url : "img/ol-spot.png",
-                    anchor : new google.maps.Point(9, 9)
-                }];
-                if (nsd.user.token == null) {
-                    $('#welcome').addClass('visible');
-                    effect.fadeIn('#welcome', .4, 1);
-                    setTimeout(function() {
-                        effect.fadeOut('#welcome', .4);
-                    }, 10000);
-                }
-                var ignore = getCookie("upgrade_ignore");
-                if ($('html').hasClass('lt-ie9') && (ignore == null || ignore == "")) {
-                    setTimeout(showBrowserAlert, 1000);
-                }
-                initMap();
+            _maker = [{
+                url : "img/ol-vehicle.png",
+                anchor : new google.maps.Point(17.5, 19.5)
+            }, "img/ol-dest-a.png", "img/ol-dest-b.png", "img/ol-dest-c.png", {
+                url : "img/ol-stop.png",
+                anchor : new google.maps.Point(11, 10.5)
+            }, {
+                url : "img/ol-spot.png",
+                anchor : new google.maps.Point(9, 9)
+            }];
+
+            homeVideo();
+
+            var ignore = getCookie("upgrade_ignore");
+            if ($('html').hasClass('lt-ie9') && (ignore == null || ignore == "")) {
+                setTimeout(showBrowserAlert, 1000);
             }
+            initMap();
             delegateListener();
             adjust();
-            var bgm_mute = getCookie("bgm_mute");
-            if ($('#bgm').length > 0) {
-                if (bgm_mute != 'yes') {
-                    var bgm = $('#bgm')[0];
-                    bgm.play();
-                    setTimeout(function() {
-                        bgm.volume = .25;
-                    }, 200);
-                } else {
-                    $('#bgm_control i').removeClass('bgm-on').addClass('bgm-off');
-                    $('#bgm_control span b').text('off');
-                }
-            }
         });
     }
 })(jQuery, window);
